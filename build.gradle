@@ -9,18 +9,50 @@
 plugins {
     // Apply the java-library plugin to add support for Java Library
     id 'java-library'
+    // Apply the Gradle plugin that provides Maven-like dependency management functionality (esp. for BOMs)
+    id 'io.spring.dependency-management' version '1.0.5.RELEASE'
+    // Apply the Gradle plugin for collapsing all dependencies and project code into a single Jar file.
+    id "com.github.johnrengelman.shadow" version "2.0.4"
 }
+
+dependencyManagement {
+    imports {
+        mavenBom 'org.apache.logging.log4j:log4j-bom:2.11.0'
+        mavenBom 'org.junit:junit-bom:5.2.0'
+    }
+}
+
+// GroupId
+group = 'com.github.rishabh9'
+// Version
+version = '1.0.0-SNAPSHOT'
 
 dependencies {
     // This dependency is exported to consumers, that is to say found on their compile classpath.
     //api 'org.apache.commons:commons-math3:3.6.1'
 
-    // This dependency is used internally, and not exposed to consumers on their own compile classpath.
+    // These dependencies are used internally, and not exposed to consumers on their own compile classpath.
+    // Developer's toolkit
     implementation 'com.google.guava:guava:23.0'
+    // Making API calls
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.8.0'
+    // Picking up configurations from properties, environment
+    implementation 'org.aeonbits.owner:owner-java8:1.0.10'
+
+    // TODO KEEP OR REMOVE - DECIDE SOON
+    implementation 'com.sparkjava:spark-core:2.7.2'
+
+    // Logging framework
+    implementation 'org.apache.logging.log4j:log4j-api'
+    implementation 'org.apache.logging.log4j:log4j-core'
+    implementation 'org.apache.logging.log4j:log4j-slf4j-impl'
 
     // Use JUnit test framework
-    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api'
+    testRuntime 'org.junit.jupiter:junit-jupiter-engine'
+    // Mock web server
     testImplementation 'com.squareup.okhttp3:mockwebserver:3.10.0'
 }
 
@@ -28,5 +60,23 @@ dependencies {
 repositories {
     // Use jcenter for resolving your dependencies.
     // You can declare any Maven/Ivy/file repository here.
-    jcenter()
+     jcenter()
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+    reports {
+        html.enabled = true
+    }
+}
+
+jar {
+    manifest {
+        attributes 'Implementation-Title': project.name,
+                'Implementation-Version': project.version
+                //'Main-Class': mainClassName
+    }
 }
