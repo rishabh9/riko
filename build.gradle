@@ -13,6 +13,8 @@ plugins {
     id 'io.spring.dependency-management' version '1.0.5.RELEASE'
     // Apply the Gradle plugin for collapsing all dependencies and project code into a single Jar file.
     id "com.github.johnrengelman.shadow" version "2.0.4"
+    id "maven-publish"
+    id "signing"
 }
 
 dependencyManagement {
@@ -23,9 +25,10 @@ dependencyManagement {
 }
 
 // GroupId
-group = 'com.github.rishabh9.riko'
+group = 'com.github.rishabh9'
 // Version
 version = '1.0.0-SNAPSHOT'
+archivesBaseName = 'riko'
 
 dependencies {
     // This dependency is exported to consumers, that is to say found on their compile classpath.
@@ -55,7 +58,8 @@ dependencies {
 repositories {
     // Use jcenter for resolving your dependencies.
     // You can declare any Maven/Ivy/file repository here.
-     jcenter()
+    jcenter()
+    mavenCentral()
 }
 
 test {
@@ -68,10 +72,145 @@ test {
     }
 }
 
+task sourceJar(type: Jar) {
+    from sourceSets.main.allJava
+    classifier 'sources'
+}
+
+task javadocJar(type: Jar) {
+    from javadoc.destinationDir
+    classifier 'javadoc'
+}
+
 jar {
     manifest {
         attributes 'Implementation-Title': project.name,
                 'Implementation-Version': project.version
-                //'Main-Class': mainClassName
+        //'Main-Class': mainClassName
+    }
+}
+
+artifacts {
+    archives jar
+    archives sourceJar
+    archives javadocJar
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            customizePom(pom)
+
+            groupId project.group
+            artifactId project.name
+            version project.version
+
+            from components.java
+
+            artifact(shadowJar) {
+                classifier = 'sources'
+            }
+            artifact(javadocJar) {
+                classifier = 'javadoc'
+            }
+
+            // create the sign pom artifact
+            pom.withXml {
+                def pomFile = file("${project.buildDir}/generated-pom.xml")
+                writeTo(pomFile)
+                def pomAscFile = signing.sign(pomFile).signatureFiles[0]
+                artifact(pomAscFile) {
+                    classifier = null
+                    extension = 'pom.asc'
+                }
+            }
+
+            // create the signed artifacts
+            project.tasks.signArchives.signatureFiles.each {
+                artifact(it) {
+                    def matcher = it.file =~ /-(sources|javadoc)\.jar\.asc$/
+                    if (matcher.find()) {
+                        classifier = matcher.group(1)
+                    } else {
+                        classifier = null
+                    }
+                    extension = 'jar.asc'
+                }
+            }
+        }
+    }
+
+    repositories {
+        maven {
+//            def releasesRepoUrl = "http://gotham:8081/repository/maven-releases/"
+//            def snapshotsRepoUrl = "http://gotham:8081/repository/maven-snapshots/"
+//            url version.endsWith("SNAPSHOT") ? snapshotsRepoUrl : releasesRepoUrl
+
+            def releasesRepoUrl = 'https://oss.sonatype.org/service/local/staging/deploy/maven2'
+            def snapshotsRepoUrl = 'https://oss.sonatype.org/content/repositories/snapshots'
+            url version.endsWith("SNAPSHOT") ? snapshotsRepoUrl : releasesRepoUrl
+
+            credentials {
+                username sonatypeUsername
+                password sonatypePassword
+
+//                username nexusUsername
+//                password nexusPassword
+            }
+        }
+    }
+}
+
+model {
+    tasks.generatePomFileForMavenJavaPublication {
+        destination = file("$buildDir/generated-pom.xml")
+    }
+    tasks.publishMavenJavaPublicationToMavenLocal {
+        dependsOn project.tasks.signArchives
+    }
+    tasks.publishMavenJavaPublicationToMavenRepository {
+        dependsOn project.tasks.signArchives
+    }
+}
+
+signing {
+    sign configurations.archives
+}
+
+def customizePom(pom) {
+    pom.withXml {
+        def root = asNode()
+
+        // eliminate test-scoped dependencies (no need in maven central POMs)
+        root.dependencies.removeAll { dep ->
+            dep.scope == "test"
+        }
+
+        // add all items necessary for maven central publication
+        root.children().last() + {
+            resolveStrategy = Closure.DELEGATE_FIRST
+
+            description 'Riko is a third-party Java library for accessing Upstox API.'
+            name 'riko'
+            url 'https://github.com/rishabh9/riko'
+
+            licenses {
+                license {
+                    name 'Apache License 2.0'
+                    url 'https://github.com/mautini/schemaorg-java/blob/master/LICENSE'
+                    distribution 'repo'
+                }
+            }
+            scm {
+                url 'https://github.com/rishabh9/riko'
+                connection 'scm:git:git://github.com/rishabh9/riko.git'
+                developerConnection 'scm:git:ssh://git@github.com:rishabh9/riko.git'
+            }
+            developers {
+                developer {
+                    name 'Rishabh Joshi'
+                }
+            }
+        }
     }
 }
