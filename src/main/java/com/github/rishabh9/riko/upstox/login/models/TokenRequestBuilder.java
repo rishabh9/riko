@@ -1,4 +1,4 @@
-package com.github.rishabh9.upstox.login.models;
+package com.github.rishabh9.riko.upstox.login.models;
 
 public class TokenRequestBuilder {
     private String code;

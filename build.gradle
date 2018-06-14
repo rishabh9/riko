@@ -23,7 +23,7 @@ dependencyManagement {
 }
 
 // GroupId
-group = 'com.github.rishabh9'
+group = 'com.github.rishabh9.riko'
 // Version
 version = '1.0.0-SNAPSHOT'
 
@@ -38,11 +38,6 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.8.0'
-    // Picking up configurations from properties, environment
-    implementation 'org.aeonbits.owner:owner-java8:1.0.10'
-
-    // TODO KEEP OR REMOVE - DECIDE SOON
-    implementation 'com.sparkjava:spark-core:2.7.2'
 
     // Logging framework
     implementation 'org.apache.logging.log4j:log4j-api'

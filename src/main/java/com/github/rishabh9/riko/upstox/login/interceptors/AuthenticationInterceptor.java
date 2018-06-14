@@ -1,4 +1,4 @@
-package com.github.rishabh9.upstox.login.interceptors;
+package com.github.rishabh9.riko.upstox.login.interceptors;
 
 import okhttp3.Interceptor;
 import okhttp3.Request;

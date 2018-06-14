@@ -1,4 +1,4 @@
-package com.github.rishabh9.upstox.login.models;
+package com.github.rishabh9.riko.upstox.login.models;
 
 import com.google.common.base.MoreObjects;
 import com.google.gson.annotations.SerializedName;
@@ -15,6 +15,10 @@ public class TokenRequest {
 
     @SerializedName("redirect_uri")
     private final String redirectUri;
+
+    public String getCode() {
+        return code;
+    }
 
     TokenRequest(@Nonnull String code, @Nonnull String grantType, @Nonnull String redirectUri) {
         this.code = code;

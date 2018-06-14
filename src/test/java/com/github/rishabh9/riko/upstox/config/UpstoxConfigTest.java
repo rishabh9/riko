@@ -1,5 +1,6 @@
-package com.github.rishabh9.upstox.config;
+package com.github.rishabh9.riko.upstox.config;
 
+import com.github.rishabh9.riko.config.UpstoxConfig;
 import org.aeonbits.owner.ConfigFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

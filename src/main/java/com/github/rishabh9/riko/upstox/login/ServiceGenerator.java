@@ -1,6 +1,6 @@
-package com.github.rishabh9.upstox.login;
+package com.github.rishabh9.riko.upstox.login;
 
-import com.github.rishabh9.upstox.login.interceptors.AuthenticationInterceptor;
+import com.github.rishabh9.riko.upstox.login.interceptors.AuthenticationInterceptor;
 import com.google.common.base.Strings;
 import okhttp3.Credentials;
 import okhttp3.OkHttpClient;
