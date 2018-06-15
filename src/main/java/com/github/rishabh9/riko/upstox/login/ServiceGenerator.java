@@ -5,10 +5,14 @@ import com.google.common.base.Strings;
 import okhttp3.Credentials;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ServiceGenerator {
+
+    private static final Logger log = LogManager.getLogger(ServiceGenerator.class);
 
     private static final String API_BASE_URL = "https://api.upstox.com/";
 
@@ -37,7 +41,9 @@ public class ServiceGenerator {
 
     public static <S> S createService(Class<S> serviceClass, final String authToken) {
         enableAuthentication(authToken);
-        enableLogging();
+        if (log.isTraceEnabled()) {
+            enableHttpLogging();
+        }
         return retrofit.create(serviceClass);
     }
 
@@ -54,7 +60,7 @@ public class ServiceGenerator {
         }
     }
 
-    private static void enableLogging() {
+    private static void enableHttpLogging() {
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         // Set your desired log level
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
