@@ -14,9 +14,9 @@ import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.Optional;
 
-public class UpstoxOAuthLogin {
+public class UpstoxLogin {
 
-    private static final Logger log = LogManager.getLogger(UpstoxOAuthLogin.class);
+    private static final Logger log = LogManager.getLogger(UpstoxLogin.class);
 
     /**
      * Retrieves the access code from Upstox Authorization URL through a synchronous call.<br>
