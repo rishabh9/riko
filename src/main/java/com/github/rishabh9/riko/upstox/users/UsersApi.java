@@ -5,7 +5,7 @@ import com.github.rishabh9.riko.upstox.users.models.Profile;
 import retrofit2.Call;
 import retrofit2.http.GET;
 
-public interface UsersApi {
+interface UsersApi {
 
     @GET("/index/profile")
     Call<UpstoxResponse<Profile>> getProfile();

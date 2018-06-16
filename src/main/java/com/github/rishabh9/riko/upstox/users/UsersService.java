@@ -21,7 +21,6 @@ public class UsersService {
     private static final Logger log = LogManager.getLogger(UsersService.class);
 
     /**
-     *
      * @param accessToken
      * @param credentials
      * @return
@@ -50,7 +49,6 @@ public class UsersService {
     }
 
     /**
-     *
      * @param accessToken
      * @param credentials
      * @param callMe
@@ -77,11 +75,12 @@ public class UsersService {
 
                                 if (response.isSuccessful()) {
                                     callMe.onSuccess(response.body().getData());
-                                }
-                                try {
-                                    callMe.onFailure(response.errorBody().string(), null);
-                                } catch (IOException e) {
-                                    log.error("Error reading error response for request " + call.request(), e);
+                                } else {
+                                    try {
+                                        callMe.onFailure(response.errorBody().string(), null);
+                                    } catch (IOException e) {
+                                        log.error("Error reading error response for request " + call.request(), e);
+                                    }
                                 }
                             }
 

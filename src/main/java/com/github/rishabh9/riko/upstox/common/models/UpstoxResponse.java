@@ -2,14 +2,13 @@ package com.github.rishabh9.riko.upstox.common.models;
 
 import com.google.common.base.MoreObjects;
 
-import java.time.OffsetDateTime;
 import java.util.Objects;
 
 public class UpstoxResponse<T> {
 
     private int code;
     private String status;
-    private OffsetDateTime timestamp;
+    private String timestamp;
     private String message;
     private T data;
 
@@ -29,11 +28,11 @@ public class UpstoxResponse<T> {
         this.status = status;
     }
 
-    public OffsetDateTime getTimestamp() {
+    public String getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(OffsetDateTime timestamp) {
+    public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
     }
 
