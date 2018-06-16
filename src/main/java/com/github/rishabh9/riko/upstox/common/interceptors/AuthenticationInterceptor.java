@@ -1,4 +1,4 @@
-package com.github.rishabh9.riko.upstox.login.interceptors;
+package com.github.rishabh9.riko.upstox.common.interceptors;
 
 import okhttp3.Interceptor;
 import okhttp3.Request;
@@ -9,9 +9,11 @@ import java.io.IOException;
 public class AuthenticationInterceptor implements Interceptor {
 
     private String authToken;
+    private String apiKey;
 
-    public AuthenticationInterceptor(String token) {
+    public AuthenticationInterceptor(String token, String apiKey) {
         this.authToken = token;
+        this.apiKey = apiKey;
     }
 
     @Override
@@ -19,6 +21,7 @@ public class AuthenticationInterceptor implements Interceptor {
         Request original = chain.request();
 
         Request.Builder builder = original.newBuilder()
+                .header("X-API-KEY", apiKey)
                 .header("Authorization", authToken);
 
         Request request = builder.build();

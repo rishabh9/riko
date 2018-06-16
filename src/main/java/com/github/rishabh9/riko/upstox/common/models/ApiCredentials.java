@@ -1,4 +1,4 @@
-package com.github.rishabh9.riko.upstox.models;
+package com.github.rishabh9.riko.upstox.common.models;
 
 import javax.annotation.Nonnull;
 import java.util.Objects;
@@ -11,7 +11,7 @@ public class ApiCredentials {
     private String apiKey;
     private String apiSecret;
 
-    public ApiCredentials(@Nonnull String apiKey, @Nonnull String apiSecret) {
+    ApiCredentials(@Nonnull String apiKey, @Nonnull String apiSecret) {
         this.apiKey = apiKey;
         this.apiSecret = apiSecret;
     }

@@ -1,4 +1,4 @@
-package com.github.rishabh9.riko.upstox.models;
+package com.github.rishabh9.riko.upstox.common.models;
 
 import javax.annotation.Nonnull;
 
