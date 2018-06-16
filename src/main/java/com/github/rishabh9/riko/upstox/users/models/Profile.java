@@ -1,4 +1,4 @@
-package com.github.rishabh9.riko.upstox.models;
+package com.github.rishabh9.riko.upstox.users.models;
 
 import com.google.common.base.MoreObjects;
 import com.google.gson.annotations.SerializedName;
