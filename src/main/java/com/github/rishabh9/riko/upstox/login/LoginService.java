@@ -1,9 +1,9 @@
 package com.github.rishabh9.riko.upstox.login;
 
-import com.github.rishabh9.riko.upstox.api.LoginService;
+import com.github.rishabh9.riko.upstox.common.ServiceGenerator;
+import com.github.rishabh9.riko.upstox.common.models.ApiCredentials;
 import com.github.rishabh9.riko.upstox.login.models.AccessToken;
 import com.github.rishabh9.riko.upstox.login.models.TokenRequest;
-import com.github.rishabh9.riko.upstox.models.ApiCredentials;
 import com.google.common.base.Strings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,9 +14,9 @@ import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.Optional;
 
-public class UpstoxLogin {
+public class LoginService {
 
-    private static final Logger log = LogManager.getLogger(UpstoxLogin.class);
+    private static final Logger log = LogManager.getLogger(LoginService.class);
 
     /**
      * Retrieves the access code from Upstox Authorization URL through a synchronous call.<br>
@@ -36,13 +36,13 @@ public class UpstoxLogin {
         }
 
         // Create a very simple REST adapter which points the Upstox API endpoint.
-        LoginService loginService =
+        LoginApi loginApi =
                 ServiceGenerator.createService(
-                        LoginService.class,
+                        LoginApi.class,
                         credentials.getApiKey(),
                         credentials.getApiSecret());
 
-        Call<AccessToken> call = loginService.getAccessToken(credentials.getApiKey(), request);
+        Call<AccessToken> call = loginApi.getAccessToken(request);
 
         // Make a synchronous call.
         Response<AccessToken> response = call.execute();
