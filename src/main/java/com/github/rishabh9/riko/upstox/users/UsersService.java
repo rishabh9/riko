@@ -7,12 +7,15 @@ import com.github.rishabh9.riko.upstox.common.models.AuthHeadersBuilder;
 import com.github.rishabh9.riko.upstox.common.models.UpstoxResponse;
 import com.github.rishabh9.riko.upstox.login.models.AccessToken;
 import com.github.rishabh9.riko.upstox.users.models.Profile;
+import com.github.rishabh9.riko.upstox.users.models.ProfileBalance;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Response;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.Optional;
 
@@ -21,20 +24,90 @@ public class UsersService {
     private static final Logger log = LogManager.getLogger(UsersService.class);
 
     /**
-     * @param accessToken
-     * @param credentials
-     * @return
+     * Retrieves the user's profile synchronously
+     *
+     * @param accessToken The user's access token
+     * @param credentials The user's API credentials
+     * @return User's profile details. It will be empty if request 'returns' an error.
+     * @throws IOException When an error occurs while making the request.
+     */
+    public Optional<Profile> getProfile(@Nonnull AccessToken accessToken,
+                                        @Nonnull final ApiCredentials credentials)
+            throws IOException {
+
+        UsersApi api = setupService(accessToken, credentials);
+
+        Response<UpstoxResponse<Profile>> response = api.getProfile().execute();
+
+        return completeSynchronousRequest(response);
+    }
+
+    /**
+     * Retrieves the user's profile asynchronously
+     *
+     * @param accessToken The user's access token
+     * @param credentials The user's API credentials
+     * @param callMe      The call back interface
+     */
+    public void getProfileAsync(@Nonnull final AccessToken accessToken,
+                                @Nonnull final ApiCredentials credentials,
+                                @Nonnull final CallMe<Profile> callMe) {
+
+        UsersApi api = setupService(accessToken, credentials);
+
+        api.getProfile().enqueue(prepareCallback(callMe));
+    }
+
+    /**
+     * Retrieve the profile balance.
+     *
+     * @param accessToken The user's access token
+     * @param credentials The user's API credentials
+     * @param accountType The account type - 'security' or 'commodity'
+     * @return the user's account balance.
      * @throws IOException
      */
-    public Optional<Profile> getProfile(@Nonnull AccessToken accessToken, @Nonnull final ApiCredentials credentials)
+    public Optional<ProfileBalance> getProfileBalance(@Nonnull final AccessToken accessToken,
+                                                      @Nonnull final ApiCredentials credentials,
+                                                      @Nullable final String accountType)
             throws IOException {
+
+        UsersApi api = setupService(accessToken, credentials);
+
+        Response<UpstoxResponse<ProfileBalance>> response = api.getProfileBalance(accountType).execute();
+
+        return completeSynchronousRequest(response);
+    }
+
+    /**
+     * Retrieve's profile balance asynchronously.
+     *
+     * @param accessToken The user's access token
+     * @param credentials The user's API credentials
+     * @param accountType The account type - 'security' or 'commodity'
+     * @param callMe      The call back interface
+     */
+    public void getProfileBalanceAsync(@Nonnull final AccessToken accessToken,
+                                       @Nonnull final ApiCredentials credentials,
+                                       @Nullable final String accountType,
+                                       @Nonnull final CallMe<ProfileBalance> callMe) {
+
+        UsersApi api = setupService(accessToken, credentials);
+
+        api.getProfileBalance(accountType).enqueue(prepareCallback(callMe));
+    }
+
+    private UsersApi setupService(@Nonnull final AccessToken accessToken,
+                                  @Nonnull final ApiCredentials credentials) {
 
         final AuthHeadersBuilder builder = new AuthHeadersBuilder()
                 .withApiKey(credentials.getApiKey())
                 .withToken(accessToken.getType() + " " + accessToken.getToken());
 
-        UsersApi api = ServiceGenerator.createService(UsersApi.class, builder.build());
-        Response<UpstoxResponse<Profile>> response = api.getProfile().execute();
+        return ServiceGenerator.createService(UsersApi.class, builder.build());
+    }
+
+    private <T> Optional<T> completeSynchronousRequest(final Response<UpstoxResponse<T>> response) throws IOException {
 
         log.debug("Request to retrieve profile was {}. HTTP response code: {}.",
                 response.isSuccessful() ? "successful" : "unsuccessful",
@@ -44,51 +117,37 @@ public class UsersService {
             return Optional.ofNullable(response.body().getData());
         }
 
-        log.error("Error Response (if any) {}", response.errorBody().string());
+        log.error("Error Response: {}", response.errorBody().string());
         return Optional.empty();
     }
 
-    /**
-     * @param accessToken
-     * @param credentials
-     * @param callMe
-     */
-    public void getProfileAsync(
-            @Nonnull AccessToken accessToken,
-            @Nonnull final ApiCredentials credentials,
-            @Nonnull CallMe<Profile> callMe) {
+    private <T> Callback<UpstoxResponse<T>> prepareCallback(@Nonnull CallMe<T> callMe) {
 
-        final AuthHeadersBuilder builder = new AuthHeadersBuilder()
-                .withApiKey(credentials.getApiKey())
-                .withToken(accessToken.getType() + " " + accessToken.getToken());
+        return new Callback<>() {
+            @Override
+            public void onResponse(Call<UpstoxResponse<T>> call, Response<UpstoxResponse<T>> response) {
 
-        ServiceGenerator.createService(UsersApi.class, builder.build())
-                .getProfile()
-                .enqueue(
-                        new retrofit2.Callback<>() {
-                            @Override
-                            public void
-                            onResponse(Call<UpstoxResponse<Profile>> call, Response<UpstoxResponse<Profile>> response) {
-                                log.debug("Request to retrieve profile was {}. HTTP response code: {}.",
-                                        response.isSuccessful() ? "successful" : "unsuccessful",
-                                        response.code());
+                log.debug("Request to retrieve profile was {}. HTTP response code: {}.",
+                        response.isSuccessful() ? "successful" : "unsuccessful",
+                        response.code());
 
-                                if (response.isSuccessful()) {
-                                    callMe.onSuccess(response.body().getData());
-                                } else {
-                                    try {
-                                        callMe.onFailure(response.errorBody().string(), null);
-                                    } catch (IOException e) {
-                                        log.error("Error reading error response for request " + call.request(), e);
-                                    }
-                                }
-                            }
+                if (response.isSuccessful()) {
+                    callMe.onSuccess(response.body().getData());
+                } else {
+                    try {
+                        callMe.onFailure(response.errorBody().string(), null);
+                    } catch (IOException e) {
+                        log.error("Error reading error response for request " + call.request(), e);
+                    }
+                }
+            }
 
-                            @Override
-                            public void onFailure(Call<UpstoxResponse<Profile>> call, Throwable t) {
-                                log.error(t);
-                                callMe.onFailure("", t);
-                            }
-                        });
+            @Override
+            public void onFailure(Call<UpstoxResponse<T>> call, Throwable t) {
+
+                log.error(t);
+                callMe.onFailure("", t);
+            }
+        };
     }
 }

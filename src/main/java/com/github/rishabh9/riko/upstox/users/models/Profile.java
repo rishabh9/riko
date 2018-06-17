@@ -3,8 +3,8 @@ package com.github.rishabh9.riko.upstox.users.models;
 import com.google.common.base.MoreObjects;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 public class Profile {
 
@@ -14,9 +14,9 @@ public class Profile {
     private String email;
     private String phone;
     @SerializedName("exchanges_enabled")
-    private List<String> exchangesEnabled;
+    private Set<String> exchangesEnabled;
     @SerializedName("products_enabled")
-    private List<String> productsEnabled;
+    private Set<String> productsEnabled;
 
     public String getClientId() {
         return clientId;
@@ -50,19 +50,19 @@ public class Profile {
         this.phone = phone;
     }
 
-    public List<String> getExchangesEnabled() {
+    public Set<String> getExchangesEnabled() {
         return exchangesEnabled;
     }
 
-    public void setExchangesEnabled(List<String> exchangesEnabled) {
+    public void setExchangesEnabled(Set<String> exchangesEnabled) {
         this.exchangesEnabled = exchangesEnabled;
     }
 
-    public List<String> getProductsEnabled() {
+    public Set<String> getProductsEnabled() {
         return productsEnabled;
     }
 
-    public void setProductsEnabled(List<String> productsEnabled) {
+    public void setProductsEnabled(Set<String> productsEnabled) {
         this.productsEnabled = productsEnabled;
     }
 
