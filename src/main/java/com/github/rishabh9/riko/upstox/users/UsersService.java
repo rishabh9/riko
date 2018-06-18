@@ -6,6 +6,7 @@ import com.github.rishabh9.riko.upstox.common.models.ApiCredentials;
 import com.github.rishabh9.riko.upstox.common.models.AuthHeadersBuilder;
 import com.github.rishabh9.riko.upstox.common.models.UpstoxResponse;
 import com.github.rishabh9.riko.upstox.login.models.AccessToken;
+import com.github.rishabh9.riko.upstox.users.models.Position;
 import com.github.rishabh9.riko.upstox.users.models.Profile;
 import com.github.rishabh9.riko.upstox.users.models.ProfileBalance;
 import org.apache.logging.log4j.LogManager;
@@ -17,6 +18,7 @@ import retrofit2.Response;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 public class UsersService {
@@ -65,7 +67,7 @@ public class UsersService {
      * @param credentials The user's API credentials
      * @param accountType The account type - 'security' or 'commodity'
      * @return the user's account balance.
-     * @throws IOException
+     * @throws IOException When an error occurs while making the request.
      */
     public Optional<ProfileBalance> getProfileBalance(@Nonnull final AccessToken accessToken,
                                                       @Nonnull final ApiCredentials credentials,
@@ -95,6 +97,41 @@ public class UsersService {
         UsersApi api = setupService(accessToken, credentials);
 
         api.getProfileBalance(accountType).enqueue(prepareCallback(callMe));
+    }
+
+    /**
+     * Fetches the current positions for the user for the current day.
+     *
+     * @param accessToken The user's access token
+     * @param credentials The user's API credentials
+     * @return List of Position
+     * @throws IOException When an error occurs while making the request.
+     */
+    public Optional<List<Position>> getPositions(@Nonnull final AccessToken accessToken,
+                                                 @Nonnull final ApiCredentials credentials)
+            throws IOException {
+
+        UsersApi api = setupService(accessToken, credentials);
+
+        Response<UpstoxResponse<List<Position>>> response = api.getPositions().execute();
+
+        return completeSynchronousRequest(response);
+    }
+
+    /**
+     * Fetches the current positions for the user for the current day, asynchronously.
+     *
+     * @param accessToken The user's access token
+     * @param credentials The user's API credentials
+     * @param callMe      The call back interface
+     */
+    public void getPositionsAsync(@Nonnull final AccessToken accessToken,
+                                  @Nonnull final ApiCredentials credentials,
+                                  @Nonnull final CallMe<List<Position>> callMe) {
+
+        UsersApi api = setupService(accessToken, credentials);
+
+        api.getPositions().enqueue(prepareCallback(callMe));
     }
 
     private UsersApi setupService(@Nonnull final AccessToken accessToken,

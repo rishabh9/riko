@@ -1,9 +1,14 @@
 package com.github.rishabh9.riko.upstox.common;
 
+import com.github.rishabh9.riko.upstox.common.converters.NumberString;
+import com.github.rishabh9.riko.upstox.common.converters.NumberStringDeserializer;
+import com.github.rishabh9.riko.upstox.common.converters.NumberStringSerializer;
 import com.github.rishabh9.riko.upstox.common.interceptors.AuthenticationInterceptor;
 import com.github.rishabh9.riko.upstox.common.models.AuthHeaders;
 import com.github.rishabh9.riko.upstox.common.models.AuthHeadersBuilder;
 import com.google.common.base.Strings;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import okhttp3.Credentials;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -23,10 +28,15 @@ public class ServiceGenerator {
 
     private static OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
 
+    private static Gson gson = new GsonBuilder()
+            .registerTypeAdapter(NumberString.class, new NumberStringSerializer())
+            .registerTypeAdapter(NumberString.class, new NumberStringDeserializer())
+            .create();
+
     private static Retrofit.Builder builder =
             new Retrofit.Builder()
                     .baseUrl(API_BASE_URL)
-                    .addConverterFactory(GsonConverterFactory.create());
+                    .addConverterFactory(GsonConverterFactory.create(gson));
 
     private static Retrofit retrofit = builder.build();
 
@@ -68,7 +78,7 @@ public class ServiceGenerator {
      */
     public static <S> S createService(final Class<S> serviceClass, @Nonnull final AuthHeaders headers) {
         enableAuthentication(headers);
-        if (log.isTraceEnabled()) {
+        if (log.isDebugEnabled()) {
             enableHttpLogging();
         }
         return retrofit.create(serviceClass);
@@ -88,7 +98,7 @@ public class ServiceGenerator {
     private static void enableHttpLogging() {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         // Set your desired log level
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BASIC);
         addInterceptor(interceptor);
     }
 
