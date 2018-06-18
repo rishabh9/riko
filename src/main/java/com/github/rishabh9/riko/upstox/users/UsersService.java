@@ -6,6 +6,7 @@ import com.github.rishabh9.riko.upstox.common.models.ApiCredentials;
 import com.github.rishabh9.riko.upstox.common.models.AuthHeadersBuilder;
 import com.github.rishabh9.riko.upstox.common.models.UpstoxResponse;
 import com.github.rishabh9.riko.upstox.login.models.AccessToken;
+import com.github.rishabh9.riko.upstox.users.models.Holding;
 import com.github.rishabh9.riko.upstox.users.models.Position;
 import com.github.rishabh9.riko.upstox.users.models.Profile;
 import com.github.rishabh9.riko.upstox.users.models.ProfileBalance;
@@ -132,6 +133,41 @@ public class UsersService {
         UsersApi api = setupService(accessToken, credentials);
 
         api.getPositions().enqueue(prepareCallback(callMe));
+    }
+
+    /**
+     * Fetches the holdings which the user has bought/sold in previous trading sessions.
+     *
+     * @param accessToken The user's access token
+     * @param credentials The user's API credentials
+     * @return List of Holding
+     * @throws IOException When an error occurs while making the request.
+     */
+    public Optional<List<Holding>> getHoldings(@Nonnull final AccessToken accessToken,
+                                               @Nonnull final ApiCredentials credentials)
+            throws IOException {
+
+        UsersApi api = setupService(accessToken, credentials);
+
+        Response<UpstoxResponse<List<Holding>>> response = api.getHoldings().execute();
+
+        return completeSynchronousRequest(response);
+    }
+
+    /**
+     * Fetches the holdings which the user has bought/sold in previous trading sessions, asynchronously.
+     *
+     * @param accessToken The user's access token
+     * @param credentials The user's API credentials
+     * @param callMe      The call back interface
+     */
+    public void getHoldingsAsync(@Nonnull final AccessToken accessToken,
+                                 @Nonnull final ApiCredentials credentials,
+                                 @Nonnull final CallMe<List<Holding>> callMe) {
+
+        UsersApi api = setupService(accessToken, credentials);
+
+        api.getHoldings().enqueue(prepareCallback(callMe));
     }
 
     private UsersApi setupService(@Nonnull final AccessToken accessToken,

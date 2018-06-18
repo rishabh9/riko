@@ -98,7 +98,7 @@ public class ServiceGenerator {
     private static void enableHttpLogging() {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         // Set your desired log level
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BASIC);
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         addInterceptor(interceptor);
     }
 

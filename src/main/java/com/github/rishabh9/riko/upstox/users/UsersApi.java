@@ -1,6 +1,7 @@
 package com.github.rishabh9.riko.upstox.users;
 
 import com.github.rishabh9.riko.upstox.common.models.UpstoxResponse;
+import com.github.rishabh9.riko.upstox.users.models.Holding;
 import com.github.rishabh9.riko.upstox.users.models.Position;
 import com.github.rishabh9.riko.upstox.users.models.Profile;
 import com.github.rishabh9.riko.upstox.users.models.ProfileBalance;
@@ -20,4 +21,7 @@ interface UsersApi {
 
     @GET("/live/profile/positions")
     Call<UpstoxResponse<List<Position>>> getPositions();
+
+    @GET("/live/profile/holdings")
+    Call<UpstoxResponse<List<Holding>>> getHoldings();
 }
