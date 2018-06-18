@@ -6,10 +6,8 @@ import com.github.rishabh9.riko.upstox.common.models.ApiCredentials;
 import com.github.rishabh9.riko.upstox.common.models.AuthHeadersBuilder;
 import com.github.rishabh9.riko.upstox.common.models.UpstoxResponse;
 import com.github.rishabh9.riko.upstox.login.models.AccessToken;
-import com.github.rishabh9.riko.upstox.users.models.Holding;
-import com.github.rishabh9.riko.upstox.users.models.Position;
-import com.github.rishabh9.riko.upstox.users.models.Profile;
-import com.github.rishabh9.riko.upstox.users.models.ProfileBalance;
+import com.github.rishabh9.riko.upstox.users.models.*;
+import com.google.common.base.Strings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import retrofit2.Call;
@@ -168,6 +166,164 @@ public class UsersService {
         UsersApi api = setupService(accessToken, credentials);
 
         api.getHoldings().enqueue(prepareCallback(callMe));
+    }
+
+    /**
+     * Get all available contracts as a CSV.
+     *
+     * @param accessToken The user's access token
+     * @param credentials The user's API credentials
+     * @param exchange    Name of the exchange. <em>Mandatory</em>. Valid values are:<br/>
+     *                    <ul>
+     *                    <li><code>bse_index</code> - BSE Index</li>
+     *                    <li><code>nse_index</code> - NSE Index</li>
+     *                    <li><code>bse_eq</code> - BSE Equity</li>
+     *                    <li><code>bcd_fo</code> - BSE Currency Futures & Options</li>
+     *                    <li><code>nse_eq</code> - NSE Equity</li>
+     *                    <li><code>nse_fo</code> - NSE Futures & Options</li>
+     *                    <li><code>ncd_fo</code> - NSE Currency Futures & Options</li>
+     *                    <li><code>mcx_fo</code> - MCX Futures</li>
+     *                    </ul>
+     * @throws IllegalArgumentException if exchange is not specified.
+     *
+     * @implNote
+     * The CSV is returned as list of strings.
+     * The first item in the list are the headers for the CSV. Rest of the items are the individual records.
+     */
+    public Optional<List<String>> getMasterContracts(@Nonnull final AccessToken accessToken,
+                                                     @Nonnull final ApiCredentials credentials,
+                                                     @Nonnull final String exchange)
+            throws IOException {
+
+        validateExchange(exchange);
+
+        UsersApi api = setupService(accessToken, credentials);
+
+        Response<UpstoxResponse<List<String>>> response = api.getMasterContracts(exchange).execute();
+
+        return completeSynchronousRequest(response);
+    }
+
+    /**
+     * Get all available contracts as a CSV, asynchronously.
+     *
+     * @param accessToken The user's access token
+     * @param credentials The user's API credentials
+     * @param exchange    Name of the exchange. <em>Mandatory</em>. Valid values are:<br/>
+     *                    <ul>
+     *                    <li><code>bse_index</code> - BSE Index</li>
+     *                    <li><code>nse_index</code> - NSE Index</li>
+     *                    <li><code>bse_eq</code> - BSE Equity</li>
+     *                    <li><code>bcd_fo</code> - BSE Currency Futures & Options</li>
+     *                    <li><code>nse_eq</code> - NSE Equity</li>
+     *                    <li><code>nse_fo</code> - NSE Futures & Options</li>
+     *                    <li><code>ncd_fo</code> - NSE Currency Futures & Options</li>
+     *                    <li><code>mcx_fo</code> - MCX Futures</li>
+     *                    </ul>
+     * @param callMe      The call back interface
+     * @throws IllegalArgumentException if exchange is not specified.
+     *
+     * @implNote
+     * The CSV is returned as list of strings.
+     * The first item in the list are the headers for the CSV. Rest of the items are the individual records.
+     */
+    public void getMasterContractsAsync(@Nonnull final AccessToken accessToken,
+                                        @Nonnull final ApiCredentials credentials,
+                                        @Nonnull final String exchange,
+                                        @Nonnull final CallMe<List<String>> callMe) {
+
+        validateExchange(exchange);
+
+        UsersApi api = setupService(accessToken, credentials);
+
+        api.getMasterContracts(exchange).enqueue(prepareCallback(callMe));
+    }
+
+    /**
+     * Get available contract for given symbol/token.
+     *
+     * @param accessToken The user's access token
+     * @param credentials The user's API credentials
+     * @param exchange    Name of the exchange. <em>Mandatory</em>. Valid values are:<br/>
+     *                    <ul>
+     *                    <li><code>bse_index</code> - BSE Index</li>
+     *                    <li><code>nse_index</code> - NSE Index</li>
+     *                    <li><code>bse_eq</code> - BSE Equity</li>
+     *                    <li><code>bcd_fo</code> - BSE Currency Futures & Options</li>
+     *                    <li><code>nse_eq</code> - NSE Equity</li>
+     *                    <li><code>nse_fo</code> - NSE Futures & Options</li>
+     *                    <li><code>ncd_fo</code> - NSE Currency Futures & Options</li>
+     *                    <li><code>mcx_fo</code> - MCX Futures</li>
+     *                    </ul>
+     * @param symbol      Trading symbol which could be a combination of symbol name, instrument, expiry date, etc.
+     *                    Optional if token is provided.
+     * @param token       Unique indentifier within an exchange. Optional, if symbol is provided.
+     * @throws IllegalArgumentException if exchange is not specified. Also, if both symbol and token are null or empty.
+     */
+    public Optional<Contract> getMasterContract(@Nonnull final AccessToken accessToken,
+                                                @Nonnull final ApiCredentials credentials,
+                                                @Nonnull final String exchange,
+                                                @Nullable final String symbol,
+                                                @Nullable final String token)
+            throws IOException {
+
+        validateExchange(exchange);
+        validateSymbolAndToken(symbol, token);
+
+        UsersApi api = setupService(accessToken, credentials);
+
+        Response<UpstoxResponse<Contract>> response = api.getMasterContract(exchange, symbol, token).execute();
+
+        return completeSynchronousRequest(response);
+    }
+
+    /**
+     * Get available contract for given symbol/token, asynchronously.
+     *
+     * @param accessToken The user's access token
+     * @param credentials The user's API credentials
+     * @param exchange    Name of the exchange. <em>Mandatory</em>. Valid values are:<br/>
+     *                    <ul>
+     *                    <li><code>bse_index</code> - BSE Index</li>
+     *                    <li><code>nse_index</code> - NSE Index</li>
+     *                    <li><code>bse_eq</code> - BSE Equity</li>
+     *                    <li><code>bcd_fo</code> - BSE Currency Futures & Options</li>
+     *                    <li><code>nse_eq</code> - NSE Equity</li>
+     *                    <li><code>nse_fo</code> - NSE Futures & Options</li>
+     *                    <li><code>ncd_fo</code> - NSE Currency Futures & Options</li>
+     *                    <li><code>mcx_fo</code> - MCX Futures</li>
+     *                    </ul>
+     * @param symbol      Trading symbol which could be a combination of symbol name, instrument, expiry date, etc.
+     *                    Optional if token is provided.
+     * @param token       Unique indentifier within an exchange. Optional, if symbol is provided.
+     * @param callMe      The call back interface
+     * @throws IllegalArgumentException if exchange is not specified. Also, if both symbol and token are null or empty.
+     */
+    public void getMasterContractAsync(@Nonnull final AccessToken accessToken,
+                                       @Nonnull final ApiCredentials credentials,
+                                       @Nonnull final String exchange,
+                                       @Nullable final String symbol,
+                                       @Nullable final String token,
+                                       @Nonnull final CallMe<Contract> callMe) {
+
+        validateExchange(exchange);
+        validateSymbolAndToken(symbol, token);
+
+        UsersApi api = setupService(accessToken, credentials);
+
+        api.getMasterContract(exchange, symbol, token).enqueue(prepareCallback(callMe));
+    }
+
+    private void validateSymbolAndToken(final String symbol, final String token) {
+        if (Strings.isNullOrEmpty(symbol) && Strings.isNullOrEmpty(token)) {
+            throw new IllegalArgumentException("Provide either the 'symbol' or 'token'. Both cannot be null or empty.");
+        }
+    }
+
+    private void validateExchange(@Nonnull String exchange) {
+        if (Strings.isNullOrEmpty(exchange)) {
+            throw new IllegalArgumentException("Argument 'exchange' is mandatory. It cannot be null or empty.");
+        }
     }
 
     private UsersApi setupService(@Nonnull final AccessToken accessToken,
