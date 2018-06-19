@@ -13,7 +13,9 @@ plugins {
     id 'io.spring.dependency-management' version '1.0.5.RELEASE'
     // Apply the Gradle plugin for collapsing all dependencies and project code into a single Jar file.
     id "com.github.johnrengelman.shadow" version "2.0.4"
+    // Apply plugin for publishing to Maven Repository.
     id "maven-publish"
+    // Apply plugin for signing of the jars.
     id "signing"
 }
 
@@ -142,10 +144,6 @@ publishing {
 
     repositories {
         maven {
-//            def releasesRepoUrl = "http://gotham:8081/repository/maven-releases/"
-//            def snapshotsRepoUrl = "http://gotham:8081/repository/maven-snapshots/"
-//            url version.endsWith("SNAPSHOT") ? snapshotsRepoUrl : releasesRepoUrl
-
             def releasesRepoUrl = 'https://oss.sonatype.org/service/local/staging/deploy/maven2'
             def snapshotsRepoUrl = 'https://oss.sonatype.org/content/repositories/snapshots'
             url version.endsWith("SNAPSHOT") ? snapshotsRepoUrl : releasesRepoUrl
@@ -153,9 +151,6 @@ publishing {
             credentials {
                 username sonatypeUsername
                 password sonatypePassword
-
-//                username nexusUsername
-//                password nexusPassword
             }
         }
     }
@@ -196,8 +191,8 @@ def customizePom(pom) {
 
             licenses {
                 license {
-                    name 'Apache License 2.0'
-                    url 'https://github.com/mautini/schemaorg-java/blob/master/LICENSE'
+                    name 'MIT License'
+                    url 'https://github.com/rishabh9/riko/blob/master/LICENSE'
                     distribution 'repo'
                 }
             }
