@@ -1,17 +1,14 @@
 package com.github.rishabh9.riko.upstox.users;
 
 import com.github.rishabh9.riko.upstox.common.CallMe;
-import com.github.rishabh9.riko.upstox.common.ServiceGenerator;
+import com.github.rishabh9.riko.upstox.common.Service;
 import com.github.rishabh9.riko.upstox.common.models.ApiCredentials;
-import com.github.rishabh9.riko.upstox.common.models.AuthHeadersBuilder;
 import com.github.rishabh9.riko.upstox.common.models.UpstoxResponse;
 import com.github.rishabh9.riko.upstox.login.models.AccessToken;
 import com.github.rishabh9.riko.upstox.users.models.*;
 import com.google.common.base.Strings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 import javax.annotation.Nonnull;
@@ -20,7 +17,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-public class UsersService {
+public class UsersService extends Service {
 
     private static final Logger log = LogManager.getLogger(UsersService.class);
 
@@ -32,11 +29,11 @@ public class UsersService {
      * @return User's profile details. It will be empty if request 'returns' an error.
      * @throws IOException When an error occurs while making the request.
      */
-    public Optional<Profile> getProfile(@Nonnull AccessToken accessToken,
+    public Optional<Profile> getProfile(@Nonnull final AccessToken accessToken,
                                         @Nonnull final ApiCredentials credentials)
             throws IOException {
 
-        UsersApi api = setupService(accessToken, credentials);
+        UsersApi api = prepareServiceApi(UsersApi.class, accessToken, credentials);
 
         Response<UpstoxResponse<Profile>> response = api.getProfile().execute();
 
@@ -54,7 +51,7 @@ public class UsersService {
                                 @Nonnull final ApiCredentials credentials,
                                 @Nonnull final CallMe<Profile> callMe) {
 
-        UsersApi api = setupService(accessToken, credentials);
+        UsersApi api = prepareServiceApi(UsersApi.class, accessToken, credentials);
 
         api.getProfile().enqueue(prepareCallback(callMe));
     }
@@ -73,7 +70,7 @@ public class UsersService {
                                                       @Nullable final String accountType)
             throws IOException {
 
-        UsersApi api = setupService(accessToken, credentials);
+        UsersApi api = prepareServiceApi(UsersApi.class, accessToken, credentials);
 
         Response<UpstoxResponse<ProfileBalance>> response = api.getProfileBalance(accountType).execute();
 
@@ -93,7 +90,7 @@ public class UsersService {
                                        @Nullable final String accountType,
                                        @Nonnull final CallMe<ProfileBalance> callMe) {
 
-        UsersApi api = setupService(accessToken, credentials);
+        UsersApi api = prepareServiceApi(UsersApi.class, accessToken, credentials);
 
         api.getProfileBalance(accountType).enqueue(prepareCallback(callMe));
     }
@@ -110,7 +107,7 @@ public class UsersService {
                                                  @Nonnull final ApiCredentials credentials)
             throws IOException {
 
-        UsersApi api = setupService(accessToken, credentials);
+        UsersApi api = prepareServiceApi(UsersApi.class, accessToken, credentials);
 
         Response<UpstoxResponse<List<Position>>> response = api.getPositions().execute();
 
@@ -128,7 +125,7 @@ public class UsersService {
                                   @Nonnull final ApiCredentials credentials,
                                   @Nonnull final CallMe<List<Position>> callMe) {
 
-        UsersApi api = setupService(accessToken, credentials);
+        UsersApi api = prepareServiceApi(UsersApi.class, accessToken, credentials);
 
         api.getPositions().enqueue(prepareCallback(callMe));
     }
@@ -145,7 +142,7 @@ public class UsersService {
                                                @Nonnull final ApiCredentials credentials)
             throws IOException {
 
-        UsersApi api = setupService(accessToken, credentials);
+        UsersApi api = prepareServiceApi(UsersApi.class, accessToken, credentials);
 
         Response<UpstoxResponse<List<Holding>>> response = api.getHoldings().execute();
 
@@ -163,7 +160,7 @@ public class UsersService {
                                  @Nonnull final ApiCredentials credentials,
                                  @Nonnull final CallMe<List<Holding>> callMe) {
 
-        UsersApi api = setupService(accessToken, credentials);
+        UsersApi api = prepareServiceApi(UsersApi.class, accessToken, credentials);
 
         api.getHoldings().enqueue(prepareCallback(callMe));
     }
@@ -197,7 +194,7 @@ public class UsersService {
 
         validateExchange(exchange);
 
-        UsersApi api = setupService(accessToken, credentials);
+        UsersApi api = prepareServiceApi(UsersApi.class, accessToken, credentials);
 
         Response<UpstoxResponse<List<String>>> response = api.getMasterContracts(exchange).execute();
 
@@ -234,7 +231,7 @@ public class UsersService {
 
         validateExchange(exchange);
 
-        UsersApi api = setupService(accessToken, credentials);
+        UsersApi api = prepareServiceApi(UsersApi.class, accessToken, credentials);
 
         api.getMasterContracts(exchange).enqueue(prepareCallback(callMe));
     }
@@ -270,7 +267,7 @@ public class UsersService {
         validateExchange(exchange);
         validateSymbolAndToken(symbol, token);
 
-        UsersApi api = setupService(accessToken, credentials);
+        UsersApi api = prepareServiceApi(UsersApi.class, accessToken, credentials);
 
         Response<UpstoxResponse<Contract>> response = api.getMasterContract(exchange, symbol, token).execute();
 
@@ -309,7 +306,7 @@ public class UsersService {
         validateExchange(exchange);
         validateSymbolAndToken(symbol, token);
 
-        UsersApi api = setupService(accessToken, credentials);
+        UsersApi api = prepareServiceApi(UsersApi.class, accessToken, credentials);
 
         api.getMasterContract(exchange, symbol, token).enqueue(prepareCallback(callMe));
     }
@@ -326,57 +323,4 @@ public class UsersService {
         }
     }
 
-    private UsersApi setupService(@Nonnull final AccessToken accessToken,
-                                  @Nonnull final ApiCredentials credentials) {
-
-        final AuthHeadersBuilder builder = new AuthHeadersBuilder()
-                .withApiKey(credentials.getApiKey())
-                .withToken(accessToken.getType() + " " + accessToken.getToken());
-
-        return ServiceGenerator.createService(UsersApi.class, builder.build());
-    }
-
-    private <T> Optional<T> completeSynchronousRequest(final Response<UpstoxResponse<T>> response) throws IOException {
-
-        log.debug("Request to retrieve profile was {}. HTTP response code: {}.",
-                response.isSuccessful() ? "successful" : "unsuccessful",
-                response.code());
-
-        if (response.isSuccessful()) {
-            return Optional.ofNullable(response.body().getData());
-        }
-
-        log.error("Error Response: {}", response.errorBody().string());
-        return Optional.empty();
-    }
-
-    private <T> Callback<UpstoxResponse<T>> prepareCallback(@Nonnull CallMe<T> callMe) {
-
-        return new Callback<>() {
-            @Override
-            public void onResponse(Call<UpstoxResponse<T>> call, Response<UpstoxResponse<T>> response) {
-
-                log.debug("Request to retrieve profile was {}. HTTP response code: {}.",
-                        response.isSuccessful() ? "successful" : "unsuccessful",
-                        response.code());
-
-                if (response.isSuccessful()) {
-                    callMe.onSuccess(response.body().getData());
-                } else {
-                    try {
-                        callMe.onFailure(response.errorBody().string(), null);
-                    } catch (IOException e) {
-                        log.error("Error reading error response for request " + call.request(), e);
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<UpstoxResponse<T>> call, Throwable t) {
-
-                log.error(t);
-                callMe.onFailure("", t);
-            }
-        };
-    }
 }
