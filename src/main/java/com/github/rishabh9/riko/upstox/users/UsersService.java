@@ -313,13 +313,13 @@ public class UsersService extends Service {
 
     private void validateSymbolAndToken(final String symbol, final String token) {
         if (Strings.isNullOrEmpty(symbol) && Strings.isNullOrEmpty(token)) {
-            throw new IllegalArgumentException("Provide either the 'symbol' or 'token'. Both cannot be null or empty.");
+            throw new IllegalArgumentException("Provide either the 'symbol' or 'token'. Both cannot be null nor empty.");
         }
     }
 
     private void validateExchange(@Nonnull String exchange) {
         if (Strings.isNullOrEmpty(exchange)) {
-            throw new IllegalArgumentException("Argument 'exchange' is mandatory. It cannot be null or empty.");
+            throw new IllegalArgumentException("Argument 'exchange' is mandatory. It cannot be null nor empty.");
         }
     }
 
