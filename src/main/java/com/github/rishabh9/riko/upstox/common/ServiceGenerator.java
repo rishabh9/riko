@@ -5,7 +5,6 @@ import com.github.rishabh9.riko.upstox.common.converters.NumberStringDeserialize
 import com.github.rishabh9.riko.upstox.common.converters.NumberStringSerializer;
 import com.github.rishabh9.riko.upstox.common.interceptors.AuthenticationInterceptor;
 import com.github.rishabh9.riko.upstox.common.models.AuthHeaders;
-import com.github.rishabh9.riko.upstox.common.models.AuthHeadersBuilder;
 import com.google.common.base.Strings;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -19,6 +18,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class ServiceGenerator {
 
@@ -40,7 +40,14 @@ public class ServiceGenerator {
 
     private static Retrofit retrofit = builder.build();
 
-    public static <S> S createService(final Class<S> serviceClass) {
+    /**
+     * Create service without authentication.
+     *
+     * @param serviceClass The Service
+     * @param <S>          The type of Service
+     * @return The retrofitted service
+     */
+    public static <S> S createService(@Nonnull final Class<S> serviceClass) {
         return createService(serviceClass, null, null);
     }
 
@@ -48,35 +55,33 @@ public class ServiceGenerator {
      * Create service with Basic Authentication
      *
      * @param serviceClass The Service
-     * @param username Username for basic authentication
-     * @param password Password for basic authentication
-     * @param <S> The Service
+     * @param username     Username for basic authentication
+     * @param password     Password for basic authentication
+     * @param <S>          The type of Service
      * @return The retrofitted service
      */
-    public static <S> S createService(final Class<S> serviceClass, final String username, final String password) {
-        AuthHeadersBuilder builder = new AuthHeadersBuilder();
+    public static <S> S createService(@Nonnull final Class<S> serviceClass,
+                                      @Nullable final String username,
+                                      @Nullable final String password) {
+
         if (!Strings.isNullOrEmpty(username)
                 && !Strings.isNullOrEmpty(password)) {
             String authToken = Credentials.basic(username, password);
-            return createService(
-                    serviceClass,
-                    builder
-                            .withToken(authToken)
-                            .withApiKey(username)
-                            .build());
+            return createService(serviceClass, new AuthHeaders(authToken, username));
         }
-        return createService(serviceClass, builder.build());
+        // Setup request headers without any auth
+        return createService(serviceClass, null);
     }
 
     /**
      * Create service with Token Authorization
      *
      * @param serviceClass The Service
-     * @param headers The Authentication headers
-     * @param <S> The Service
+     * @param headers      The Authentication headers
+     * @param <S>          The type of Service
      * @return The retrofitted service
      */
-    public static <S> S createService(final Class<S> serviceClass, @Nonnull final AuthHeaders headers) {
+    public static <S> S createService(@Nonnull final Class<S> serviceClass, @Nullable final AuthHeaders headers) {
         enableAuthentication(headers);
         if (log.isDebugEnabled()) {
             enableHttpLogging();
@@ -85,7 +90,8 @@ public class ServiceGenerator {
     }
 
     private static void enableAuthentication(final AuthHeaders headers) {
-        if (!Strings.isNullOrEmpty(headers.getToken())
+        if (null != headers
+                && !Strings.isNullOrEmpty(headers.getToken())
                 && !Strings.isNullOrEmpty(headers.getApiKey())) {
 
             addInterceptor(
@@ -97,7 +103,7 @@ public class ServiceGenerator {
 
     private static void enableHttpLogging() {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        // Set your desired log level
+        // Set the desired log level
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         addInterceptor(interceptor);
     }

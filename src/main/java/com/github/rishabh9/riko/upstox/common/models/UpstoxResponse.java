@@ -4,6 +4,11 @@ import com.google.common.base.MoreObjects;
 
 import java.util.Objects;
 
+/**
+ * The wrapper for the response returned by the Upstox API.
+ *
+ * @param <T> The type of data returned in the response.
+ */
 public class UpstoxResponse<T> {
 
     private int code;
@@ -12,26 +17,44 @@ public class UpstoxResponse<T> {
     private String message;
     private T data;
 
+    /**
+     * @return HTTP response code.
+     */
     public int getCode() {
         return code;
     }
 
+    /**
+     * @param code HTTP response code.
+     */
     public void setCode(int code) {
         this.code = code;
     }
 
+    /**
+     * @return HTTP status.
+     */
     public String getStatus() {
         return status;
     }
 
+    /**
+     * @param status HTTP status.
+     */
     public void setStatus(String status) {
         this.status = status;
     }
 
+    /**
+     * @return Timestamp of the response in ISO format.
+     */
     public String getTimestamp() {
         return timestamp;
     }
 
+    /**
+     * @param timestamp Timestamp of the response in ISO format.
+     */
     public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
     }
@@ -44,10 +67,16 @@ public class UpstoxResponse<T> {
         this.message = message;
     }
 
+    /**
+     * @return The actual payload.
+     */
     public T getData() {
         return data;
     }
 
+    /**
+     * @param data The actual payload.
+     */
     public void setData(T data) {
         this.data = data;
     }

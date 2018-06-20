@@ -6,6 +6,9 @@ import okhttp3.Response;
 
 import java.io.IOException;
 
+/**
+ * Retrofit2 interceptor to add common authentication headers to every request.
+ */
 public class AuthenticationInterceptor implements Interceptor {
 
     private String authToken;

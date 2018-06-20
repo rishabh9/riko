@@ -8,6 +8,9 @@ import com.google.gson.JsonParseException;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 
+/**
+ * Deserializer for Json, to support the custom data type {@link NumberString}.
+ */
 public class NumberStringDeserializer implements JsonDeserializer<NumberString> {
 
     @Override

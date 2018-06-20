@@ -4,12 +4,15 @@ import com.google.common.base.MoreObjects;
 
 import java.util.Objects;
 
+/**
+ * Model for preparing the authentication/authorization headers for API calls.
+ */
 public class AuthHeaders {
 
     private String token;
     private String apiKey;
 
-    AuthHeaders(String token, String apiKey) {
+    public AuthHeaders(String token, String apiKey) {
         this.token = token;
         this.apiKey = apiKey;
     }

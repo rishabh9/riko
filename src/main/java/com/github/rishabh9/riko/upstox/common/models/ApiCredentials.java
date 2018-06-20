@@ -11,7 +11,7 @@ public class ApiCredentials {
     private String apiKey;
     private String apiSecret;
 
-    ApiCredentials(@Nonnull String apiKey, @Nonnull String apiSecret) {
+    public ApiCredentials(@Nonnull String apiKey, @Nonnull String apiSecret) {
         this.apiKey = apiKey;
         this.apiSecret = apiSecret;
     }

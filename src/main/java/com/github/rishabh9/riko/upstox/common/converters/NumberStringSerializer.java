@@ -7,6 +7,9 @@ import com.google.gson.JsonSerializer;
 
 import java.lang.reflect.Type;
 
+/**
+ * Serializer for Json, to support the custom data type {@link NumberString}.
+ */
 public class NumberStringSerializer implements JsonSerializer<NumberString> {
 
     @Override

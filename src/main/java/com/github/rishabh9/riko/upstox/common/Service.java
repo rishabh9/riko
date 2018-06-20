@@ -1,7 +1,7 @@
 package com.github.rishabh9.riko.upstox.common;
 
 import com.github.rishabh9.riko.upstox.common.models.ApiCredentials;
-import com.github.rishabh9.riko.upstox.common.models.AuthHeadersBuilder;
+import com.github.rishabh9.riko.upstox.common.models.AuthHeaders;
 import com.github.rishabh9.riko.upstox.common.models.UpstoxResponse;
 import com.github.rishabh9.riko.upstox.login.models.AccessToken;
 import org.apache.logging.log4j.LogManager;
@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.util.Optional;
 
 /**
- * Parent class for every Service class. Holds some common methods.
+ * Parent class for every Service class. Holds common methods.
  */
 public abstract class Service {
 
@@ -25,11 +25,8 @@ public abstract class Service {
                                       @Nonnull final AccessToken accessToken,
                                       @Nonnull final ApiCredentials credentials) {
 
-        final AuthHeadersBuilder builder = new AuthHeadersBuilder()
-                .withApiKey(credentials.getApiKey())
-                .withToken(accessToken.getType() + " " + accessToken.getToken());
-
-        return ServiceGenerator.createService(type, builder.build());
+        final String token = accessToken.getType() + " " + accessToken.getToken();
+        return ServiceGenerator.createService(type, new AuthHeaders(token, credentials.getApiKey()));
     }
 
     protected <T> Optional<T> completeSynchronousRequest(final Response<UpstoxResponse<T>> response) throws IOException {
