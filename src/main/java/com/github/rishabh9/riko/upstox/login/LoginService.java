@@ -27,8 +27,8 @@ public class LoginService {
      * @return An 'optional' AccessToken. Return object is empty in case of error.
      * @throws IOException on network failure
      */
-    public Optional<AccessToken>
-    getAccessToken(@Nonnull final TokenRequest request, @Nonnull final ApiCredentials credentials)
+    public Optional<AccessToken> getAccessToken(@Nonnull final TokenRequest request,
+                                                @Nonnull final ApiCredentials credentials)
             throws IOException {
 
         if (Strings.isNullOrEmpty(request.getCode())) {
