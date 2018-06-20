@@ -5,14 +5,23 @@ import com.google.common.base.MoreObjects;
 import java.math.BigDecimal;
 import java.util.Objects;
 
+/**
+ * OHLC candle.
+ */
 public class Candle {
 
     private long timestamp;
+
     private BigDecimal open;
+
     private BigDecimal high;
+
     private BigDecimal low;
+
     private BigDecimal close;
+
     private long volume;
+
     private BigDecimal cp;
 
     public long getTimestamp() {

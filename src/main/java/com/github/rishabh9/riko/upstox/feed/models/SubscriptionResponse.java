@@ -8,8 +8,11 @@ import java.util.Objects;
 public class SubscriptionResponse {
 
     private boolean success;
+
     private String exchange;
+
     private List<String> symbol;
+
     private String type;
 
     public boolean isSuccess() {

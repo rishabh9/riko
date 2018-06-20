@@ -10,32 +10,52 @@ import java.util.Objects;
 public class Feed {
 
     private long timestamp;
+
     private String exchange;
+
     private String symbol;
+
     private double ltp;
+
     private double open;
+
     private double high;
+
     private double low;
+
     private double close;
+
     private double vtt;
+
     private double atp;
+
     private String oi;
+
     @SerializedName("spot_price")
     private BigDecimal spotPrice;
+
     @SerializedName("total_buy_qty")
     private long totalBuyQuantity;
+
     @SerializedName("total_sell_qty")
     private long totalSellQuantity;
+
     @SerializedName("lower_circuit")
     private BigDecimal lowerCircuit;
+
     @SerializedName("upper_circuit")
     private BigDecimal upperCircuit;
+
     @SerializedName("yearly_low")
     private BigDecimal yearlyLow;
+
     @SerializedName("yearly_high")
     private BigDecimal yearlyHigh;
+
     private List<BidsAsk> bids;
+
     private List<BidsAsk> ask;
+
     private long ltt;
 
     public long getTimestamp() {

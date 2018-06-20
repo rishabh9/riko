@@ -21,6 +21,8 @@ public class FeedService extends Service {
     private static final Logger log = LogManager.getLogger(FeedService.class);
 
     /**
+     * Get live feed information about a single instrument.
+     *
      * @param accessToken The user's access token
      * @param credentials The user's API credentials
      * @param exchange    Name of the exchange. <em>Mandatory.</em>
@@ -46,6 +48,8 @@ public class FeedService extends Service {
     }
 
     /**
+     * Get live feed information about a single instrument, asynchronously.
+     *
      * @param accessToken The user's access token
      * @param credentials The user's API credentials
      * @param exchange    Name of the exchange. <em>Mandatory.</em>
@@ -74,7 +78,7 @@ public class FeedService extends Service {
      * @param credentials The user's API credentials
      * @param type        'ltp' or 'full'. <em>Either. Mandatory.</em>
      * @param exchange    Name of the exchange. <em>Mandatory.</em>
-     * @param symbolsCsv  Comma seperated list of trading symbols
+     * @param symbolsCsv  Comma separated list of trading symbols
      * @return Confirmation response
      * @throws IOException When an error occurs while making the request.
      */
@@ -101,7 +105,7 @@ public class FeedService extends Service {
      * @param credentials The user's API credentials
      * @param type        'ltp' or 'full'. <em>Either. Mandatory.</em>
      * @param exchange    Name of the exchange. <em>Mandatory.</em>
-     * @param symbolsCsv  Comma seperated list of trading symbols
+     * @param symbolsCsv  Comma separated list of trading symbols
      * @param callMe      The call back interface
      */
     public void subscribeAsync(@Nonnull final AccessToken accessToken,
@@ -125,7 +129,7 @@ public class FeedService extends Service {
      * @param credentials The user's API credentials
      * @param type        'ltp' or 'full'. <em>Either. Mandatory.</em>
      * @param exchange    Name of the exchange. <em>Mandatory.</em>
-     * @param symbolsCsv  Comma seperated list of trading symbols
+     * @param symbolsCsv  Comma separated list of trading symbols
      * @return Confirmation response
      * @throws IOException When an error occurs while making the request.
      */
@@ -152,7 +156,7 @@ public class FeedService extends Service {
      * @param credentials The user's API credentials
      * @param type        'ltp' or 'full'. <em>Either. Mandatory.</em>
      * @param exchange    Name of the exchange. <em>Mandatory.</em>
-     * @param symbolsCsv  Comma seperated list of trading symbols
+     * @param symbolsCsv  Comma separated list of trading symbols
      * @param callMe      The call back interface
      */
     public void unsubscribeAsync(@Nonnull final AccessToken accessToken,
@@ -172,6 +176,7 @@ public class FeedService extends Service {
     private void validatePathParameters(String... values) {
         for (String value : values) {
             if (Strings.isNullOrEmpty(value)) {
+                log.error("Argument validation failed. Arguments 'exchange', 'symbol' and 'type' are mandatory.");
                 throw new IllegalArgumentException(
                         "Arguments 'exchange', 'symbol' and 'type' are mandatory. They cannot be null nor empty.");
             }
