@@ -17,6 +17,8 @@ plugins {
     id "maven-publish"
     // Apply plugin for signing of the jars.
     id "signing"
+    // Apply spotbugs plugin
+    id "com.github.spotbugs" version "1.6.2"
 }
 
 dependencyManagement {
@@ -207,5 +209,20 @@ def customizePom(pom) {
                 }
             }
         }
+    }
+}
+
+spotbugs {
+    ignoreFailures = true
+//    toolVersion = "2.0.1"
+    sourceSets = [sourceSets.main]
+    reportsDir = file("$project.buildDir/reports/findbugs")
+    effort = "max"
+}
+// To generate an HTML report instead of XML
+tasks.withType(com.github.spotbugs.SpotBugsTask) {
+    reports {
+        xml.enabled = false
+        html.enabled = true
     }
 }
