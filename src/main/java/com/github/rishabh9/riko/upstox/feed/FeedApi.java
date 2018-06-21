@@ -11,7 +11,7 @@ import retrofit2.http.Query;
 /**
  * Feed API endpoints declaration.
  */
-interface FeedApi {
+public interface FeedApi {
 
     /**
      * Get live feed information about a single instrument.

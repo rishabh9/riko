@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Historical API endpoints declaration.
  */
-interface HistoricalApi {
+public interface HistoricalApi {
 
     /**
      * Get OHLC data.

@@ -10,11 +10,16 @@ public class Profile {
 
     @SerializedName("client_id")
     private String clientId;
+
     private String name;
+
     private String email;
+
     private String phone;
+
     @SerializedName("exchanges_enabled")
     private Set<String> exchangesEnabled;
+
     @SerializedName("products_enabled")
     private Set<String> productsEnabled;
 

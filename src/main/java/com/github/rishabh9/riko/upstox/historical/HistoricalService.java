@@ -38,8 +38,10 @@ public class HistoricalService extends Service {
      *                    <li><code>1WEEK</code></li>
      *                    <li><code>1MONTH</code></li>
      *                    </ul>
-     * @param startDate   Date in the format: <code>DD-MM-YYYY</code>. Default value is 15 days before today.
-     * @param endDate     Date in the format: <code>DD-MM-YYYY</code>. Default value is today.
+     * @param startDate   Date in the format: <code>DD-MM-YYYY</code>.
+     *                    Default value is 15 days before today.
+     * @param endDate     Date in the format: <code>DD-MM-YYYY</code>.
+     *                    Default value is today.
      * @return List of Candle
      * @throws IOException When an error occurs while making the request.
      */
@@ -52,13 +54,17 @@ public class HistoricalService extends Service {
                                           final String endDate)
             throws IOException {
 
+        log.debug("Validate parameters - GET OHLC");
         validatePathParameters(exchange, symbol);
 
-        HistoricalApi api = prepareServiceApi(HistoricalApi.class, accessToken, credentials);
+        log.debug("Preparing service - GET OHLC");
+        final HistoricalApi api = prepareServiceApi(HistoricalApi.class, accessToken, credentials);
 
-        Response<UpstoxResponse<List<Candle>>> response =
+        log.debug("Making request - GET OHLC");
+        final Response<UpstoxResponse<List<Candle>>> response =
                 api.getOhlc(exchange, symbol, interval, startDate, endDate, "json").execute();
 
+        log.debug("Finishing request - GET OHLC");
         return completeSynchronousRequest(response);
     }
 
@@ -80,8 +86,10 @@ public class HistoricalService extends Service {
      *                    <li><code>1WEEK</code></li>
      *                    <li><code>1MONTH</code></li>
      *                    </ul>
-     * @param startDate   Date in the format: <code>DD-MM-YYYY</code>. Default value is 15 days before today.
-     * @param endDate     Date in the format: <code>DD-MM-YYYY</code>. Default value is today.
+     * @param startDate   Date in the format: <code>DD-MM-YYYY</code>.
+     *                    Default value is 15 days before today.
+     * @param endDate     Date in the format: <code>DD-MM-YYYY</code>.
+     *                    Default value is today.
      * @param callMe      The call back interface
      */
     public void getOhlcAsync(@Nonnull final AccessToken accessToken,
@@ -91,18 +99,22 @@ public class HistoricalService extends Service {
                              final String interval,
                              final String startDate,
                              final String endDate,
-                             CallMe<List<Candle>> callMe) {
+                             final CallMe<List<Candle>> callMe) {
 
+        log.debug("Validate parameters - GET OHLC");
         validatePathParameters(exchange, symbol);
 
-        HistoricalApi api = prepareServiceApi(HistoricalApi.class, accessToken, credentials);
+        log.debug("Preparing async service - GET OHLC");
+        final HistoricalApi api = prepareServiceApi(HistoricalApi.class, accessToken, credentials);
 
+        log.debug("Setting up callback interface - GET OHLC");
         api.getOhlc(exchange, symbol, interval, startDate, endDate, "json").enqueue(prepareCallback(callMe));
     }
 
     private void validatePathParameters(String... values) {
         for (String value : values) {
             if (Strings.isNullOrEmpty(value)) {
+                log.error("Argument validation failed. Arguments 'exchange' and 'symbol' are mandatory.");
                 throw new IllegalArgumentException(
                         "Arguments 'exchange' and 'symbol' are mandatory. They cannot be null nor empty.");
             }

@@ -21,7 +21,7 @@ public abstract class Service {
 
     private static final Logger log = LogManager.getLogger(Service.class);
 
-    protected <T> T prepareServiceApi(@Nonnull Class<T> type,
+    protected <T> T prepareServiceApi(@Nonnull final Class<T> type,
                                       @Nonnull final AccessToken accessToken,
                                       @Nonnull final ApiCredentials credentials) {
 
@@ -29,13 +29,14 @@ public abstract class Service {
         return ServiceGenerator.createService(type, new AuthHeaders(token, credentials.getApiKey()));
     }
 
-    protected <T> Optional<T> completeSynchronousRequest(final Response<UpstoxResponse<T>> response) throws IOException {
+    protected <T> Optional<T> completeSynchronousRequest(final Response<UpstoxResponse<T>> response)
+            throws IOException {
 
         log.debug("Request to retrieve profile was {}. HTTP response code: {}.",
                 response.isSuccessful() ? "successful" : "unsuccessful",
                 response.code());
 
-        if (response.isSuccessful()) {
+        if (response.isSuccessful() && null != response.body()) {
             return Optional.ofNullable(response.body().getData());
         }
 

@@ -48,6 +48,8 @@ public class ServiceGenerator {
      * @return The retrofitted service
      */
     public static <S> S createService(@Nonnull final Class<S> serviceClass) {
+
+        log.debug("Creating service without authentication");
         return createService(serviceClass, null, null);
     }
 
@@ -66,7 +68,8 @@ public class ServiceGenerator {
 
         if (!Strings.isNullOrEmpty(username)
                 && !Strings.isNullOrEmpty(password)) {
-            String authToken = Credentials.basic(username, password);
+            final String authToken = Credentials.basic(username, password);
+            log.debug("Creating service with Basic authentication");
             return createService(serviceClass, new AuthHeaders(authToken, username));
         }
         // Setup request headers without any auth
@@ -81,34 +84,41 @@ public class ServiceGenerator {
      * @param <S>          The type of Service
      * @return The retrofitted service
      */
-    public static <S> S createService(@Nonnull final Class<S> serviceClass, @Nullable final AuthHeaders headers) {
+    public static <S> S createService(@Nonnull final Class<S> serviceClass,
+                                      @Nullable final AuthHeaders headers) {
+
         enableAuthentication(headers);
         if (log.isDebugEnabled()) {
             enableHttpLogging();
         }
+        log.debug("Creating service with authorization headers");
         return retrofit.create(serviceClass);
     }
 
     private static void enableAuthentication(final AuthHeaders headers) {
+
         if (null != headers
                 && !Strings.isNullOrEmpty(headers.getToken())
                 && !Strings.isNullOrEmpty(headers.getApiKey())) {
 
+            log.debug("Adding auth headers interceptor");
             addInterceptor(
                     new AuthenticationInterceptor(
-                            headers.getToken(),
-                            headers.getApiKey()));
+                            headers.getToken(), headers.getApiKey()));
         }
     }
 
     private static void enableHttpLogging() {
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+
+        final HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         // Set the desired log level
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        log.debug("Adding HTTP logging interceptor");
         addInterceptor(interceptor);
     }
 
     private static void addInterceptor(Interceptor interceptor) {
+
         if (!httpClient.interceptors().contains(interceptor)) {
             httpClient.addInterceptor(interceptor);
 

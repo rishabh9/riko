@@ -22,7 +22,7 @@ public class UsersService extends Service {
     private static final Logger log = LogManager.getLogger(UsersService.class);
 
     /**
-     * Retrieves the user's profile synchronously
+     * Retrieves the user's profile
      *
      * @param accessToken The user's access token
      * @param credentials The user's API credentials
@@ -33,10 +33,13 @@ public class UsersService extends Service {
                                         @Nonnull final ApiCredentials credentials)
             throws IOException {
 
-        UsersApi api = prepareServiceApi(UsersApi.class, accessToken, credentials);
+        log.debug("Preparing service - GET Profile");
+        final UsersApi api = prepareServiceApi(UsersApi.class, accessToken, credentials);
 
-        Response<UpstoxResponse<Profile>> response = api.getProfile().execute();
+        log.debug("Making request - GET Profile");
+        final Response<UpstoxResponse<Profile>> response = api.getProfile().execute();
 
+        log.debug("Finishing request - GET Profile");
         return completeSynchronousRequest(response);
     }
 
@@ -51,8 +54,10 @@ public class UsersService extends Service {
                                 @Nonnull final ApiCredentials credentials,
                                 @Nonnull final CallMe<Profile> callMe) {
 
-        UsersApi api = prepareServiceApi(UsersApi.class, accessToken, credentials);
+        log.debug("Preparing async service - GET Profile");
+        final UsersApi api = prepareServiceApi(UsersApi.class, accessToken, credentials);
 
+        log.debug("Setting up callback interface - GET Profile");
         api.getProfile().enqueue(prepareCallback(callMe));
     }
 
@@ -70,10 +75,14 @@ public class UsersService extends Service {
                                                       @Nullable final String accountType)
             throws IOException {
 
-        UsersApi api = prepareServiceApi(UsersApi.class, accessToken, credentials);
+        log.debug("Preparing service - GET Profile Balance");
+        final UsersApi api = prepareServiceApi(UsersApi.class, accessToken, credentials);
 
-        Response<UpstoxResponse<ProfileBalance>> response = api.getProfileBalance(accountType).execute();
+        log.debug("Making request - GET Profile Balance");
+        final Response<UpstoxResponse<ProfileBalance>> response =
+                api.getProfileBalance(accountType).execute();
 
+        log.debug("Finishing request - GET Profile Balance");
         return completeSynchronousRequest(response);
     }
 
@@ -90,8 +99,10 @@ public class UsersService extends Service {
                                        @Nullable final String accountType,
                                        @Nonnull final CallMe<ProfileBalance> callMe) {
 
-        UsersApi api = prepareServiceApi(UsersApi.class, accessToken, credentials);
+        log.debug("Preparing async service - GET Profile Balance");
+        final UsersApi api = prepareServiceApi(UsersApi.class, accessToken, credentials);
 
+        log.debug("Setting up callback interface - GET Profile Balance");
         api.getProfileBalance(accountType).enqueue(prepareCallback(callMe));
     }
 
@@ -107,10 +118,13 @@ public class UsersService extends Service {
                                                  @Nonnull final ApiCredentials credentials)
             throws IOException {
 
-        UsersApi api = prepareServiceApi(UsersApi.class, accessToken, credentials);
+        log.debug("Preparing service - GET Positions");
+        final UsersApi api = prepareServiceApi(UsersApi.class, accessToken, credentials);
 
-        Response<UpstoxResponse<List<Position>>> response = api.getPositions().execute();
+        log.debug("Making request - GET Positions");
+        final Response<UpstoxResponse<List<Position>>> response = api.getPositions().execute();
 
+        log.debug("Finishing request - GET Positions");
         return completeSynchronousRequest(response);
     }
 
@@ -125,8 +139,10 @@ public class UsersService extends Service {
                                   @Nonnull final ApiCredentials credentials,
                                   @Nonnull final CallMe<List<Position>> callMe) {
 
-        UsersApi api = prepareServiceApi(UsersApi.class, accessToken, credentials);
+        log.debug("Preparing async service - GET Positions");
+        final UsersApi api = prepareServiceApi(UsersApi.class, accessToken, credentials);
 
+        log.debug("Setting up callback interface - GET Positions");
         api.getPositions().enqueue(prepareCallback(callMe));
     }
 
@@ -142,10 +158,13 @@ public class UsersService extends Service {
                                                @Nonnull final ApiCredentials credentials)
             throws IOException {
 
-        UsersApi api = prepareServiceApi(UsersApi.class, accessToken, credentials);
+        log.debug("Preparing service - GET Holdings");
+        final UsersApi api = prepareServiceApi(UsersApi.class, accessToken, credentials);
 
-        Response<UpstoxResponse<List<Holding>>> response = api.getHoldings().execute();
+        log.debug("Making request - GET Holdings");
+        final Response<UpstoxResponse<List<Holding>>> response = api.getHoldings().execute();
 
+        log.debug("Finishing request - GET Holdings");
         return completeSynchronousRequest(response);
     }
 
@@ -160,8 +179,10 @@ public class UsersService extends Service {
                                  @Nonnull final ApiCredentials credentials,
                                  @Nonnull final CallMe<List<Holding>> callMe) {
 
-        UsersApi api = prepareServiceApi(UsersApi.class, accessToken, credentials);
+        log.debug("Preparing async service - GET Holdings");
+        final UsersApi api = prepareServiceApi(UsersApi.class, accessToken, credentials);
 
+        log.debug("Setting up callback interface - GET Holdings");
         api.getHoldings().enqueue(prepareCallback(callMe));
     }
 
@@ -182,22 +203,26 @@ public class UsersService extends Service {
      *                    <li><code>mcx_fo</code> - MCX Futures</li>
      *                    </ul>
      * @throws IllegalArgumentException if exchange is not specified.
-     *
-     * @implNote
-     * The CSV is returned as list of strings.
-     * The first item in the list are the headers for the CSV. Rest of the items are the individual records.
+     * @implNote The CSV is returned as list of strings.
+     * The first item in the list are the headers for the CSV.
+     * Rest of the items are the individual records.
      */
-    public Optional<List<String>> getMasterContracts(@Nonnull final AccessToken accessToken,
-                                                     @Nonnull final ApiCredentials credentials,
-                                                     @Nonnull final String exchange)
+    public Optional<List<String>> getAllMasterContracts(@Nonnull final AccessToken accessToken,
+                                                        @Nonnull final ApiCredentials credentials,
+                                                        @Nonnull final String exchange)
             throws IOException {
 
+        log.debug("Validate parameters - GET All Contracts");
         validateExchange(exchange);
 
-        UsersApi api = prepareServiceApi(UsersApi.class, accessToken, credentials);
+        log.debug("Preparing service - GET All Contracts");
+        final UsersApi api = prepareServiceApi(UsersApi.class, accessToken, credentials);
 
-        Response<UpstoxResponse<List<String>>> response = api.getMasterContracts(exchange).execute();
+        log.debug("Making request - GET All Contracts");
+        final Response<UpstoxResponse<List<String>>> response =
+                api.getAllMasterContracts(exchange).execute();
 
+        log.debug("Finishing request - GET All Contracts");
         return completeSynchronousRequest(response);
     }
 
@@ -219,21 +244,23 @@ public class UsersService extends Service {
      *                    </ul>
      * @param callMe      The call back interface
      * @throws IllegalArgumentException if exchange is not specified.
-     *
-     * @implNote
-     * The CSV is returned as list of strings.
-     * The first item in the list are the headers for the CSV. Rest of the items are the individual records.
+     * @implNote The CSV is returned as list of strings.
+     * The first item in the list are the headers for the CSV.
+     * Rest of the items are the individual records.
      */
-    public void getMasterContractsAsync(@Nonnull final AccessToken accessToken,
-                                        @Nonnull final ApiCredentials credentials,
-                                        @Nonnull final String exchange,
-                                        @Nonnull final CallMe<List<String>> callMe) {
+    public void getAllMasterContractsAsync(@Nonnull final AccessToken accessToken,
+                                           @Nonnull final ApiCredentials credentials,
+                                           @Nonnull final String exchange,
+                                           @Nonnull final CallMe<List<String>> callMe) {
 
+        log.debug("Validate parameters - GET All Contracts");
         validateExchange(exchange);
 
-        UsersApi api = prepareServiceApi(UsersApi.class, accessToken, credentials);
+        log.debug("Preparing async service - GET All Contracts");
+        final UsersApi api = prepareServiceApi(UsersApi.class, accessToken, credentials);
 
-        api.getMasterContracts(exchange).enqueue(prepareCallback(callMe));
+        log.debug("Setting up callback interface - GET All Contracts");
+        api.getAllMasterContracts(exchange).enqueue(prepareCallback(callMe));
     }
 
     /**
@@ -252,10 +279,11 @@ public class UsersService extends Service {
      *                    <li><code>ncd_fo</code> - NSE Currency Futures & Options</li>
      *                    <li><code>mcx_fo</code> - MCX Futures</li>
      *                    </ul>
-     * @param symbol      Trading symbol which could be a combination of symbol name, instrument, expiry date, etc.
-     *                    Optional if token is provided.
+     * @param symbol      Trading symbol which could be a combination of symbol name,
+     *                    instrument, expiry date, etc. Optional if token is provided.
      * @param token       Unique indentifier within an exchange. Optional, if symbol is provided.
-     * @throws IllegalArgumentException if exchange is not specified. Also, if both symbol and token are null or empty.
+     * @throws IllegalArgumentException if exchange is not specified.
+     *                                  Also, if both symbol and token are null or empty.
      */
     public Optional<Contract> getMasterContract(@Nonnull final AccessToken accessToken,
                                                 @Nonnull final ApiCredentials credentials,
@@ -264,13 +292,18 @@ public class UsersService extends Service {
                                                 @Nullable final String token)
             throws IOException {
 
+        log.debug("Validate parameters - GET Contract");
         validateExchange(exchange);
         validateSymbolAndToken(symbol, token);
 
-        UsersApi api = prepareServiceApi(UsersApi.class, accessToken, credentials);
+        log.debug("Preparing service - GET Contract");
+        final UsersApi api = prepareServiceApi(UsersApi.class, accessToken, credentials);
 
-        Response<UpstoxResponse<Contract>> response = api.getMasterContract(exchange, symbol, token).execute();
+        log.debug("Making request - GET Contract");
+        final Response<UpstoxResponse<Contract>> response =
+                api.getMasterContract(exchange, symbol, token).execute();
 
+        log.debug("Finishing request - GET Master Contract");
         return completeSynchronousRequest(response);
     }
 
@@ -290,11 +323,12 @@ public class UsersService extends Service {
      *                    <li><code>ncd_fo</code> - NSE Currency Futures & Options</li>
      *                    <li><code>mcx_fo</code> - MCX Futures</li>
      *                    </ul>
-     * @param symbol      Trading symbol which could be a combination of symbol name, instrument, expiry date, etc.
-     *                    Optional if token is provided.
-     * @param token       Unique indentifier within an exchange. Optional, if symbol is provided.
+     * @param symbol      Trading symbol which could be a combination of symbol name, instrument,
+     *                    expiry date, etc. Optional if token is provided.
+     * @param token       Unique identifier within an exchange. Optional, if symbol is provided.
      * @param callMe      The call back interface
-     * @throws IllegalArgumentException if exchange is not specified. Also, if both symbol and token are null or empty.
+     * @throws IllegalArgumentException if exchange is not specified.
+     *                                  Also, if both symbol and token are null or empty.
      */
     public void getMasterContractAsync(@Nonnull final AccessToken accessToken,
                                        @Nonnull final ApiCredentials credentials,
@@ -303,22 +337,27 @@ public class UsersService extends Service {
                                        @Nullable final String token,
                                        @Nonnull final CallMe<Contract> callMe) {
 
+        log.debug("Validate parameters - GET Contract");
         validateExchange(exchange);
         validateSymbolAndToken(symbol, token);
 
-        UsersApi api = prepareServiceApi(UsersApi.class, accessToken, credentials);
+        log.debug("Preparing async service - GET Contract");
+        final UsersApi api = prepareServiceApi(UsersApi.class, accessToken, credentials);
 
+        log.debug("Setting up callback interface - GET Contract");
         api.getMasterContract(exchange, symbol, token).enqueue(prepareCallback(callMe));
     }
 
     private void validateSymbolAndToken(final String symbol, final String token) {
         if (Strings.isNullOrEmpty(symbol) && Strings.isNullOrEmpty(token)) {
+            log.error("Argument validation failed. Either 'symbol' or 'token' must be specified.");
             throw new IllegalArgumentException("Provide either the 'symbol' or 'token'. Both cannot be null nor empty.");
         }
     }
 
     private void validateExchange(@Nonnull String exchange) {
         if (Strings.isNullOrEmpty(exchange)) {
+            log.error("Argument validation failed. Argument 'exchange' is mandatory.");
             throw new IllegalArgumentException("Argument 'exchange' is mandatory. It cannot be null nor empty.");
         }
     }

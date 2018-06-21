@@ -7,6 +7,7 @@ import java.util.Objects;
 public class ProfileBalance {
 
     private Balance equity;
+
     private Balance commodity;
 
     public Balance getEquity() {

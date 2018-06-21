@@ -38,12 +38,17 @@ public class FeedService extends Service {
                                    @Nonnull final String type)
             throws IOException {
 
+        log.debug("Validate parameters - GET Live Feed");
         validatePathParameters(exchange, symbol, type);
 
-        FeedApi api = prepareServiceApi(FeedApi.class, accessToken, credentials);
+        log.debug("Preparing service - GET Live Feed");
+        final FeedApi api = prepareServiceApi(FeedApi.class, accessToken, credentials);
 
-        Response<UpstoxResponse<Feed>> response = api.liveFeed(exchange, symbol, type).execute();
+        log.debug("Making request - GET Live Feed");
+        final Response<UpstoxResponse<Feed>> response =
+                api.liveFeed(exchange, symbol, type).execute();
 
+        log.debug("Finishing request - GET Live Feed");
         return completeSynchronousRequest(response);
     }
 
@@ -64,10 +69,13 @@ public class FeedService extends Service {
                               @Nonnull final String type,
                               @Nonnull final CallMe<Feed> callMe) {
 
+        log.debug("Validate parameters - GET Live Feed");
         validatePathParameters(exchange, symbol, type);
 
-        FeedApi api = prepareServiceApi(FeedApi.class, accessToken, credentials);
+        log.debug("Preparing async service - GET Live Feed");
+        final FeedApi api = prepareServiceApi(FeedApi.class, accessToken, credentials);
 
+        log.debug("Setting up callback interface - GET Live Feed");
         api.liveFeed(exchange, symbol, type).enqueue(prepareCallback(callMe));
     }
 
@@ -89,12 +97,17 @@ public class FeedService extends Service {
                                                     @Nonnull final String symbolsCsv)
             throws IOException {
 
+        log.debug("Validate parameters - GET Subscribe");
         validatePathParameters(exchange, type);
 
-        FeedApi api = prepareServiceApi(FeedApi.class, accessToken, credentials);
+        log.debug("Preparing service - GET Subscribe");
+        final FeedApi api = prepareServiceApi(FeedApi.class, accessToken, credentials);
 
-        Response<UpstoxResponse<SubscriptionResponse>> response = api.subscribe(type, exchange, symbolsCsv).execute();
+        log.debug("Making request - GET Subscribe");
+        final Response<UpstoxResponse<SubscriptionResponse>> response =
+                api.subscribe(type, exchange, symbolsCsv).execute();
 
+        log.debug("Finishing request - GET Subscribe");
         return completeSynchronousRequest(response);
     }
 
@@ -115,10 +128,13 @@ public class FeedService extends Service {
                                @Nonnull final String symbolsCsv,
                                @Nonnull final CallMe<SubscriptionResponse> callMe) {
 
+        log.debug("Validate parameters - GET Subscribe");
         validatePathParameters(exchange, type);
 
-        FeedApi api = prepareServiceApi(FeedApi.class, accessToken, credentials);
+        log.debug("Preparing async service - GET Subscribe");
+        final FeedApi api = prepareServiceApi(FeedApi.class, accessToken, credentials);
 
+        log.debug("Setting up callback interface - GET Subscribe");
         api.subscribe(type, exchange, symbolsCsv).enqueue(prepareCallback(callMe));
     }
 
@@ -140,12 +156,17 @@ public class FeedService extends Service {
                                                       @Nonnull final String symbolsCsv)
             throws IOException {
 
+        log.debug("Validate parameters - GET Unsubscribe");
         validatePathParameters(exchange, type);
 
-        FeedApi api = prepareServiceApi(FeedApi.class, accessToken, credentials);
+        log.debug("Preparing service - GET Unsubscribe");
+        final FeedApi api = prepareServiceApi(FeedApi.class, accessToken, credentials);
 
-        Response<UpstoxResponse<SubscriptionResponse>> response = api.unsubscribe(type, exchange, symbolsCsv).execute();
+        log.debug("Making request - GET Unsubscribe");
+        final Response<UpstoxResponse<SubscriptionResponse>> response =
+                api.unsubscribe(type, exchange, symbolsCsv).execute();
 
+        log.debug("Finishing request - GET Unsubscribe");
         return completeSynchronousRequest(response);
     }
 
@@ -166,19 +187,24 @@ public class FeedService extends Service {
                                  @Nonnull final String symbolsCsv,
                                  @Nonnull final CallMe<SubscriptionResponse> callMe) {
 
+        log.debug("Validate parameters - GET Unsubscribe");
         validatePathParameters(exchange, type);
 
-        FeedApi api = prepareServiceApi(FeedApi.class, accessToken, credentials);
+        log.debug("Preparing async service - GET Unsubscribe");
+        final FeedApi api = prepareServiceApi(FeedApi.class, accessToken, credentials);
 
+        log.debug("Setting up callback interface - GET Unsubscribe");
         api.unsubscribe(type, exchange, symbolsCsv).enqueue(prepareCallback(callMe));
     }
 
     private void validatePathParameters(String... values) {
         for (String value : values) {
             if (Strings.isNullOrEmpty(value)) {
-                log.error("Argument validation failed. Arguments 'exchange', 'symbol' and 'type' are mandatory.");
+                log.error("Argument validation failed. " +
+                        "Arguments 'exchange', 'symbol' and 'type' are mandatory.");
                 throw new IllegalArgumentException(
-                        "Arguments 'exchange', 'symbol' and 'type' are mandatory. They cannot be null nor empty.");
+                        "Arguments 'exchange', 'symbol' and 'type' are mandatory. " +
+                                "They cannot be null nor empty.");
             }
         }
     }

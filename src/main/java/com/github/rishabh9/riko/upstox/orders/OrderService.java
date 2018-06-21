@@ -34,10 +34,13 @@ public class OrderService extends Service {
                                                  @Nonnull final ApiCredentials credentials)
             throws IOException {
 
-        OrderApi api = prepareServiceApi(OrderApi.class, accessToken, credentials);
+        log.debug("Preparing service - GET Order History");
+        final OrderApi api = prepareServiceApi(OrderApi.class, accessToken, credentials);
 
-        Response<UpstoxResponse<List<Order>>> response = api.getOrderHistory().execute();
+        log.debug("Making request - GET Order History");
+        final Response<UpstoxResponse<List<Order>>> response = api.getOrderHistory().execute();
 
+        log.debug("Finishing request - GET Order History");
         return completeSynchronousRequest(response);
     }
 
@@ -52,8 +55,10 @@ public class OrderService extends Service {
                                      @Nonnull final ApiCredentials credentials,
                                      @Nonnull final CallMe<List<Order>> callMe) {
 
-        OrderApi api = prepareServiceApi(OrderApi.class, accessToken, credentials);
+        log.debug("Preparing async service - GET Order History");
+        final OrderApi api = prepareServiceApi(OrderApi.class, accessToken, credentials);
 
+        log.debug("Setting up callback interface - GET Order History");
         api.getOrderHistory().enqueue(prepareCallback(callMe));
     }
 
@@ -71,12 +76,16 @@ public class OrderService extends Service {
                                                  @Nonnull final String orderId)
             throws IOException {
 
+        log.debug("Validate parameters - GET Order Details");
         validateOrderId(orderId);
 
-        OrderApi api = prepareServiceApi(OrderApi.class, accessToken, credentials);
+        log.debug("Preparing service - GET Order Details");
+        final OrderApi api = prepareServiceApi(OrderApi.class, accessToken, credentials);
 
-        Response<UpstoxResponse<List<Order>>> response = api.getOrderDetails(orderId).execute();
+        log.debug("Making request - GET Order Details");
+        final Response<UpstoxResponse<List<Order>>> response = api.getOrderDetails(orderId).execute();
 
+        log.debug("Finishing request - GET Order Details");
         return completeSynchronousRequest(response);
     }
 
@@ -93,10 +102,13 @@ public class OrderService extends Service {
                                      @Nonnull final String orderId,
                                      @Nonnull final CallMe<List<Order>> callMe) {
 
+        log.debug("Validate parameters - GET Order Details");
         validateOrderId(orderId);
 
-        OrderApi api = prepareServiceApi(OrderApi.class, accessToken, credentials);
+        log.debug("Preparing async service - GET Order Details");
+        final OrderApi api = prepareServiceApi(OrderApi.class, accessToken, credentials);
 
+        log.debug("Setting up callback interface - GET Order Details");
         api.getOrderDetails(orderId).enqueue(prepareCallback(callMe));
     }
 
@@ -112,10 +124,13 @@ public class OrderService extends Service {
                                               @Nonnull final ApiCredentials credentials)
             throws IOException {
 
-        OrderApi api = prepareServiceApi(OrderApi.class, accessToken, credentials);
+        log.debug("Preparing service - GET Trade Book");
+        final OrderApi api = prepareServiceApi(OrderApi.class, accessToken, credentials);
 
-        Response<UpstoxResponse<List<Trade>>> response = api.getTradeBook().execute();
+        log.debug("Making request - GET Trade Book");
+        final Response<UpstoxResponse<List<Trade>>> response = api.getTradeBook().execute();
 
+        log.debug("Finishing request - GET Trade Book");
         return completeSynchronousRequest(response);
     }
 
@@ -130,8 +145,10 @@ public class OrderService extends Service {
                                   @Nonnull final ApiCredentials credentials,
                                   @Nonnull final CallMe<List<Trade>> callMe) {
 
-        OrderApi api = prepareServiceApi(OrderApi.class, accessToken, credentials);
+        log.debug("Preparing async service - GET Trade Book");
+        final OrderApi api = prepareServiceApi(OrderApi.class, accessToken, credentials);
 
+        log.debug("Setting up callback interface - GET Trade Book");
         api.getTradeBook().enqueue(prepareCallback(callMe));
     }
 
@@ -150,12 +167,16 @@ public class OrderService extends Service {
                                                  @Nonnull final String orderId)
             throws IOException {
 
+        log.debug("Validate parameters - GET Trade History");
         validateOrderId(orderId);
 
-        OrderApi api = prepareServiceApi(OrderApi.class, accessToken, credentials);
+        log.debug("Preparing service - GET Trade History");
+        final OrderApi api = prepareServiceApi(OrderApi.class, accessToken, credentials);
 
-        Response<UpstoxResponse<List<Trade>>> response = api.getTradeHistory(orderId).execute();
+        log.debug("Making request - GET Trade History");
+        final Response<UpstoxResponse<List<Trade>>> response = api.getTradeHistory(orderId).execute();
 
+        log.debug("Finishing request - GET Trade History");
         return completeSynchronousRequest(response);
     }
 
@@ -172,10 +193,13 @@ public class OrderService extends Service {
                                      @Nonnull final String orderId,
                                      @Nonnull final CallMe<List<Trade>> callMe) {
 
+        log.debug("Validate parameters - GET Trade History");
         validateOrderId(orderId);
 
-        OrderApi api = prepareServiceApi(OrderApi.class, accessToken, credentials);
+        log.debug("Preparing async service - GET Trade History");
+        final OrderApi api = prepareServiceApi(OrderApi.class, accessToken, credentials);
 
+        log.debug("Setting up callback interface - GET Trade History");
         api.getTradeHistory(orderId).enqueue(prepareCallback(callMe));
     }
 
@@ -193,10 +217,13 @@ public class OrderService extends Service {
                                       @Nonnull final OrderRequest request)
             throws IOException {
 
-        OrderApi api = prepareServiceApi(OrderApi.class, accessToken, credentials);
+        log.debug("Preparing service - POST Place Order");
+        final OrderApi api = prepareServiceApi(OrderApi.class, accessToken, credentials);
 
-        Response<UpstoxResponse<Order>> response = api.placeOrder(request).execute();
+        log.debug("Making request - POST Place Order");
+        final Response<UpstoxResponse<Order>> response = api.placeOrder(request).execute();
 
+        log.debug("Finishing request - POST Place Order");
         return completeSynchronousRequest(response);
     }
 
@@ -213,8 +240,10 @@ public class OrderService extends Service {
                                 @Nonnull final OrderRequest request,
                                 @Nonnull final CallMe<Order> callMe) {
 
-        OrderApi api = prepareServiceApi(OrderApi.class, accessToken, credentials);
+        log.debug("Preparing async service - POST Place Order");
+        final OrderApi api = prepareServiceApi(OrderApi.class, accessToken, credentials);
 
+        log.debug("Setting up callback interface - POST Place Order");
         api.placeOrder(request).enqueue(prepareCallback(callMe));
     }
 
@@ -234,12 +263,16 @@ public class OrderService extends Service {
                                        @Nonnull final OrderRequest request)
             throws IOException {
 
+        log.debug("Validate parameters - PUT Place Order");
         validateOrderId(orderId);
 
-        OrderApi api = prepareServiceApi(OrderApi.class, accessToken, credentials);
+        log.debug("Preparing service - PUT Place Order");
+        final OrderApi api = prepareServiceApi(OrderApi.class, accessToken, credentials);
 
-        Response<UpstoxResponse<Order>> response = api.modifyOrder(orderId, request).execute();
+        log.debug("Making request - PUT Place Order");
+        final Response<UpstoxResponse<Order>> response = api.modifyOrder(orderId, request).execute();
 
+        log.debug("Finishing request - PUT Place Order");
         return completeSynchronousRequest(response);
     }
 
@@ -258,10 +291,13 @@ public class OrderService extends Service {
                                  @Nonnull final OrderRequest request,
                                  @Nonnull final CallMe<Order> callMe) {
 
+        log.debug("Validate parameters - PUT Place Order");
         validateOrderId(orderId);
 
-        OrderApi api = prepareServiceApi(OrderApi.class, accessToken, credentials);
+        log.debug("Preparing async service - PUT Place Order");
+        final OrderApi api = prepareServiceApi(OrderApi.class, accessToken, credentials);
 
+        log.debug("Setting up callback interface - PUT Place Order");
         api.modifyOrder(orderId, request).enqueue(prepareCallback(callMe));
     }
 
@@ -279,12 +315,16 @@ public class OrderService extends Service {
                                          @Nonnull final String orderIdsCsv)
             throws IOException {
 
+        log.debug("Validate parameters - DELETE Orders");
         validateOrderId(orderIdsCsv);
 
-        OrderApi api = prepareServiceApi(OrderApi.class, accessToken, credentials);
+        log.debug("Preparing service - DELETE Orders");
+        final OrderApi api = prepareServiceApi(OrderApi.class, accessToken, credentials);
 
-        Response<UpstoxResponse<String>> response = api.cancelOrders(orderIdsCsv).execute();
+        log.debug("Making request - DELETE Orders");
+        final Response<UpstoxResponse<String>> response = api.cancelOrders(orderIdsCsv).execute();
 
+        log.debug("Finishing request - DELETE Orders");
         return completeSynchronousRequest(response);
     }
 
@@ -301,10 +341,13 @@ public class OrderService extends Service {
                                   @Nonnull final String orderIdsCsv,
                                   @Nonnull final CallMe<String> callMe) {
 
+        log.debug("Validate parameters - DELETE Orders");
         validateOrderId(orderIdsCsv);
 
-        OrderApi api = prepareServiceApi(OrderApi.class, accessToken, credentials);
+        log.debug("Preparing async service - DELETE Orders");
+        final OrderApi api = prepareServiceApi(OrderApi.class, accessToken, credentials);
 
+        log.debug("Setting up callback interface - DELETE Orders");
         api.cancelOrders(orderIdsCsv).enqueue(prepareCallback(callMe));
     }
 
@@ -320,10 +363,13 @@ public class OrderService extends Service {
                                             @Nonnull final ApiCredentials credentials)
             throws IOException {
 
+        log.debug("Preparing service - DELETE All Orders");
         OrderApi api = prepareServiceApi(OrderApi.class, accessToken, credentials);
 
-        Response<UpstoxResponse<String>> response = api.cancelAllOrders().execute();
+        log.debug("Making request - DELETE All Orders");
+        final Response<UpstoxResponse<String>> response = api.cancelAllOrders().execute();
 
+        log.debug("Finishing request - DELETE All Orders");
         return completeSynchronousRequest(response);
     }
 
@@ -338,13 +384,16 @@ public class OrderService extends Service {
                                      @Nonnull final ApiCredentials credentials,
                                      @Nonnull final CallMe<String> callMe) {
 
-        OrderApi api = prepareServiceApi(OrderApi.class, accessToken, credentials);
+        log.debug("Preparing async service - DELETE All Orders");
+        final OrderApi api = prepareServiceApi(OrderApi.class, accessToken, credentials);
 
+        log.debug("Setting up callback interface - DELETE All Orders");
         api.cancelAllOrders().enqueue(prepareCallback(callMe));
     }
 
     private void validateOrderId(@Nonnull String orderId) {
         if (Strings.isNullOrEmpty(orderId)) {
+            log.error("Argument validation failed. Argument 'orderId' is mandatory.");
             throw new IllegalArgumentException("Argument 'orderId' is mandatory. It cannot be null nor empty.");
         }
     }
