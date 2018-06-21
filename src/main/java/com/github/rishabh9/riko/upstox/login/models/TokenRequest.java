@@ -20,7 +20,7 @@ public class TokenRequest {
         return code;
     }
 
-    TokenRequest(@Nonnull String code, @Nonnull String grantType, @Nonnull String redirectUri) {
+    public TokenRequest(@Nonnull String code, @Nonnull String grantType, @Nonnull String redirectUri) {
         this.code = code;
         this.grantType = grantType;
         this.redirectUri = redirectUri;
