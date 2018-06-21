@@ -21,9 +21,15 @@ public abstract class Service {
 
     private static final Logger log = LogManager.getLogger(Service.class);
 
-    protected <T> T prepareServiceApi(@Nonnull final Class<T> type,
-                                      @Nonnull final AccessToken accessToken,
-                                      @Nonnull final ApiCredentials credentials) {
+    private final AccessToken accessToken;
+    private final ApiCredentials credentials;
+
+    public Service(@Nonnull final AccessToken accessToken, @Nonnull final ApiCredentials credentials) {
+        this.accessToken = accessToken;
+        this.credentials = credentials;
+    }
+
+    protected <T> T prepareServiceApi(@Nonnull final Class<T> type) {
 
         final String token = accessToken.getType() + " " + accessToken.getToken();
         return ServiceGenerator.createService(type, new AuthHeaders(token, credentials.getApiKey()));

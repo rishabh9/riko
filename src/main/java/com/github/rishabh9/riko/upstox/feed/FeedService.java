@@ -21,19 +21,23 @@ public class FeedService extends Service {
     private static final Logger log = LogManager.getLogger(FeedService.class);
 
     /**
-     * Get live feed information about a single instrument.
-     *
      * @param accessToken The user's access token
      * @param credentials The user's API credentials
-     * @param exchange    Name of the exchange. <em>Mandatory.</em>
-     * @param symbol      Trading symbol. <em>Mandatory.</em>
-     * @param type        'ltp' or 'full'. <em>Either. Mandatory.</em>
+     */
+    public FeedService(@Nonnull AccessToken accessToken, @Nonnull ApiCredentials credentials) {
+        super(accessToken, credentials);
+    }
+
+    /**
+     * Get live feed information about a single instrument.
+     *
+     * @param exchange Name of the exchange. <em>Mandatory.</em>
+     * @param symbol   Trading symbol. <em>Mandatory.</em>
+     * @param type     'ltp' or 'full'. <em>Either. Mandatory.</em>
      * @return Instant of a live Feed
      * @throws IOException When an error occurs while making the request.
      */
-    public Optional<Feed> liveFeed(@Nonnull final AccessToken accessToken,
-                                   @Nonnull final ApiCredentials credentials,
-                                   @Nonnull final String exchange,
+    public Optional<Feed> liveFeed(@Nonnull final String exchange,
                                    @Nonnull final String symbol,
                                    @Nonnull final String type)
             throws IOException {
@@ -42,7 +46,7 @@ public class FeedService extends Service {
         validatePathParameters(exchange, symbol, type);
 
         log.debug("Preparing service - GET Live Feed");
-        final FeedApi api = prepareServiceApi(FeedApi.class, accessToken, credentials);
+        final FeedApi api = prepareServiceApi(FeedApi.class);
 
         log.debug("Making request - GET Live Feed");
         final Response<UpstoxResponse<Feed>> response =
@@ -55,16 +59,12 @@ public class FeedService extends Service {
     /**
      * Get live feed information about a single instrument, asynchronously.
      *
-     * @param accessToken The user's access token
-     * @param credentials The user's API credentials
-     * @param exchange    Name of the exchange. <em>Mandatory.</em>
-     * @param symbol      Trading symbol. <em>Mandatory.</em>
-     * @param type        'ltp' or 'full'. <em>Either. Mandatory.</em>
-     * @param callMe      The call back interface
+     * @param exchange Name of the exchange. <em>Mandatory.</em>
+     * @param symbol   Trading symbol. <em>Mandatory.</em>
+     * @param type     'ltp' or 'full'. <em>Either. Mandatory.</em>
+     * @param callMe   The call back interface
      */
-    public void liveFeedAsync(@Nonnull final AccessToken accessToken,
-                              @Nonnull final ApiCredentials credentials,
-                              @Nonnull final String exchange,
+    public void liveFeedAsync(@Nonnull final String exchange,
                               @Nonnull final String symbol,
                               @Nonnull final String type,
                               @Nonnull final CallMe<Feed> callMe) {
@@ -73,7 +73,7 @@ public class FeedService extends Service {
         validatePathParameters(exchange, symbol, type);
 
         log.debug("Preparing async service - GET Live Feed");
-        final FeedApi api = prepareServiceApi(FeedApi.class, accessToken, credentials);
+        final FeedApi api = prepareServiceApi(FeedApi.class);
 
         log.debug("Setting up callback interface - GET Live Feed");
         api.liveFeed(exchange, symbol, type).enqueue(prepareCallback(callMe));
@@ -82,17 +82,13 @@ public class FeedService extends Service {
     /**
      * Subscribe to the feed.
      *
-     * @param accessToken The user's access token
-     * @param credentials The user's API credentials
-     * @param type        'ltp' or 'full'. <em>Either. Mandatory.</em>
-     * @param exchange    Name of the exchange. <em>Mandatory.</em>
-     * @param symbolsCsv  Comma separated list of trading symbols
+     * @param type       'ltp' or 'full'. <em>Either. Mandatory.</em>
+     * @param exchange   Name of the exchange. <em>Mandatory.</em>
+     * @param symbolsCsv Comma separated list of trading symbols
      * @return Confirmation response
      * @throws IOException When an error occurs while making the request.
      */
-    public Optional<SubscriptionResponse> subscribe(@Nonnull final AccessToken accessToken,
-                                                    @Nonnull final ApiCredentials credentials,
-                                                    @Nonnull final String type,
+    public Optional<SubscriptionResponse> subscribe(@Nonnull final String type,
                                                     @Nonnull final String exchange,
                                                     @Nonnull final String symbolsCsv)
             throws IOException {
@@ -101,7 +97,7 @@ public class FeedService extends Service {
         validatePathParameters(exchange, type);
 
         log.debug("Preparing service - GET Subscribe");
-        final FeedApi api = prepareServiceApi(FeedApi.class, accessToken, credentials);
+        final FeedApi api = prepareServiceApi(FeedApi.class);
 
         log.debug("Making request - GET Subscribe");
         final Response<UpstoxResponse<SubscriptionResponse>> response =
@@ -114,16 +110,12 @@ public class FeedService extends Service {
     /**
      * Subscribe to the feed, asynchronously.
      *
-     * @param accessToken The user's access token
-     * @param credentials The user's API credentials
-     * @param type        'ltp' or 'full'. <em>Either. Mandatory.</em>
-     * @param exchange    Name of the exchange. <em>Mandatory.</em>
-     * @param symbolsCsv  Comma separated list of trading symbols
-     * @param callMe      The call back interface
+     * @param type       'ltp' or 'full'. <em>Either. Mandatory.</em>
+     * @param exchange   Name of the exchange. <em>Mandatory.</em>
+     * @param symbolsCsv Comma separated list of trading symbols
+     * @param callMe     The call back interface
      */
-    public void subscribeAsync(@Nonnull final AccessToken accessToken,
-                               @Nonnull final ApiCredentials credentials,
-                               @Nonnull final String type,
+    public void subscribeAsync(@Nonnull final String type,
                                @Nonnull final String exchange,
                                @Nonnull final String symbolsCsv,
                                @Nonnull final CallMe<SubscriptionResponse> callMe) {
@@ -132,7 +124,7 @@ public class FeedService extends Service {
         validatePathParameters(exchange, type);
 
         log.debug("Preparing async service - GET Subscribe");
-        final FeedApi api = prepareServiceApi(FeedApi.class, accessToken, credentials);
+        final FeedApi api = prepareServiceApi(FeedApi.class);
 
         log.debug("Setting up callback interface - GET Subscribe");
         api.subscribe(type, exchange, symbolsCsv).enqueue(prepareCallback(callMe));
@@ -141,17 +133,13 @@ public class FeedService extends Service {
     /**
      * Unsubscribe to the feed.
      *
-     * @param accessToken The user's access token
-     * @param credentials The user's API credentials
-     * @param type        'ltp' or 'full'. <em>Either. Mandatory.</em>
-     * @param exchange    Name of the exchange. <em>Mandatory.</em>
-     * @param symbolsCsv  Comma separated list of trading symbols
+     * @param type       'ltp' or 'full'. <em>Either. Mandatory.</em>
+     * @param exchange   Name of the exchange. <em>Mandatory.</em>
+     * @param symbolsCsv Comma separated list of trading symbols
      * @return Confirmation response
      * @throws IOException When an error occurs while making the request.
      */
-    public Optional<SubscriptionResponse> unsubscribe(@Nonnull final AccessToken accessToken,
-                                                      @Nonnull final ApiCredentials credentials,
-                                                      @Nonnull final String type,
+    public Optional<SubscriptionResponse> unsubscribe(@Nonnull final String type,
                                                       @Nonnull final String exchange,
                                                       @Nonnull final String symbolsCsv)
             throws IOException {
@@ -160,7 +148,7 @@ public class FeedService extends Service {
         validatePathParameters(exchange, type);
 
         log.debug("Preparing service - GET Unsubscribe");
-        final FeedApi api = prepareServiceApi(FeedApi.class, accessToken, credentials);
+        final FeedApi api = prepareServiceApi(FeedApi.class);
 
         log.debug("Making request - GET Unsubscribe");
         final Response<UpstoxResponse<SubscriptionResponse>> response =
@@ -173,16 +161,12 @@ public class FeedService extends Service {
     /**
      * Unsubscribe to the feed, asynchronously.
      *
-     * @param accessToken The user's access token
-     * @param credentials The user's API credentials
-     * @param type        'ltp' or 'full'. <em>Either. Mandatory.</em>
-     * @param exchange    Name of the exchange. <em>Mandatory.</em>
-     * @param symbolsCsv  Comma separated list of trading symbols
-     * @param callMe      The call back interface
+     * @param type       'ltp' or 'full'. <em>Either. Mandatory.</em>
+     * @param exchange   Name of the exchange. <em>Mandatory.</em>
+     * @param symbolsCsv Comma separated list of trading symbols
+     * @param callMe     The call back interface
      */
-    public void unsubscribeAsync(@Nonnull final AccessToken accessToken,
-                                 @Nonnull final ApiCredentials credentials,
-                                 @Nonnull final String type,
+    public void unsubscribeAsync(@Nonnull final String type,
                                  @Nonnull final String exchange,
                                  @Nonnull final String symbolsCsv,
                                  @Nonnull final CallMe<SubscriptionResponse> callMe) {
@@ -191,7 +175,7 @@ public class FeedService extends Service {
         validatePathParameters(exchange, type);
 
         log.debug("Preparing async service - GET Unsubscribe");
-        final FeedApi api = prepareServiceApi(FeedApi.class, accessToken, credentials);
+        final FeedApi api = prepareServiceApi(FeedApi.class);
 
         log.debug("Setting up callback interface - GET Unsubscribe");
         api.unsubscribe(type, exchange, symbolsCsv).enqueue(prepareCallback(callMe));

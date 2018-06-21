@@ -21,33 +21,37 @@ public class HistoricalService extends Service {
     private static final Logger log = LogManager.getLogger(HistoricalService.class);
 
     /**
-     * Get OHLC data.
-     *
      * @param accessToken The user's access token
      * @param credentials The user's API credentials
-     * @param exchange    Name of the exchange. <em>Mandatory.</em>
-     * @param symbol      Trading symbol. <em>Mandatory.</em>
-     * @param interval    Allowed Values:
-     *                    <ul>
-     *                    <li><code>1MINUTE</code></li>
-     *                    <li><code>5MINUTE</code></li>
-     *                    <li><code>10MINUTE</code></li>
-     *                    <li><code>30MINUTE</code></li>
-     *                    <li><code>60MINUTE</code></li>
-     *                    <li><code>1DAY</code> <em>(default)</em></li>
-     *                    <li><code>1WEEK</code></li>
-     *                    <li><code>1MONTH</code></li>
-     *                    </ul>
-     * @param startDate   Date in the format: <code>DD-MM-YYYY</code>.
-     *                    Default value is 15 days before today.
-     * @param endDate     Date in the format: <code>DD-MM-YYYY</code>.
-     *                    Default value is today.
+     */
+    public HistoricalService(@Nonnull AccessToken accessToken, @Nonnull ApiCredentials credentials) {
+        super(accessToken, credentials);
+    }
+
+    /**
+     * Get OHLC data.
+     *
+     * @param exchange  Name of the exchange. <em>Mandatory.</em>
+     * @param symbol    Trading symbol. <em>Mandatory.</em>
+     * @param interval  Allowed Values:
+     *                  <ul>
+     *                  <li><code>1MINUTE</code></li>
+     *                  <li><code>5MINUTE</code></li>
+     *                  <li><code>10MINUTE</code></li>
+     *                  <li><code>30MINUTE</code></li>
+     *                  <li><code>60MINUTE</code></li>
+     *                  <li><code>1DAY</code> <em>(default)</em></li>
+     *                  <li><code>1WEEK</code></li>
+     *                  <li><code>1MONTH</code></li>
+     *                  </ul>
+     * @param startDate Date in the format: <code>DD-MM-YYYY</code>.
+     *                  Default value is 15 days before today.
+     * @param endDate   Date in the format: <code>DD-MM-YYYY</code>.
+     *                  Default value is today.
      * @return List of Candle
      * @throws IOException When an error occurs while making the request.
      */
-    public Optional<List<Candle>> getOhlc(@Nonnull final AccessToken accessToken,
-                                          @Nonnull final ApiCredentials credentials,
-                                          @Nonnull final String exchange,
+    public Optional<List<Candle>> getOhlc(@Nonnull final String exchange,
                                           @Nonnull final String symbol,
                                           final String interval,
                                           final String startDate,
@@ -58,7 +62,7 @@ public class HistoricalService extends Service {
         validatePathParameters(exchange, symbol);
 
         log.debug("Preparing service - GET OHLC");
-        final HistoricalApi api = prepareServiceApi(HistoricalApi.class, accessToken, credentials);
+        final HistoricalApi api = prepareServiceApi(HistoricalApi.class);
 
         log.debug("Making request - GET OHLC");
         final Response<UpstoxResponse<List<Candle>>> response =
@@ -71,30 +75,26 @@ public class HistoricalService extends Service {
     /**
      * Get OHLC data, asynchronously.
      *
-     * @param accessToken The user's access token
-     * @param credentials The user's API credentials
-     * @param exchange    Name of the exchange. <em>Mandatory.</em>
-     * @param symbol      Trading symbol. <em>Mandatory.</em>
-     * @param interval    Allowed Values:
-     *                    <ul>
-     *                    <li><code>1MINUTE</code></li>
-     *                    <li><code>5MINUTE</code></li>
-     *                    <li><code>10MINUTE</code></li>
-     *                    <li><code>30MINUTE</code></li>
-     *                    <li><code>60MINUTE</code></li>
-     *                    <li><code>1DAY</code> (default)</li>
-     *                    <li><code>1WEEK</code></li>
-     *                    <li><code>1MONTH</code></li>
-     *                    </ul>
-     * @param startDate   Date in the format: <code>DD-MM-YYYY</code>.
-     *                    Default value is 15 days before today.
-     * @param endDate     Date in the format: <code>DD-MM-YYYY</code>.
-     *                    Default value is today.
-     * @param callMe      The call back interface
+     * @param exchange  Name of the exchange. <em>Mandatory.</em>
+     * @param symbol    Trading symbol. <em>Mandatory.</em>
+     * @param interval  Allowed Values:
+     *                  <ul>
+     *                  <li><code>1MINUTE</code></li>
+     *                  <li><code>5MINUTE</code></li>
+     *                  <li><code>10MINUTE</code></li>
+     *                  <li><code>30MINUTE</code></li>
+     *                  <li><code>60MINUTE</code></li>
+     *                  <li><code>1DAY</code> (default)</li>
+     *                  <li><code>1WEEK</code></li>
+     *                  <li><code>1MONTH</code></li>
+     *                  </ul>
+     * @param startDate Date in the format: <code>DD-MM-YYYY</code>.
+     *                  Default value is 15 days before today.
+     * @param endDate   Date in the format: <code>DD-MM-YYYY</code>.
+     *                  Default value is today.
+     * @param callMe    The call back interface
      */
-    public void getOhlcAsync(@Nonnull final AccessToken accessToken,
-                             @Nonnull final ApiCredentials credentials,
-                             @Nonnull final String exchange,
+    public void getOhlcAsync(@Nonnull final String exchange,
                              @Nonnull final String symbol,
                              final String interval,
                              final String startDate,
@@ -105,7 +105,7 @@ public class HistoricalService extends Service {
         validatePathParameters(exchange, symbol);
 
         log.debug("Preparing async service - GET OHLC");
-        final HistoricalApi api = prepareServiceApi(HistoricalApi.class, accessToken, credentials);
+        final HistoricalApi api = prepareServiceApi(HistoricalApi.class);
 
         log.debug("Setting up callback interface - GET OHLC");
         api.getOhlc(exchange, symbol, interval, startDate, endDate, "json").enqueue(prepareCallback(callMe));

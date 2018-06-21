@@ -23,19 +23,24 @@ public class OrderService extends Service {
     private static final Logger log = LogManager.getLogger(OrderService.class);
 
     /**
-     * Fetches the list of orders placed by the user.
-     *
      * @param accessToken The user's access token
      * @param credentials The user's API credentials
+     */
+    public OrderService(@Nonnull AccessToken accessToken, @Nonnull ApiCredentials credentials) {
+        super(accessToken, credentials);
+    }
+
+    /**
+     * Fetches the list of orders placed by the user.
+     *
      * @return List of Order
      * @throws IOException When an error occurs while making the request.
      */
-    public Optional<List<Order>> getOrderHistory(@Nonnull final AccessToken accessToken,
-                                                 @Nonnull final ApiCredentials credentials)
+    public Optional<List<Order>> getOrderHistory()
             throws IOException {
 
         log.debug("Preparing service - GET Order History");
-        final OrderApi api = prepareServiceApi(OrderApi.class, accessToken, credentials);
+        final OrderApi api = prepareServiceApi(OrderApi.class);
 
         log.debug("Making request - GET Order History");
         final Response<UpstoxResponse<List<Order>>> response = api.getOrderHistory().execute();
@@ -47,16 +52,12 @@ public class OrderService extends Service {
     /**
      * Fetches the list of orders placed by the user, asynchronously.
      *
-     * @param accessToken The user's access token
-     * @param credentials The user's API credentials
-     * @param callMe      The call back interface
+     * @param callMe The call back interface
      */
-    public void getOrderHistoryAsync(@Nonnull final AccessToken accessToken,
-                                     @Nonnull final ApiCredentials credentials,
-                                     @Nonnull final CallMe<List<Order>> callMe) {
+    public void getOrderHistoryAsync(@Nonnull final CallMe<List<Order>> callMe) {
 
         log.debug("Preparing async service - GET Order History");
-        final OrderApi api = prepareServiceApi(OrderApi.class, accessToken, credentials);
+        final OrderApi api = prepareServiceApi(OrderApi.class);
 
         log.debug("Setting up callback interface - GET Order History");
         api.getOrderHistory().enqueue(prepareCallback(callMe));
@@ -65,22 +66,18 @@ public class OrderService extends Service {
     /**
      * Fetches the details of the particular order the user has placed.
      *
-     * @param accessToken The user's access token
-     * @param credentials The user's API credentials
-     * @param orderId     The id of the order whose details need to be fetched.
+     * @param orderId The id of the order whose details need to be fetched.
      * @return List of Order
      * @throws IOException When an error occurs while making the request.
      */
-    public Optional<List<Order>> getOrderDetails(@Nonnull final AccessToken accessToken,
-                                                 @Nonnull final ApiCredentials credentials,
-                                                 @Nonnull final String orderId)
+    public Optional<List<Order>> getOrderDetails(@Nonnull final String orderId)
             throws IOException {
 
         log.debug("Validate parameters - GET Order Details");
         validateOrderId(orderId);
 
         log.debug("Preparing service - GET Order Details");
-        final OrderApi api = prepareServiceApi(OrderApi.class, accessToken, credentials);
+        final OrderApi api = prepareServiceApi(OrderApi.class);
 
         log.debug("Making request - GET Order Details");
         final Response<UpstoxResponse<List<Order>>> response = api.getOrderDetails(orderId).execute();
@@ -92,21 +89,17 @@ public class OrderService extends Service {
     /**
      * Fetches the details of the particular order the user has placed, asynchronously.
      *
-     * @param accessToken The user's access token
-     * @param credentials The user's API credentials
-     * @param orderId     The id of the order whose details need to be fetched.
-     * @param callMe      The call back interface
+     * @param orderId The id of the order whose details need to be fetched.
+     * @param callMe  The call back interface
      */
-    public void getOrderDetailsAsync(@Nonnull final AccessToken accessToken,
-                                     @Nonnull final ApiCredentials credentials,
-                                     @Nonnull final String orderId,
+    public void getOrderDetailsAsync(@Nonnull final String orderId,
                                      @Nonnull final CallMe<List<Order>> callMe) {
 
         log.debug("Validate parameters - GET Order Details");
         validateOrderId(orderId);
 
         log.debug("Preparing async service - GET Order Details");
-        final OrderApi api = prepareServiceApi(OrderApi.class, accessToken, credentials);
+        final OrderApi api = prepareServiceApi(OrderApi.class);
 
         log.debug("Setting up callback interface - GET Order Details");
         api.getOrderDetails(orderId).enqueue(prepareCallback(callMe));
@@ -115,17 +108,14 @@ public class OrderService extends Service {
     /**
      * Fetches the trades for the current day.
      *
-     * @param accessToken The user's access token
-     * @param credentials The user's API credentials
      * @return List of Trade
      * @throws IOException When an error occurs while making the request.
      */
-    public Optional<List<Trade>> getTradeBook(@Nonnull final AccessToken accessToken,
-                                              @Nonnull final ApiCredentials credentials)
+    public Optional<List<Trade>> getTradeBook()
             throws IOException {
 
         log.debug("Preparing service - GET Trade Book");
-        final OrderApi api = prepareServiceApi(OrderApi.class, accessToken, credentials);
+        final OrderApi api = prepareServiceApi(OrderApi.class);
 
         log.debug("Making request - GET Trade Book");
         final Response<UpstoxResponse<List<Trade>>> response = api.getTradeBook().execute();
@@ -137,16 +127,12 @@ public class OrderService extends Service {
     /**
      * Fetches the trades for the current day, asynchronously.
      *
-     * @param accessToken The user's access token
-     * @param credentials The user's API credentials
-     * @param callMe      The call back interface
+     * @param callMe The call back interface
      */
-    public void getTradeBookAsync(@Nonnull final AccessToken accessToken,
-                                  @Nonnull final ApiCredentials credentials,
-                                  @Nonnull final CallMe<List<Trade>> callMe) {
+    public void getTradeBookAsync(@Nonnull final CallMe<List<Trade>> callMe) {
 
         log.debug("Preparing async service - GET Trade Book");
-        final OrderApi api = prepareServiceApi(OrderApi.class, accessToken, credentials);
+        final OrderApi api = prepareServiceApi(OrderApi.class);
 
         log.debug("Setting up callback interface - GET Trade Book");
         api.getTradeBook().enqueue(prepareCallback(callMe));
@@ -156,22 +142,18 @@ public class OrderService extends Service {
     /**
      * Fetches the trades for the given order.
      *
-     * @param accessToken The user's access token
-     * @param credentials The user's API credentials
-     * @param orderId     The id of the order whose trade history need to be fetched.
+     * @param orderId The id of the order whose trade history need to be fetched.
      * @return List of Trade
      * @throws IOException When an error occurs while making the request.
      */
-    public Optional<List<Trade>> getTradeHistory(@Nonnull final AccessToken accessToken,
-                                                 @Nonnull final ApiCredentials credentials,
-                                                 @Nonnull final String orderId)
+    public Optional<List<Trade>> getTradeHistory(@Nonnull final String orderId)
             throws IOException {
 
         log.debug("Validate parameters - GET Trade History");
         validateOrderId(orderId);
 
         log.debug("Preparing service - GET Trade History");
-        final OrderApi api = prepareServiceApi(OrderApi.class, accessToken, credentials);
+        final OrderApi api = prepareServiceApi(OrderApi.class);
 
         log.debug("Making request - GET Trade History");
         final Response<UpstoxResponse<List<Trade>>> response = api.getTradeHistory(orderId).execute();
@@ -183,21 +165,17 @@ public class OrderService extends Service {
     /**
      * Fetches the trades for the given order, asynchronously.
      *
-     * @param accessToken The user's access token
-     * @param credentials The user's API credentials
-     * @param orderId     The id of the order whose trade history need to be fetched.
-     * @param callMe      The call back interface
+     * @param orderId The id of the order whose trade history need to be fetched.
+     * @param callMe  The call back interface
      */
-    public void getTradeHistoryAsync(@Nonnull final AccessToken accessToken,
-                                     @Nonnull final ApiCredentials credentials,
-                                     @Nonnull final String orderId,
+    public void getTradeHistoryAsync(@Nonnull final String orderId,
                                      @Nonnull final CallMe<List<Trade>> callMe) {
 
         log.debug("Validate parameters - GET Trade History");
         validateOrderId(orderId);
 
         log.debug("Preparing async service - GET Trade History");
-        final OrderApi api = prepareServiceApi(OrderApi.class, accessToken, credentials);
+        final OrderApi api = prepareServiceApi(OrderApi.class);
 
         log.debug("Setting up callback interface - GET Trade History");
         api.getTradeHistory(orderId).enqueue(prepareCallback(callMe));
@@ -206,19 +184,15 @@ public class OrderService extends Service {
     /**
      * Place an order to the exchange via Upstox.
      *
-     * @param accessToken The user's access token
-     * @param credentials The user's API credentials
-     * @param request     The order request
+     * @param request The order request
      * @return The creates order
      * @throws IOException When an error occurs while making the request.
      */
-    public Optional<Order> placeOrder(@Nonnull final AccessToken accessToken,
-                                      @Nonnull final ApiCredentials credentials,
-                                      @Nonnull final OrderRequest request)
+    public Optional<Order> placeOrder(@Nonnull final OrderRequest request)
             throws IOException {
 
         log.debug("Preparing service - POST Place Order");
-        final OrderApi api = prepareServiceApi(OrderApi.class, accessToken, credentials);
+        final OrderApi api = prepareServiceApi(OrderApi.class);
 
         log.debug("Making request - POST Place Order");
         final Response<UpstoxResponse<Order>> response = api.placeOrder(request).execute();
@@ -230,18 +204,14 @@ public class OrderService extends Service {
     /**
      * Place an order to the exchange via Upstox, asynchronously.
      *
-     * @param accessToken The user's access token
-     * @param credentials The user's API credentials
-     * @param request     The order request
-     * @param callMe      The call back interface
+     * @param request The order request
+     * @param callMe  The call back interface
      */
-    public void placeOrderAsync(@Nonnull final AccessToken accessToken,
-                                @Nonnull final ApiCredentials credentials,
-                                @Nonnull final OrderRequest request,
+    public void placeOrderAsync(@Nonnull final OrderRequest request,
                                 @Nonnull final CallMe<Order> callMe) {
 
         log.debug("Preparing async service - POST Place Order");
-        final OrderApi api = prepareServiceApi(OrderApi.class, accessToken, credentials);
+        final OrderApi api = prepareServiceApi(OrderApi.class);
 
         log.debug("Setting up callback interface - POST Place Order");
         api.placeOrder(request).enqueue(prepareCallback(callMe));
@@ -250,16 +220,12 @@ public class OrderService extends Service {
     /**
      * Modify the order.
      *
-     * @param accessToken The user's access token
-     * @param credentials The user's API credentials
-     * @param orderId     The id of the order to be modified
-     * @param request     The order request
+     * @param orderId The id of the order to be modified
+     * @param request The order request
      * @return The modified order
      * @throws IOException When an error occurs while making the request.
      */
-    public Optional<Order> modifyOrder(@Nonnull final AccessToken accessToken,
-                                       @Nonnull final ApiCredentials credentials,
-                                       @Nonnull final String orderId,
+    public Optional<Order> modifyOrder(@Nonnull final String orderId,
                                        @Nonnull final OrderRequest request)
             throws IOException {
 
@@ -267,7 +233,7 @@ public class OrderService extends Service {
         validateOrderId(orderId);
 
         log.debug("Preparing service - PUT Place Order");
-        final OrderApi api = prepareServiceApi(OrderApi.class, accessToken, credentials);
+        final OrderApi api = prepareServiceApi(OrderApi.class);
 
         log.debug("Making request - PUT Place Order");
         final Response<UpstoxResponse<Order>> response = api.modifyOrder(orderId, request).execute();
@@ -279,15 +245,11 @@ public class OrderService extends Service {
     /**
      * Modify the order, asynchronously.
      *
-     * @param accessToken The user's access token
-     * @param credentials The user's API credentials
-     * @param orderId     The id of the order to be modified
-     * @param request     The order request
-     * @param callMe      The call back interface
+     * @param orderId The id of the order to be modified
+     * @param request The order request
+     * @param callMe  The call back interface
      */
-    public void modifyOrderAsync(@Nonnull final AccessToken accessToken,
-                                 @Nonnull final ApiCredentials credentials,
-                                 @Nonnull final String orderId,
+    public void modifyOrderAsync(@Nonnull final String orderId,
                                  @Nonnull final OrderRequest request,
                                  @Nonnull final CallMe<Order> callMe) {
 
@@ -295,7 +257,7 @@ public class OrderService extends Service {
         validateOrderId(orderId);
 
         log.debug("Preparing async service - PUT Place Order");
-        final OrderApi api = prepareServiceApi(OrderApi.class, accessToken, credentials);
+        final OrderApi api = prepareServiceApi(OrderApi.class);
 
         log.debug("Setting up callback interface - PUT Place Order");
         api.modifyOrder(orderId, request).enqueue(prepareCallback(callMe));
@@ -304,22 +266,18 @@ public class OrderService extends Service {
     /**
      * Cancel a single or multiple orders.
      *
-     * @param accessToken The user's access token
-     * @param credentials The user's API credentials
      * @param orderIdsCsv The comma separated string of order ids that need to cancelled.
      * @return The comma separate string of affected orders
      * @throws IOException When an error occurs while making the request.
      */
-    public Optional<String> cancelOrders(@Nonnull final AccessToken accessToken,
-                                         @Nonnull final ApiCredentials credentials,
-                                         @Nonnull final String orderIdsCsv)
+    public Optional<String> cancelOrders(@Nonnull final String orderIdsCsv)
             throws IOException {
 
         log.debug("Validate parameters - DELETE Orders");
         validateOrderId(orderIdsCsv);
 
         log.debug("Preparing service - DELETE Orders");
-        final OrderApi api = prepareServiceApi(OrderApi.class, accessToken, credentials);
+        final OrderApi api = prepareServiceApi(OrderApi.class);
 
         log.debug("Making request - DELETE Orders");
         final Response<UpstoxResponse<String>> response = api.cancelOrders(orderIdsCsv).execute();
@@ -331,21 +289,17 @@ public class OrderService extends Service {
     /**
      * Cancel a single or multiple orders, asynchronously.
      *
-     * @param accessToken The user's access token
-     * @param credentials The user's API credentials
      * @param orderIdsCsv The comma separated string of order ids that need to cancelled.
      * @param callMe      The call back interface
      */
-    public void cancelOrdersAsync(@Nonnull final AccessToken accessToken,
-                                  @Nonnull final ApiCredentials credentials,
-                                  @Nonnull final String orderIdsCsv,
+    public void cancelOrdersAsync(@Nonnull final String orderIdsCsv,
                                   @Nonnull final CallMe<String> callMe) {
 
         log.debug("Validate parameters - DELETE Orders");
         validateOrderId(orderIdsCsv);
 
         log.debug("Preparing async service - DELETE Orders");
-        final OrderApi api = prepareServiceApi(OrderApi.class, accessToken, credentials);
+        final OrderApi api = prepareServiceApi(OrderApi.class);
 
         log.debug("Setting up callback interface - DELETE Orders");
         api.cancelOrders(orderIdsCsv).enqueue(prepareCallback(callMe));
@@ -354,17 +308,14 @@ public class OrderService extends Service {
     /**
      * Cancel all open orders.
      *
-     * @param accessToken The user's access token
-     * @param credentials The user's API credentials
      * @return The comma separate string of affected orders
      * @throws IOException When an error occurs while making the request.
      */
-    public Optional<String> cancelAllOrders(@Nonnull final AccessToken accessToken,
-                                            @Nonnull final ApiCredentials credentials)
+    public Optional<String> cancelAllOrders()
             throws IOException {
 
         log.debug("Preparing service - DELETE All Orders");
-        OrderApi api = prepareServiceApi(OrderApi.class, accessToken, credentials);
+        OrderApi api = prepareServiceApi(OrderApi.class);
 
         log.debug("Making request - DELETE All Orders");
         final Response<UpstoxResponse<String>> response = api.cancelAllOrders().execute();
@@ -376,16 +327,12 @@ public class OrderService extends Service {
     /**
      * Cancel all open orders, asynchronously.
      *
-     * @param accessToken The user's access token
-     * @param credentials The user's API credentials
-     * @param callMe      The call back interface
+     * @param callMe The call back interface
      */
-    public void cancelAllOrdersAsync(@Nonnull final AccessToken accessToken,
-                                     @Nonnull final ApiCredentials credentials,
-                                     @Nonnull final CallMe<String> callMe) {
+    public void cancelAllOrdersAsync(@Nonnull final CallMe<String> callMe) {
 
         log.debug("Preparing async service - DELETE All Orders");
-        final OrderApi api = prepareServiceApi(OrderApi.class, accessToken, credentials);
+        final OrderApi api = prepareServiceApi(OrderApi.class);
 
         log.debug("Setting up callback interface - DELETE All Orders");
         api.cancelAllOrders().enqueue(prepareCallback(callMe));
