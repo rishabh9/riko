@@ -2,12 +2,12 @@ package com.github.rishabh9.riko.upstox.users;
 
 import com.github.rishabh9.riko.upstox.common.models.UpstoxResponse;
 import com.github.rishabh9.riko.upstox.users.models.*;
-import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Order API endpoints declaration.
@@ -17,35 +17,35 @@ public interface UsersApi {
     /**
      * Retrieves the user's profile
      *
-     * @return A Call to execute the request (a)synchronously.
+     * @return A CompletableFuture to execute the request (a)synchronously.
      */
     @GET("/index/profile")
-    Call<UpstoxResponse<Profile>> getProfile();
+    CompletableFuture<UpstoxResponse<Profile>> getProfile();
 
     /**
      * Retrieve the profile balance.
      *
      * @param type The account type - 'security' or 'commodity'
-     * @return A Call to execute the request (a)synchronously.
+     * @return A CompletableFuture to execute the request (a)synchronously.
      */
     @GET("/live/profile/balance")
-    Call<UpstoxResponse<ProfileBalance>> getProfileBalance(@Query("type") String type);
+    CompletableFuture<UpstoxResponse<ProfileBalance>> getProfileBalance(@Query("type") String type);
 
     /**
      * Fetches the current positions for the user for the current day.
      *
-     * @return A Call to execute the request (a)synchronously.
+     * @return A CompletableFuture to execute the request (a)synchronously.
      */
     @GET("/live/profile/positions")
-    Call<UpstoxResponse<List<Position>>> getPositions();
+    CompletableFuture<UpstoxResponse<List<Position>>> getPositions();
 
     /**
      * Fetches the holdings which the user has bought/sold in previous trading sessions.
      *
-     * @return A Call to execute the request (a)synchronously.
+     * @return A CompletableFuture to execute the request (a)synchronously.
      */
     @GET("/live/profile/holdings")
-    Call<UpstoxResponse<List<Holding>>> getHoldings();
+    CompletableFuture<UpstoxResponse<List<Holding>>> getHoldings();
 
     /**
      * Get all available contracts as a CSV.
@@ -61,10 +61,10 @@ public interface UsersApi {
      *                 <li><code>ncd_fo</code> - NSE Currency Futures & Options</li>
      *                 <li><code>mcx_fo</code> - MCX Futures</li>
      *                 </ul>
-     * @return A Call to execute the request (a)synchronously.
+     * @return A CompletableFuture to execute the request (a)synchronously.
      */
     @GET("/index/master-contract/{exchange}")
-    Call<UpstoxResponse<List<String>>> getAllMasterContracts(@Path("exchange") String exchange);
+    CompletableFuture<UpstoxResponse<List<String>>> getAllMasterContracts(@Path("exchange") String exchange);
 
     /**
      * Get available contract for given symbol/token.
@@ -83,10 +83,10 @@ public interface UsersApi {
      * @param symbol   Trading symbol which could be a combination of symbol name, instrument, expiry date, etc.
      *                 Optional if token is provided.
      * @param token    Unique identifier within an exchange. Optional, if symbol is provided.
-     * @return A Call to execute the request (a)synchronously.
+     * @return A CompletableFuture to execute the request (a)synchronously.
      */
     @GET("/index/master-contract/{exchange}")
-    Call<UpstoxResponse<Contract>> getMasterContract(@Path("exchange") String exchange,
-                                                     @Query("symbol") String symbol,
-                                                     @Query("token") String token);
+    CompletableFuture<UpstoxResponse<Contract>> getMasterContract(@Path("exchange") String exchange,
+                                                                  @Query("symbol") String symbol,
+                                                                  @Query("token") String token);
 }

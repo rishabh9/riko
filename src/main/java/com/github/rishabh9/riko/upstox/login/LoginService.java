@@ -7,12 +7,10 @@ import com.github.rishabh9.riko.upstox.login.models.TokenRequest;
 import com.google.common.base.Strings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import retrofit2.Call;
-import retrofit2.Response;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
-import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 public class LoginService {
 
@@ -25,11 +23,10 @@ public class LoginService {
      *                    including the access code received after authenticating the user on Upstox site.
      * @param credentials The API key and secret.
      * @return An 'optional' AccessToken. Return object is empty in case of error.
-     * @throws IOException on network failure
      */
-    public Optional<AccessToken> getAccessToken(@Nonnull final TokenRequest request,
-                                                @Nonnull final ApiCredentials credentials)
-            throws IOException {
+    public AccessToken getAccessToken(@Nonnull final TokenRequest request,
+                                      @Nonnull final ApiCredentials credentials)
+            throws ExecutionException, InterruptedException {
 
         if (Strings.isNullOrEmpty(request.getCode())) {
             throw new IllegalArgumentException("Missing value for authorization code. Code: " + request.getCode());
@@ -42,20 +39,16 @@ public class LoginService {
                         credentials.getApiKey(),
                         credentials.getApiSecret());
 
-        Call<AccessToken> call = loginApi.getAccessToken(request);
+        CompletableFuture<AccessToken> future = loginApi.getAccessToken(request);
 
         // Make a synchronous call.
-        Response<AccessToken> response = call.execute();
-
-        log.debug("Request to retrieve access code was {}. HTTP response code: {}.",
-                response.isSuccessful() ? "successful" : "unsuccessful",
-                response.code());
-
-        if (response.isSuccessful()) {
-            return Optional.ofNullable(response.body());
-        }
-
-        return Optional.empty();
+        return future.whenComplete((accessToken, throwable) -> {
+            if (null != throwable) {
+                log.debug("Request to retrieve access code was unsuccessful", throwable);
+            } else {
+                log.debug("Request to retrieve access code was successful");
+            }
+        }).get();
 
 /*
         // Execute the call asynchronously. Get a positive or negative callback.
