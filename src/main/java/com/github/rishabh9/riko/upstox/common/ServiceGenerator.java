@@ -15,6 +15,7 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import retrofit2.Retrofit;
+import retrofit2.adapter.java8.Java8CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import javax.annotation.Nonnull;
@@ -36,7 +37,8 @@ public class ServiceGenerator {
     private static Retrofit.Builder builder =
             new Retrofit.Builder()
                     .baseUrl(API_BASE_URL)
-                    .addConverterFactory(GsonConverterFactory.create(gson));
+                    .addConverterFactory(GsonConverterFactory.create(gson))
+                    .addCallAdapterFactory(Java8CallAdapterFactory.create());
 
     private static Retrofit retrofit = builder.build();
 
