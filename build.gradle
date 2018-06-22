@@ -32,7 +32,6 @@ dependencyManagement {
 group = 'com.github.rishabh9'
 // Version
 version = '1.0.0-SNAPSHOT'
-archivesBaseName = 'riko'
 
 dependencies {
     // This dependency is exported to consumers, that is to say found on their compile classpath.
@@ -106,7 +105,7 @@ publishing {
             customizePom(pom)
 
             groupId project.group
-            artifactId project.name
+            artifactId project.name + '-vanilla'
             version project.version
 
             from components.java
