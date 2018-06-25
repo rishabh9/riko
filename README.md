@@ -2,6 +2,8 @@
 
 Riko is a third-party Java library for accessing Upstox API.
 
+*Minimum JDK required - __JDK 9__*
+
 #### Riko internally depends on
 
 - Retrofit2
@@ -11,20 +13,35 @@ Riko is a third-party Java library for accessing Upstox API.
 - Log4J 2
 - Junit 5
 
-### The NumberString
+### Riko's quirks
+
+###### NumberString
 
 The Upstox API that fetches the current positions for the day, returns certain numeric data as empty String if no value
 exists for the same. In a dynamic typed language this may work, but in a strongly typed language like Java, this causes 
 a lot of pain. To support such data, we have the NumberString class and the support (de)serializers.
 
-### Riko Vanilla
+###### Web socket
+
+You need to connect using web socket to receive various updates from Upstox. The web socket implementation 
+(`WebSocketListener`) here uses the Java9 Flow API to publish the incoming messages to the interested 
+subscribers (`WebSocketMessageSubscriber`).
+
+    // Prepare the message subscribers
+    List<WebSocketMessageSubscriber> subscribers = prepareAllTypesOfMessageSubscribers();
+    
+    // Connecting to the web socket
+    WebSocketService service = new WebSocketService(accessToken, apiCredentials);
+    WrappedWebSocket socket = service.connect(subscribers);
+
+#### Riko Vanilla
 
 The build from `vanilla` branch is called as `riko-vanilla`. It does not use any of the Retrofit2 call adapters.
 In case you are turned off by the Java8's `CompletableFuture` interface, `riko-vanilla` is your only hope. ^_^
 
-### Including Riko in your project
+#### Including Riko in your project
 
-#### Maven
+###### Maven
 
     <dependency>
         <groupId>com.github.rishabh9</groupId>
@@ -40,7 +57,7 @@ in case of `riko-vanilla`
         <version>1.0.0-SNAPSHOT</version>
     </dependency>
 
-#### Gradle
+###### Gradle
 
     dependencies {
         implementation 'com.github.rishabh9:riko:1.0.0-SNAPSHOT'
@@ -52,9 +69,10 @@ in case of `riko-vanilla`
         implementation 'com.github.rishabh9:riko:1.0.0-SNAPSHOT'
     }
 
-### Progaurd
+#### Progaurd
 
-Riko is built using [Retrofit](http://square.github.io/retrofit/), and Retrofit internally uses [OkHttp](https://github.com/square/okhttp) 
+Riko is built using [Retrofit](http://square.github.io/retrofit/), 
+and Retrofit internally uses [OkHttp](https://github.com/square/okhttp) 
 and [Okio](https://github.com/square/okio).
 Please refer their respective documentation for Progaurd configurations:
 
