@@ -23,12 +23,28 @@ a lot of pain. To support such data, we have the NumberString class and the supp
 
 ###### Web socket
 
-You need to connect using web socket to receive various updates from Upstox. The web socket implementation 
-(`WebSocketListener`) here uses the Java9 Flow API to publish the incoming messages to the interested 
-subscribers (`WebSocketMessageSubscriber`).
+You need to connect using web socket to receive various updates from Upstox. The internal web socket implementation 
+(`MessageListener`) here uses the Java 9 Flow API to publish the incoming messages to the interested 
+subscribers (`MessageSubscriber`). Example:
 
+    public class TextMessageSubscriber implements MessageSubscriber {...}
+    public class BinaryMessageSubscriber implements MessageSubscriber {...}
+    public class ConnectionStatusSubscriber implements MessageSubscriber {...}
+    
+    ...
+
+    List<MessageSubscriber> prepareAllTypesOfMessageSubscribers() {
+        List<MessageSubscriber> subscribers = new ArrayList<>();
+        subscribers.add(new TextMessageSubscriber());
+        subscribers.add(new BinaryMessageSubscriber());
+        subscribers.add(new ConnectionStatusSubscriber());
+        return subscribers;
+    }
+    
+    ...
+    
     // Prepare the message subscribers
-    List<WebSocketMessageSubscriber> subscribers = prepareAllTypesOfMessageSubscribers();
+    List<MessageSubscriber> subscribers = prepareAllTypesOfMessageSubscribers();
     
     // Connecting to the web socket
     WebSocketService service = new WebSocketService(accessToken, apiCredentials);
