@@ -48,7 +48,7 @@ public class WebSocketService extends Service {
      * @throws ExecutionException   When there is an exception creating the connection.
      * @throws InterruptedException When there is an error while waiting for the connection to complete.
      */
-    public WrappedWebSocket connect(final List<WebSocketMessageSubscriber> subscribers)
+    public WrappedWebSocket connect(final List<MessageSubscriber> subscribers)
             throws ExecutionException, InterruptedException {
 
         if (null == subscribers || subscribers.isEmpty()) {
@@ -74,7 +74,7 @@ public class WebSocketService extends Service {
     }
 
     private WrappedWebSocket makeConnection(final WebsocketParameters parameters,
-                                            final List<WebSocketMessageSubscriber> subscribers) {
+                                            final List<MessageSubscriber> subscribers) {
 
         final OkHttpClient.Builder httpClientBuilder = new OkHttpClient.Builder();
         final OkHttpClient httpClient = httpClientBuilder
@@ -87,7 +87,7 @@ public class WebSocketService extends Service {
 
         final Request request = prepareRequest();
 
-        final WebSocket webSocket = httpClient.newWebSocket(request, new WebSocketListener(subscribers));
+        final WebSocket webSocket = httpClient.newWebSocket(request, new MessageListener(subscribers));
 
         return new WrappedWebSocket(webSocket);
     }

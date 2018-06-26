@@ -22,16 +22,16 @@ import java.util.concurrent.TimeUnit;
  * Responsible to receive the messages over the socket
  * and to publish them over to the subscribers.
  */
-public final class WebSocketListener
+public final class MessageListener
         extends okhttp3.WebSocketListener
         implements Flow.Publisher<WebSocketMessage> {
 
-    private static final Logger log = LogManager.getLogger(WebSocketListener.class);
+    private static final Logger log = LogManager.getLogger(MessageListener.class);
 
     private static final int MAX_SECONDS_TO_KEEP_IT_WHEN_NO_SPACE = 3;
     private final SubmissionPublisher<WebSocketMessage> publisher;
 
-    public WebSocketListener(@Nonnull List<WebSocketMessageSubscriber> subscribers) {
+    public MessageListener(@Nonnull List<MessageSubscriber> subscribers) {
         this.publisher =
                 new SubmissionPublisher<>(
                         Executors.newWorkStealingPool(),
@@ -48,7 +48,7 @@ public final class WebSocketListener
                     // We can try again - but only once.
                     // But we won't try again, as the subscriber should be quick.
                     final String errorMsg = "Subscriber "
-                            + ((WebSocketMessageSubscriber) subscriber).getName()
+                            + ((MessageSubscriber) subscriber).getName()
                             + " is slow in receiving messages. Dropping message: "
                             + msg.toString();
                     subscriber.onError(new SlowSubscriberException(errorMsg));

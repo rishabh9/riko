@@ -9,7 +9,7 @@ import java.util.concurrent.Flow;
  * By implementing this interface you ensure that each subscriber is
  * identifiable during the debugging process.
  */
-public interface WebSocketMessageSubscriber extends Flow.Subscriber<WebSocketMessage> {
+public interface MessageSubscriber extends Flow.Subscriber<WebSocketMessage> {
 
     /**
      * @return Unique name to identify this subscriber
