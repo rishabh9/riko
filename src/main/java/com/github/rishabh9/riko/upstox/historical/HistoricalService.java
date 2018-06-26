@@ -11,14 +11,17 @@ import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 public class HistoricalService extends Service {
 
     private static final Logger log = LogManager.getLogger(HistoricalService.class);
 
-    public HistoricalService(@Nonnull final AccessToken accessToken, @Nonnull final ApiCredentials credentials) {
-        super(accessToken, credentials);
+    public HistoricalService(@Nonnull final AccessToken accessToken,
+                             @Nonnull final ApiCredentials credentials) {
+
+        super(Objects.requireNonNull(accessToken), Objects.requireNonNull(credentials));
     }
 
     /**

@@ -11,9 +11,11 @@ public class ApiCredentials {
     private String apiKey;
     private String apiSecret;
 
-    public ApiCredentials(@Nonnull String apiKey, @Nonnull String apiSecret) {
-        this.apiKey = apiKey;
-        this.apiSecret = apiSecret;
+    public ApiCredentials(@Nonnull final String apiKey,
+                          @Nonnull final String apiSecret) {
+
+        this.apiKey = Objects.requireNonNull(apiKey);
+        this.apiSecret = Objects.requireNonNull(apiSecret);
     }
 
     public String getApiKey() {

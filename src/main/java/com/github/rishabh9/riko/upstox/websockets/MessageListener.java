@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Flow;
 import java.util.concurrent.SubmissionPublisher;
@@ -37,10 +38,10 @@ public final class MessageListener
                         Executors.newWorkStealingPool(),
                         Flow.defaultBufferSize());
 
-        subscribers.forEach(publisher::subscribe);
+        Objects.requireNonNull(subscribers).forEach(publisher::subscribe);
     }
 
-    private void publishMessage(@Nonnull WebSocketMessage message) {
+    private void publishMessage(WebSocketMessage message) {
         int lag = publisher.offer(message,
                 MAX_SECONDS_TO_KEEP_IT_WHEN_NO_SPACE, TimeUnit.SECONDS,
                 (subscriber, msg) -> {

@@ -20,10 +20,13 @@ public class TokenRequest {
         return code;
     }
 
-    public TokenRequest(@Nonnull String code, @Nonnull String grantType, @Nonnull String redirectUri) {
-        this.code = code;
-        this.grantType = grantType;
-        this.redirectUri = redirectUri;
+    public TokenRequest(@Nonnull final String code,
+                        @Nonnull final String grantType,
+                        @Nonnull final String redirectUri) {
+
+        this.code = Objects.requireNonNull(code);
+        this.grantType = Objects.requireNonNull(grantType);
+        this.redirectUri = Objects.requireNonNull(redirectUri);
     }
 
     @Override

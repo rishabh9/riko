@@ -13,7 +13,9 @@ import java.lang.reflect.Type;
 public class NumberStringSerializer implements JsonSerializer<NumberString> {
 
     @Override
-    public JsonElement serialize(NumberString src, Type typeOfSrc, JsonSerializationContext context) {
+    public JsonElement serialize(final NumberString src,
+                                 final Type typeOfSrc,
+                                 final JsonSerializationContext context) {
         if (null == src) {
             return new JsonPrimitive("");
         }

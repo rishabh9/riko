@@ -21,6 +21,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Objects;
 
 public class ServiceGenerator {
 
@@ -61,7 +62,7 @@ public class ServiceGenerator {
     public static <S> S createService(@Nonnull final Class<S> serviceClass) {
 
         log.debug("Creating service without authentication");
-        return createService(serviceClass, null, null);
+        return createService(Objects.requireNonNull(serviceClass), null, null);
     }
 
     /**
@@ -81,10 +82,10 @@ public class ServiceGenerator {
                 && !Strings.isNullOrEmpty(password)) {
             final String authToken = Credentials.basic(username, password);
             log.debug("Creating service with Basic authentication");
-            return createService(serviceClass, new AuthHeaders(authToken, username));
+            return createService(Objects.requireNonNull(serviceClass), new AuthHeaders(authToken, username));
         }
         // Setup request headers without any auth
-        return createService(serviceClass, null);
+        return createService(Objects.requireNonNull(serviceClass), null);
     }
 
     /**
@@ -103,7 +104,7 @@ public class ServiceGenerator {
             enableHttpLogging();
         }
         log.debug("Creating service with authorization headers");
-        return retrofit.create(serviceClass);
+        return retrofit.create(Objects.requireNonNull(serviceClass));
     }
 
     private static void enableAuthentication(final AuthHeaders headers) {

@@ -14,7 +14,9 @@ import java.math.BigDecimal;
 public class NumberStringDeserializer implements JsonDeserializer<NumberString> {
 
     @Override
-    public NumberString deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+    public NumberString deserialize(final JsonElement json,
+                                    final Type typeOfT,
+                                    final JsonDeserializationContext context)
             throws JsonParseException {
 
         BigDecimal value;

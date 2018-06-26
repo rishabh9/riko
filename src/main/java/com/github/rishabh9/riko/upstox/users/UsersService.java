@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 public class UsersService extends Service {
@@ -22,8 +23,10 @@ public class UsersService extends Service {
      * @param accessToken The user's access token
      * @param credentials The user's API credentials
      */
-    public UsersService(@Nonnull final AccessToken accessToken, @Nonnull final ApiCredentials credentials) {
-        super(accessToken, credentials);
+    public UsersService(@Nonnull final AccessToken accessToken,
+                        @Nonnull final ApiCredentials credentials) {
+
+        super(Objects.requireNonNull(accessToken), Objects.requireNonNull(credentials));
     }
 
     /**
@@ -156,7 +159,7 @@ public class UsersService extends Service {
         }
     }
 
-    private void validateExchange(@Nonnull String exchange) {
+    private void validateExchange(String exchange) {
         if (Strings.isNullOrEmpty(exchange)) {
             log.error("Argument validation failed. Argument 'exchange' is mandatory.");
             throw new IllegalArgumentException("Argument 'exchange' is mandatory. It cannot be null nor empty.");

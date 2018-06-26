@@ -11,7 +11,9 @@ import okhttp3.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.annotation.Nonnull;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -24,8 +26,10 @@ public class WebSocketService extends Service {
      * @param accessToken The user's access token
      * @param credentials The user's API credentials
      */
-    public WebSocketService(final AccessToken accessToken, final ApiCredentials credentials) {
-        super(accessToken, credentials);
+    public WebSocketService(@Nonnull final AccessToken accessToken,
+                            @Nonnull final ApiCredentials credentials) {
+
+        super(Objects.requireNonNull(accessToken), Objects.requireNonNull(credentials));
     }
 
     private CompletableFuture<UpstoxResponse<WebsocketParameters>> getWebsocketParameters() {

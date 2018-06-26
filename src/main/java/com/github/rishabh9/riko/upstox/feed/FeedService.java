@@ -11,14 +11,17 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 public class FeedService extends Service {
 
     private static final Logger log = LogManager.getLogger(FeedService.class);
 
-    public FeedService(@Nonnull final AccessToken accessToken, @Nonnull final ApiCredentials credentials) {
-        super(accessToken, credentials);
+    public FeedService(@Nonnull final AccessToken accessToken,
+                       @Nonnull final ApiCredentials credentials) {
+
+        super(Objects.requireNonNull(accessToken), Objects.requireNonNull(credentials));
     }
 
     /**

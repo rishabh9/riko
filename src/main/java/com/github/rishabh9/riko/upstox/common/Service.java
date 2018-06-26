@@ -7,6 +7,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
+import java.util.Objects;
 
 /**
  * Parent class for every Service class. Holds common methods.
@@ -22,9 +23,11 @@ public abstract class Service {
      * @param accessToken The user's access token
      * @param credentials The user's API credentials
      */
-    public Service(AccessToken accessToken, ApiCredentials credentials) {
-        this.accessToken = accessToken;
-        this.credentials = credentials;
+    public Service(@Nonnull final AccessToken accessToken,
+                   @Nonnull final ApiCredentials credentials) {
+
+        this.accessToken = Objects.requireNonNull(accessToken);
+        this.credentials = Objects.requireNonNull(credentials);
     }
 
     protected <T> T prepareServiceApi(@Nonnull final Class<T> type) {

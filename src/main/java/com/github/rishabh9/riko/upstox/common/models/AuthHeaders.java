@@ -1,7 +1,6 @@
 package com.github.rishabh9.riko.upstox.common.models;
 
-import com.google.common.base.MoreObjects;
-
+import javax.annotation.Nonnull;
 import java.util.Objects;
 
 /**
@@ -12,9 +11,11 @@ public class AuthHeaders {
     private String token;
     private String apiKey;
 
-    public AuthHeaders(String token, String apiKey) {
-        this.token = token;
-        this.apiKey = apiKey;
+    public AuthHeaders(@Nonnull final String token,
+                       @Nonnull final String apiKey) {
+
+        this.token = Objects.requireNonNull(token);
+        this.apiKey = Objects.requireNonNull(apiKey);
     }
 
     public String getToken() {
@@ -37,13 +38,5 @@ public class AuthHeaders {
     @Override
     public int hashCode() {
         return Objects.hash(token, apiKey);
-    }
-
-    @Override
-    public String toString() {
-        return MoreObjects.toStringHelper(this)
-                .add("token", token)
-                .add("apiKey", apiKey)
-                .toString();
     }
 }

@@ -14,7 +14,7 @@ public class AuthenticationInterceptor implements Interceptor {
     private String authToken;
     private String apiKey;
 
-    public AuthenticationInterceptor(String token, String apiKey) {
+    public AuthenticationInterceptor(final String token, final String apiKey) {
         this.authToken = token;
         this.apiKey = apiKey;
     }

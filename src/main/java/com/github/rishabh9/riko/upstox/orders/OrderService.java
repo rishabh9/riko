@@ -13,6 +13,7 @@ import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 public class OrderService extends Service {
@@ -23,8 +24,10 @@ public class OrderService extends Service {
      * @param accessToken The user's access token
      * @param credentials The user's API credentials
      */
-    public OrderService(@Nonnull final AccessToken accessToken, @Nonnull final ApiCredentials credentials) {
-        super(accessToken, credentials);
+    public OrderService(@Nonnull final AccessToken accessToken,
+                        @Nonnull final ApiCredentials credentials) {
+
+        super(Objects.requireNonNull(accessToken), Objects.requireNonNull(credentials));
     }
 
     /**
@@ -158,7 +161,7 @@ public class OrderService extends Service {
         return api.cancelAllOrders();
     }
 
-    private void validateOrderId(@Nonnull String orderId) {
+    private void validateOrderId(String orderId) {
         if (Strings.isNullOrEmpty(orderId)) {
             log.error("Argument validation failed. Argument 'orderId' is mandatory.");
             throw new IllegalArgumentException("Argument 'orderId' is mandatory. It cannot be null nor empty.");
