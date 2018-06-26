@@ -55,36 +55,22 @@ public class LoginService {
         CompletableFuture<AccessToken> future = loginApi.getAccessToken(request);
 
         // Make a synchronous call.
-        return future.whenComplete((accessToken, throwable) -> {
-            if (null != throwable) {
-                log.debug("Request to retrieve access code was unsuccessful", throwable);
-            } else {
-                log.debug("Request to retrieve access code was successful");
-            }
-        }).get();
-
-/*
-        // Execute the call asynchronously. Get a positive or negative callback.
-        call.enqueue(
-                new Callback<>() {
-                    @Override
-                    public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
-                        // The network call was a success and we got a response
-                        logger.debug("Request for access code was {}. HTTP response code: {}.",
-                                response.isSuccessful() ? "successful" : "unsuccessful",
-                                response.code());
-                        if (response.isSuccessful()) {
-                            // Persist the access token
-                            AccessToken accessToken = response.body();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<AccessToken> call, Throwable t) {
-                        // The network call was a failure
-                        logger.error(t);
-                    }
-                });
-*/
+        return future
+//                .exceptionally(
+//                        (throwable) -> {
+//                            if (null != throwable) {
+//                                if (throwable instanceof HttpException) { // Non 2XX HTTP Response Code
+//                                    log.error("Request to retrieve access code was unsuccessful",
+//                                            throwable);
+//                                } else if (throwable instanceof IOError) { // Network Error
+//                                    log.error("A network error occurred while trying to retrieve access code",
+//                                            throwable);
+//                                } else {
+//                                    log.error("Unexpected error has occurred", throwable);
+//                                }
+//                            }
+//                            return null;
+//                        })
+                .get();
     }
 }
