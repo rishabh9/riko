@@ -16,17 +16,27 @@ public class LoginService {
 
     private static final Logger log = LogManager.getLogger(LoginService.class);
 
+    @Nonnull
+    private final TokenRequest request;
+    @Nonnull
+    private final ApiCredentials credentials;
+
     /**
-     * Retrieves the access code from Upstox Authorization URL through a synchronous call.<br>
-     *
      * @param request     The TokenRequest object containing all fields,
      *                    including the access code received after authenticating the user on Upstox site.
      * @param credentials The API key and secret.
+     */
+    public LoginService(@Nonnull TokenRequest request, @Nonnull ApiCredentials credentials) {
+        this.request = request;
+        this.credentials = credentials;
+    }
+
+    /**
+     * Retrieves the access code from Upstox Authorization URL through a synchronous call.<br>
+     *
      * @return An 'optional' AccessToken. Return object is empty in case of error.
      */
-    public AccessToken getAccessToken(@Nonnull final TokenRequest request,
-                                      @Nonnull final ApiCredentials credentials)
-            throws ExecutionException, InterruptedException {
+    public AccessToken getAccessToken() throws ExecutionException, InterruptedException {
 
         if (Strings.isNullOrEmpty(request.getCode())) {
             throw new IllegalArgumentException("Missing value for authorization code. Code: " + request.getCode());

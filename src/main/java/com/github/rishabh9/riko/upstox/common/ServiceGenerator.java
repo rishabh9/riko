@@ -9,6 +9,7 @@ import com.google.common.base.Strings;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import okhttp3.Credentials;
+import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -25,7 +26,15 @@ public class ServiceGenerator {
 
     private static final Logger log = LogManager.getLogger(ServiceGenerator.class);
 
-    private static final String API_BASE_URL = "https://api.upstox.com/";
+    private static final HttpUrl API_BASE_URL = getBaseUrl();
+
+    private static HttpUrl getBaseUrl() {
+        HttpUrl url = TestHelper.getInstance().getBaseUrl();
+        if (null == url) {
+            url = HttpUrl.parse("https://api.upstox.com/");
+        }
+        return url;
+    }
 
     private static OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
 
