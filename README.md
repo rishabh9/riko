@@ -50,11 +50,6 @@ subscribers (`MessageSubscriber`). Example:
     WebSocketService service = new WebSocketService(accessToken, apiCredentials);
     WrappedWebSocket socket = service.connect(subscribers);
 
-#### Riko Vanilla
-
-The build from `vanilla` branch is called as `riko-vanilla`. It does not use any of the Retrofit2 call adapters.
-In case you are turned off by the Java8's `CompletableFuture` interface, `riko-vanilla` is your only hope. ^_^
-
 #### Including Riko in your project
 
 ###### Maven
@@ -65,21 +60,7 @@ In case you are turned off by the Java8's `CompletableFuture` interface, `riko-v
         <version>1.0.0-SNAPSHOT</version>
     </dependency>
 
-in case of `riko-vanilla`
-
-    <dependency>
-        <groupId>com.github.rishabh9</groupId>
-        <artifactId>riko-vanilla</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
-    </dependency>
-
 ###### Gradle
-
-    dependencies {
-        implementation 'com.github.rishabh9:riko:1.0.0-SNAPSHOT'
-    }
-
-in case of `riko-vanilla`
 
     dependencies {
         implementation 'com.github.rishabh9:riko:1.0.0-SNAPSHOT'
