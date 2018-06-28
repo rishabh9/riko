@@ -114,9 +114,9 @@ class FeedServiceTest {
             service.liveFeed("NSE", "RELIANCE", "TYPE").get();
         } catch (ExecutionException | InterruptedException e) {
             assertTrue(e.getCause() instanceof IOException);
+        } finally {
+            server.shutdown();
         }
-
-        server.shutdown();
     }
 
     @Test
@@ -132,35 +132,35 @@ class FeedServiceTest {
         FeedService service = new FeedService(token, credentials);
 
         assertThrows(IllegalArgumentException.class, () ->
-                service.liveFeed(null, null, null),
+                        service.liveFeed(null, null, null),
                 "Arguments cannot be null. Mandatory validation missing.");
 
         assertThrows(IllegalArgumentException.class, () ->
-                service.liveFeed("NSE", "ACC", null),
+                        service.liveFeed("NSE", "ACC", null),
                 "Type cannot be null. Mandatory validation missing.");
 
         assertThrows(IllegalArgumentException.class, () ->
-                service.liveFeed("NSE", null, "TYPE"),
+                        service.liveFeed("NSE", null, "TYPE"),
                 "Symbol cannot be null. Mandatory validation missing.");
 
         assertThrows(IllegalArgumentException.class, () ->
-                service.liveFeed(null, "ACC", "TYPE"),
+                        service.liveFeed(null, "ACC", "TYPE"),
                 "Exchange cannot be null. Mandatory validation missing.");
 
         assertThrows(IllegalArgumentException.class, () ->
-                service.liveFeed("", "", ""),
+                        service.liveFeed("", "", ""),
                 "Arguments cannot be empty. Mandatory validation missing.");
 
         assertThrows(IllegalArgumentException.class, () ->
-                service.liveFeed("", "ACC", "TYPE"),
+                        service.liveFeed("", "ACC", "TYPE"),
                 "Exchange cannot be empty. Mandatory validation missing.");
 
         assertThrows(IllegalArgumentException.class, () ->
-                service.liveFeed("NSE", "", "TYPE"),
+                        service.liveFeed("NSE", "", "TYPE"),
                 "Symbol cannot be empty. Mandatory validation missing.");
 
         assertThrows(IllegalArgumentException.class, () ->
-                service.liveFeed("NSE", "ACC", ""),
+                        service.liveFeed("NSE", "ACC", ""),
                 "Type cannot be empty. Mandatory validation missing.");
     }
 
@@ -275,9 +275,9 @@ class FeedServiceTest {
             service.subscribe("TYPE", "NSE", "RELIANCE,ACC").get();
         } catch (ExecutionException | InterruptedException e) {
             assertTrue(e.getCause() instanceof IOException);
+        } finally {
+            server.shutdown();
         }
-
-        server.shutdown();
     }
 
     @Test
@@ -416,9 +416,9 @@ class FeedServiceTest {
             service.unsubscribe("TYPE", "NSE", "RELIANCE,ACC").get();
         } catch (ExecutionException | InterruptedException e) {
             assertTrue(e.getCause() instanceof IOException);
+        } finally {
+            server.shutdown();
         }
-
-        server.shutdown();
     }
 
     @Test

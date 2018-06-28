@@ -49,10 +49,10 @@ class LoginServiceTest {
         } catch (ExecutionException | InterruptedException e) {
             log.fatal(e);
             fail();
+        } finally {
+            // Shut down the server. Instances cannot be reused.
+            server.shutdown();
         }
-
-        // Shut down the server. Instances cannot be reused.
-        server.shutdown();
     }
 
     @Test
@@ -105,10 +105,10 @@ class LoginServiceTest {
             service.getAccessToken();
         } catch (ExecutionException | InterruptedException e) {
             assertTrue(e.getCause() instanceof IOException);
+        } finally {
+            // Shut down the server. Instances cannot be reused.
+            server.shutdown();
         }
-
-        // Shut down the server. Instances cannot be reused.
-        server.shutdown();
     }
 
     @Test
