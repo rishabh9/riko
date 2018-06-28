@@ -15,6 +15,15 @@ Riko is a third-party Java library for accessing Upstox API.
 
 ### Riko's quirks
 
+###### Using Riko
+
+Refer the unit tests to understand how you can use Riko in your application.
+
+###### ServiceGenerator::rebuildWithUrl(HttpUrl url)
+
+The `ServiceGenerator` has a `rebuildWithUrl(HttpUrl url)` function that allows for easy unit testing of Riko, 
+and hence, only usable when developing Riko. Ignore this function, as long as you only want to use Riko as dependency.
+
 ###### NumberString
 
 The Upstox API that fetches the current positions for the day, returns certain numeric data as empty String if no value
