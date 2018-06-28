@@ -1,10 +1,9 @@
 package com.github.rishabh9.riko.upstox.login;
 
-import com.github.rishabh9.riko.upstox.common.TestHelper;
+import com.github.rishabh9.riko.upstox.common.ServiceGenerator;
 import com.github.rishabh9.riko.upstox.common.models.ApiCredentials;
 import com.github.rishabh9.riko.upstox.login.models.AccessToken;
 import com.github.rishabh9.riko.upstox.login.models.TokenRequest;
-import okhttp3.HttpUrl;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import org.apache.logging.log4j.LogManager;
@@ -32,8 +31,7 @@ class LoginServiceTest {
 
         server.start();
 
-        HttpUrl baseUrl = server.url("/unit/tests/");
-        TestHelper.getInstance().setBaseUrl(baseUrl);
+        ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
         TokenRequest request = new TokenRequest("authorization_code_123456789",
                 "authorization_code", "http://localhost:4567/hello");
@@ -50,6 +48,7 @@ class LoginServiceTest {
             assertEquals("access_token_123456789", accessToken.getToken());
         } catch (ExecutionException | InterruptedException e) {
             log.fatal(e);
+            fail();
         }
 
         // Shut down the server. Instances cannot be reused.
@@ -57,7 +56,7 @@ class LoginServiceTest {
     }
 
     @Test
-    void getAccessToken_errorOut_whenUpstoxReturnsError() throws IOException {
+    void getAccessToken_failure_whenUpstoxReturnsError() throws IOException {
         MockWebServer server = new MockWebServer();
 
         server.enqueue(new MockResponse()
@@ -70,8 +69,7 @@ class LoginServiceTest {
 
         server.start();
 
-        HttpUrl baseUrl = server.url("/unit/tests/");
-        TestHelper.getInstance().setBaseUrl(baseUrl);
+        ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
         TokenRequest request = new TokenRequest("authorization_code_123456789",
                 "authorization_code", "http://localhost:4567/hello");
@@ -87,15 +85,14 @@ class LoginServiceTest {
     }
 
     @Test
-    void getAccessToken_errorOut_onNetworkError() throws IOException {
+    void getAccessToken_failure_onNetworkError() throws IOException {
         MockWebServer server = new MockWebServer();
 
         server.enqueue(new MockResponse().setSocketPolicy(DISCONNECT_AFTER_REQUEST));
 
         server.start();
 
-        HttpUrl baseUrl = server.url("/unit/tests/");
-        TestHelper.getInstance().setBaseUrl(baseUrl);
+        ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
         TokenRequest request = new TokenRequest("authorization_code_123456789",
                 "authorization_code", "http://localhost:4567/hello");
@@ -109,7 +106,6 @@ class LoginServiceTest {
         } catch (ExecutionException | InterruptedException e) {
             assertTrue(e.getCause() instanceof IOException);
         }
-        //assertThrows(ExecutionException.class, service::getAccessToken);
 
         // Shut down the server. Instances cannot be reused.
         server.shutdown();

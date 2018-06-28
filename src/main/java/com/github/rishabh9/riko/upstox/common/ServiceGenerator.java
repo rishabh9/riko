@@ -27,30 +27,46 @@ public class ServiceGenerator {
 
     private static final Logger log = LogManager.getLogger(ServiceGenerator.class);
 
-    private static final HttpUrl API_BASE_URL = getBaseUrl();
-
-    private static HttpUrl getBaseUrl() {
-        HttpUrl url = TestHelper.getInstance().getBaseUrl();
-        if (null == url) {
-            url = HttpUrl.parse("https://api.upstox.com/");
-        }
-        return url;
+    private ServiceGenerator() {
+        final Gson gson = new GsonBuilder()
+                .registerTypeAdapter(NumberString.class, new NumberStringSerializer())
+                .registerTypeAdapter(NumberString.class, new NumberStringDeserializer())
+                .create();
+        this.httpClient = new OkHttpClient.Builder();
+        this.builder =
+                new Retrofit.Builder()
+                        .baseUrl(
+                                Objects.requireNonNull(
+                                        HttpUrl.parse("https://api.upstox.com/")))
+                        .addConverterFactory(GsonConverterFactory.create(gson))
+                        .addCallAdapterFactory(Java8CallAdapterFactory.create())
+                        .client(httpClient.build());
+        retrofit = builder.build();
     }
 
-    private static OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+    private static final ServiceGenerator instance = new ServiceGenerator();
 
-    private static Gson gson = new GsonBuilder()
-            .registerTypeAdapter(NumberString.class, new NumberStringSerializer())
-            .registerTypeAdapter(NumberString.class, new NumberStringDeserializer())
-            .create();
+    public static ServiceGenerator getInstance() {
+        return ServiceGenerator.instance;
+    }
 
-    private static Retrofit.Builder builder =
-            new Retrofit.Builder()
-                    .baseUrl(API_BASE_URL)
-                    .addConverterFactory(GsonConverterFactory.create(gson))
-                    .addCallAdapterFactory(Java8CallAdapterFactory.create());
+    private OkHttpClient.Builder httpClient;
 
-    private static Retrofit retrofit = builder.build();
+    private Retrofit.Builder builder;
+
+    private Retrofit retrofit;
+
+    /**
+     * A helper method for unit testing, allowing for random base URLs to be used per test.
+     * <em>SHOULD NOT BE USED ON OUTSIDE OF UNIT TESTS</em>
+     *
+     * @param url The base URL to use.
+     */
+    public void rebuildWithUrl(HttpUrl url) {
+        builder.client(httpClient.build());
+        builder.baseUrl(url);
+        retrofit = builder.build();
+    }
 
     /**
      * Create service without authentication.
@@ -59,7 +75,7 @@ public class ServiceGenerator {
      * @param <S>          The type of Service
      * @return The retrofitted service
      */
-    public static <S> S createService(@Nonnull final Class<S> serviceClass) {
+    public <S> S createService(@Nonnull final Class<S> serviceClass) {
 
         log.debug("Creating service without authentication");
         return createService(Objects.requireNonNull(serviceClass), null, null);
@@ -74,15 +90,17 @@ public class ServiceGenerator {
      * @param <S>          The type of Service
      * @return The retrofitted service
      */
-    public static <S> S createService(@Nonnull final Class<S> serviceClass,
-                                      @Nullable final String username,
-                                      @Nullable final String password) {
+    public <S> S createService(@Nonnull final Class<S> serviceClass,
+                               @Nullable final String username,
+                               @Nullable final String password) {
 
         if (!Strings.isNullOrEmpty(username)
                 && !Strings.isNullOrEmpty(password)) {
             final String authToken = Credentials.basic(username, password);
             log.debug("Creating service with Basic authentication");
-            return createService(Objects.requireNonNull(serviceClass), new AuthHeaders(authToken, username));
+            return createService(
+                    Objects.requireNonNull(serviceClass),
+                    new AuthHeaders(authToken, username));
         }
         // Setup request headers without any auth
         return createService(Objects.requireNonNull(serviceClass), null);
@@ -96,8 +114,8 @@ public class ServiceGenerator {
      * @param <S>          The type of Service
      * @return The retrofitted service
      */
-    public static <S> S createService(@Nonnull final Class<S> serviceClass,
-                                      @Nullable final AuthHeaders headers) {
+    public <S> S createService(@Nonnull final Class<S> serviceClass,
+                               @Nullable final AuthHeaders headers) {
 
         enableAuthentication(headers);
         if (log.isDebugEnabled()) {
@@ -107,7 +125,7 @@ public class ServiceGenerator {
         return retrofit.create(Objects.requireNonNull(serviceClass));
     }
 
-    private static void enableAuthentication(final AuthHeaders headers) {
+    private void enableAuthentication(final AuthHeaders headers) {
 
         if (null != headers
                 && !Strings.isNullOrEmpty(headers.getToken())
@@ -120,7 +138,7 @@ public class ServiceGenerator {
         }
     }
 
-    private static void enableHttpLogging() {
+    private void enableHttpLogging() {
 
         final HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         // Set the desired log level
@@ -129,7 +147,7 @@ public class ServiceGenerator {
         addInterceptor(interceptor);
     }
 
-    private static void addInterceptor(Interceptor interceptor) {
+    private void addInterceptor(Interceptor interceptor) {
 
         if (!httpClient.interceptors().contains(interceptor)) {
             httpClient.addInterceptor(interceptor);

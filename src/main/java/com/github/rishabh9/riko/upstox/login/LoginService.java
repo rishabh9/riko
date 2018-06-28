@@ -47,7 +47,7 @@ public class LoginService {
 
         // Create a very simple REST adapter which points the Upstox API endpoint.
         LoginApi loginApi =
-                ServiceGenerator.createService(
+                ServiceGenerator.getInstance().createService(
                         LoginApi.class,
                         credentials.getApiKey(),
                         credentials.getApiSecret());

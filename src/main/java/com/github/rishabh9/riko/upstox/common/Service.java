@@ -34,6 +34,7 @@ public abstract class Service {
 
         log.debug("Preparing service API: {}", type.getName());
         final String token = accessToken.getType() + " " + accessToken.getToken();
-        return ServiceGenerator.createService(type, new AuthHeaders(token, credentials.getApiKey()));
+        return ServiceGenerator.getInstance()
+                .createService(type, new AuthHeaders(token, credentials.getApiKey()));
     }
 }
