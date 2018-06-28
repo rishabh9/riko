@@ -59,7 +59,7 @@ public class FeedService extends Service {
                                                                              @Nonnull final String symbolsCsv) {
 
         log.debug("Validate parameters - GET Subscribe");
-        validatePathParameters(exchange, type);
+        validatePathParameters(exchange, type, symbolsCsv);
 
         log.debug("Preparing service - GET Subscribe");
         final FeedApi api = prepareServiceApi(FeedApi.class);
@@ -81,7 +81,7 @@ public class FeedService extends Service {
                                                                                @Nonnull final String symbolsCsv) {
 
         log.debug("Validate parameters - GET Unsubscribe");
-        validatePathParameters(exchange, type);
+        validatePathParameters(exchange, type, symbolsCsv);
 
         log.debug("Preparing service - GET Unsubscribe");
         final FeedApi api = prepareServiceApi(FeedApi.class);
@@ -94,9 +94,9 @@ public class FeedService extends Service {
         for (String value : values) {
             if (Strings.isNullOrEmpty(value)) {
                 log.error("Argument validation failed. " +
-                        "Arguments 'exchange', 'symbol' and 'type' are mandatory.");
+                        "Arguments 'exchange', 'symbol(s)' and 'type' are mandatory.");
                 throw new IllegalArgumentException(
-                        "Arguments 'exchange', 'symbol' and 'type' are mandatory. " +
+                        "Arguments 'exchange', 'symbol(s)' and 'type' are mandatory. " +
                                 "They cannot be null nor empty.");
             }
         }
