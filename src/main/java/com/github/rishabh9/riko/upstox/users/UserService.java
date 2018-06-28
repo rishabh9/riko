@@ -15,16 +15,16 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
-public class UsersService extends Service {
+public class UserService extends Service {
 
-    private static final Logger log = LogManager.getLogger(UsersService.class);
+    private static final Logger log = LogManager.getLogger(UserService.class);
 
     /**
      * @param accessToken The user's access token
      * @param credentials The user's API credentials
      */
-    public UsersService(@Nonnull final AccessToken accessToken,
-                        @Nonnull final ApiCredentials credentials) {
+    public UserService(@Nonnull final AccessToken accessToken,
+                       @Nonnull final ApiCredentials credentials) {
 
         super(Objects.requireNonNull(accessToken), Objects.requireNonNull(credentials));
     }
@@ -49,7 +49,8 @@ public class UsersService extends Service {
      * @param accountType The account type - 'security' or 'commodity'
      * @return the user's account balance.
      */
-    public CompletableFuture<UpstoxResponse<ProfileBalance>> getProfileBalance(@Nullable final String accountType) {
+    public CompletableFuture<UpstoxResponse<ProfileBalance>> getProfileBalance(
+            @Nullable final String accountType) {
 
         log.debug("Preparing service - GET Profile Balance");
         final UsersApi api = prepareServiceApi(UsersApi.class);
