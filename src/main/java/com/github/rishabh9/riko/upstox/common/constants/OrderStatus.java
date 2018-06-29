@@ -1,4 +1,4 @@
-package com.github.rishabh9.riko.upstox.orders;
+package com.github.rishabh9.riko.upstox.common.constants;
 
 /**
  * Order Status Constants

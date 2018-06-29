@@ -24,6 +24,11 @@ Refer the unit tests to understand how you can use Riko in your application.
 The `ServiceGenerator` has a `rebuildWithUrl(HttpUrl url)` function that allows for easy unit testing of Riko, 
 and hence, only usable when developing Riko. Ignore this function, as long as you only want to use Riko as dependency.
 
+###### Constants
+
+Have declared some constants under the `com.github.rishabh9.riko.upstox.common.constants` package that you can make use
+ of.
+
 ###### NumberString
 
 The Upstox API that fetches the current positions for the day, returns certain numeric data as empty String if no value
