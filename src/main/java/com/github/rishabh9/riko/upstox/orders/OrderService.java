@@ -102,6 +102,9 @@ public class OrderService extends Service {
      */
     public CompletableFuture<UpstoxResponse<Order>> placeOrder(@Nonnull final OrderRequest request) {
 
+        log.debug("Validate parameters - POST Place Order");
+        validateOrderRequest(request);
+
         log.debug("Preparing service - POST Place Order");
         final OrderApi api = prepareServiceApi(OrderApi.class);
 
@@ -119,13 +122,14 @@ public class OrderService extends Service {
     public CompletableFuture<UpstoxResponse<Order>> modifyOrder(@Nonnull final String orderId,
                                                                 @Nonnull final OrderRequest request) {
 
-        log.debug("Validate parameters - PUT Place Order");
+        log.debug("Validate parameters - PUT Modify Order");
         validateOrderId(orderId);
+        validateOrderRequest(request);
 
-        log.debug("Preparing service - PUT Place Order");
+        log.debug("Preparing service - PUT Modify Order");
         final OrderApi api = prepareServiceApi(OrderApi.class);
 
-        log.debug("Making request - PUT Place Order");
+        log.debug("Making request - PUT Modify Order");
         return api.modifyOrder(orderId, request);
     }
 
@@ -159,6 +163,13 @@ public class OrderService extends Service {
 
         log.debug("Making request - DELETE All Orders");
         return api.cancelAllOrders();
+    }
+
+    private void validateOrderRequest(OrderRequest request) {
+        if (null == request) {
+            log.error("Order placement request parameters are missing.");
+            throw new IllegalArgumentException("Order placement request parameters are missing.");
+        }
     }
 
     private void validateOrderId(String orderId) {

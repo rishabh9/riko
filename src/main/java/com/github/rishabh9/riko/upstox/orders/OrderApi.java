@@ -75,7 +75,7 @@ public interface OrderApi {
      * @param orderIdCsv The comma separated string of order ids that need to cancelled.
      * @return A CompletableFuture to execute the request (a)synchronously.
      */
-    @DELETE("/live/orders/{order_id_csv}")
+    @DELETE("/live/orders/{order_ids_csv}")
     CompletableFuture<UpstoxResponse<String>> cancelOrders(@Path("order_ids_csv") String orderIdCsv);
 
     /**
