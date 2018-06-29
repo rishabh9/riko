@@ -41,7 +41,7 @@ public class ServiceGenerator {
                         .addConverterFactory(GsonConverterFactory.create(gson))
                         .addCallAdapterFactory(Java8CallAdapterFactory.create())
                         .client(httpClient.build());
-        retrofit = builder.build();
+        this.retrofit = builder.build();
     }
 
     private static final ServiceGenerator instance = new ServiceGenerator();
