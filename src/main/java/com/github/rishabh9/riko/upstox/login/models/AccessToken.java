@@ -11,7 +11,7 @@ public class AccessToken {
     private String token;
 
     @SerializedName("expires_in")
-    private long expiresIn;
+    private Long expiresIn;
 
     @SerializedName("token_type")
     private String type;
@@ -24,11 +24,11 @@ public class AccessToken {
         this.token = token;
     }
 
-    public long getExpiresIn() {
+    public Long getExpiresIn() {
         return expiresIn;
     }
 
-    public void setExpiresIn(long expiresIn) {
+    public void setExpiresIn(Long expiresIn) {
         this.expiresIn = expiresIn;
     }
 
@@ -51,14 +51,13 @@ public class AccessToken {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AccessToken that = (AccessToken) o;
-        return expiresIn == that.expiresIn &&
-                Objects.equals(token, that.token) &&
+        return Objects.equals(token, that.token) &&
+                Objects.equals(expiresIn, that.expiresIn) &&
                 Objects.equals(type, that.type);
     }
 
     @Override
     public int hashCode() {
-
         return Objects.hash(token, expiresIn, type);
     }
 

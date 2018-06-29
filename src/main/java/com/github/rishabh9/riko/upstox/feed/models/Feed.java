@@ -9,36 +9,36 @@ import java.util.Objects;
 
 public class Feed {
 
-    private long timestamp;
+    private Long timestamp;
 
     private String exchange;
 
     private String symbol;
 
-    private double ltp;
+    private BigDecimal ltp;
 
-    private double open;
+    private BigDecimal open;
 
-    private double high;
+    private BigDecimal high;
 
-    private double low;
+    private BigDecimal low;
 
-    private double close;
+    private BigDecimal close;
 
-    private double vtt;
+    private Long vtt;
 
-    private double atp;
+    private BigDecimal atp;
 
-    private String oi;
+    private Long oi;
 
     @SerializedName("spot_price")
     private BigDecimal spotPrice;
 
     @SerializedName("total_buy_qty")
-    private long totalBuyQuantity;
+    private Long totalBuyQuantity;
 
     @SerializedName("total_sell_qty")
-    private long totalSellQuantity;
+    private Long totalSellQuantity;
 
     @SerializedName("lower_circuit")
     private BigDecimal lowerCircuit;
@@ -56,13 +56,13 @@ public class Feed {
 
     private List<BidsAsk> ask;
 
-    private long ltt;
+    private Long ltt;
 
-    public long getTimestamp() {
+    public Long getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(long timestamp) {
+    public void setTimestamp(Long timestamp) {
         this.timestamp = timestamp;
     }
 
@@ -82,67 +82,67 @@ public class Feed {
         this.symbol = symbol;
     }
 
-    public double getLtp() {
+    public BigDecimal getLtp() {
         return ltp;
     }
 
-    public void setLtp(double ltp) {
+    public void setLtp(BigDecimal ltp) {
         this.ltp = ltp;
     }
 
-    public double getOpen() {
+    public BigDecimal getOpen() {
         return open;
     }
 
-    public void setOpen(double open) {
+    public void setOpen(BigDecimal open) {
         this.open = open;
     }
 
-    public double getHigh() {
+    public BigDecimal getHigh() {
         return high;
     }
 
-    public void setHigh(double high) {
+    public void setHigh(BigDecimal high) {
         this.high = high;
     }
 
-    public double getLow() {
+    public BigDecimal getLow() {
         return low;
     }
 
-    public void setLow(double low) {
+    public void setLow(BigDecimal low) {
         this.low = low;
     }
 
-    public double getClose() {
+    public BigDecimal getClose() {
         return close;
     }
 
-    public void setClose(double close) {
+    public void setClose(BigDecimal close) {
         this.close = close;
     }
 
-    public double getVtt() {
+    public Long getVtt() {
         return vtt;
     }
 
-    public void setVtt(double vtt) {
+    public void setVtt(Long vtt) {
         this.vtt = vtt;
     }
 
-    public double getAtp() {
+    public BigDecimal getAtp() {
         return atp;
     }
 
-    public void setAtp(double atp) {
+    public void setAtp(BigDecimal atp) {
         this.atp = atp;
     }
 
-    public String getOi() {
+    public Long getOi() {
         return oi;
     }
 
-    public void setOi(String oi) {
+    public void setOi(Long oi) {
         this.oi = oi;
     }
 
@@ -154,19 +154,19 @@ public class Feed {
         this.spotPrice = spotPrice;
     }
 
-    public long getTotalBuyQuantity() {
+    public Long getTotalBuyQuantity() {
         return totalBuyQuantity;
     }
 
-    public void setTotalBuyQuantity(long totalBuyQuantity) {
+    public void setTotalBuyQuantity(Long totalBuyQuantity) {
         this.totalBuyQuantity = totalBuyQuantity;
     }
 
-    public long getTotalSellQuantity() {
+    public Long getTotalSellQuantity() {
         return totalSellQuantity;
     }
 
-    public void setTotalSellQuantity(long totalSellQuantity) {
+    public void setTotalSellQuantity(Long totalSellQuantity) {
         this.totalSellQuantity = totalSellQuantity;
     }
 
@@ -218,11 +218,11 @@ public class Feed {
         this.ask = ask;
     }
 
-    public long getLtt() {
+    public Long getLtt() {
         return ltt;
     }
 
-    public void setLtt(long ltt) {
+    public void setLtt(Long ltt) {
         this.ltt = ltt;
     }
 
@@ -231,34 +231,34 @@ public class Feed {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Feed feed = (Feed) o;
-        return timestamp == feed.timestamp &&
-                Double.compare(feed.ltp, ltp) == 0 &&
-                Double.compare(feed.open, open) == 0 &&
-                Double.compare(feed.high, high) == 0 &&
-                Double.compare(feed.low, low) == 0 &&
-                Double.compare(feed.close, close) == 0 &&
-                Double.compare(feed.vtt, vtt) == 0 &&
-                Double.compare(feed.atp, atp) == 0 &&
-                totalBuyQuantity == feed.totalBuyQuantity &&
-                totalSellQuantity == feed.totalSellQuantity &&
-                ltt == feed.ltt &&
+        return Objects.equals(timestamp, feed.timestamp) &&
                 Objects.equals(exchange, feed.exchange) &&
                 Objects.equals(symbol, feed.symbol) &&
+                Objects.equals(ltp, feed.ltp) &&
+                Objects.equals(open, feed.open) &&
+                Objects.equals(high, feed.high) &&
+                Objects.equals(low, feed.low) &&
+                Objects.equals(close, feed.close) &&
+                Objects.equals(vtt, feed.vtt) &&
+                Objects.equals(atp, feed.atp) &&
                 Objects.equals(oi, feed.oi) &&
                 Objects.equals(spotPrice, feed.spotPrice) &&
+                Objects.equals(totalBuyQuantity, feed.totalBuyQuantity) &&
+                Objects.equals(totalSellQuantity, feed.totalSellQuantity) &&
                 Objects.equals(lowerCircuit, feed.lowerCircuit) &&
                 Objects.equals(upperCircuit, feed.upperCircuit) &&
                 Objects.equals(yearlyLow, feed.yearlyLow) &&
                 Objects.equals(yearlyHigh, feed.yearlyHigh) &&
                 Objects.equals(bids, feed.bids) &&
-                Objects.equals(ask, feed.ask);
+                Objects.equals(ask, feed.ask) &&
+                Objects.equals(ltt, feed.ltt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(timestamp, exchange, symbol, ltp, open, high, low, close, vtt, atp, oi,
-                spotPrice, totalBuyQuantity, totalSellQuantity, lowerCircuit, upperCircuit, yearlyLow,
-                yearlyHigh, bids, ask, ltt);
+        return Objects.hash(timestamp, exchange, symbol, ltp, open, high, low, close,
+                vtt, atp, oi, spotPrice, totalBuyQuantity, totalSellQuantity,
+                lowerCircuit, upperCircuit, yearlyLow, yearlyHigh, bids, ask, ltt);
     }
 
     @Override

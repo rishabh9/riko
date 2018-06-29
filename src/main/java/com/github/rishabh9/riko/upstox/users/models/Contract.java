@@ -18,16 +18,16 @@ public class Contract {
     private String instrumentName;
 
     @SerializedName("gn")
-    private long gn;
+    private Long gn;
 
     @SerializedName("gd")
-    private long gd;
+    private Long gd;
 
     @SerializedName("pn")
-    private long pn;
+    private Long pn;
 
     @SerializedName("pd")
-    private long pd;
+    private Long pd;
 
     @SerializedName("circuit_limit")
     private String circuitLimit;
@@ -35,18 +35,19 @@ public class Contract {
     private String status;
 
     @SerializedName("yearly_low")
-    private long yearlyLow;
+    private BigDecimal yearlyLow;
 
     @SerializedName("yearly_high")
-    private long yearlyHigh;
+    private BigDecimal yearlyHigh;
 
     @SerializedName("symbol")
     private String symbol;
 
     @SerializedName("lot_size")
-    private long lotSize;
+    private Long lotSize;
 
     private String exchange;
+
     @SerializedName("closing_price")
     private BigDecimal closingPrice;
 
@@ -54,13 +55,13 @@ public class Contract {
     private String openInterest;
 
     @SerializedName("tick_size")
-    private double tickSize;
+    private Long tickSize;
 
     @SerializedName("name")
     private String name;
 
     @SerializedName("token")
-    private long token;
+    private Long token;
 
     @SerializedName("isin")
     private String isin;
@@ -89,35 +90,35 @@ public class Contract {
         this.instrumentName = instrumentName;
     }
 
-    public long getGn() {
+    public Long getGn() {
         return gn;
     }
 
-    public void setGn(long gn) {
+    public void setGn(Long gn) {
         this.gn = gn;
     }
 
-    public long getGd() {
+    public Long getGd() {
         return gd;
     }
 
-    public void setGd(long gd) {
+    public void setGd(Long gd) {
         this.gd = gd;
     }
 
-    public long getPn() {
+    public Long getPn() {
         return pn;
     }
 
-    public void setPn(long pn) {
+    public void setPn(Long pn) {
         this.pn = pn;
     }
 
-    public long getPd() {
+    public Long getPd() {
         return pd;
     }
 
-    public void setPd(long pd) {
+    public void setPd(Long pd) {
         this.pd = pd;
     }
 
@@ -137,19 +138,19 @@ public class Contract {
         this.status = status;
     }
 
-    public long getYearlyLow() {
+    public BigDecimal getYearlyLow() {
         return yearlyLow;
     }
 
-    public void setYearlyLow(long yearlyLow) {
+    public void setYearlyLow(BigDecimal yearlyLow) {
         this.yearlyLow = yearlyLow;
     }
 
-    public long getYearlyHigh() {
+    public BigDecimal getYearlyHigh() {
         return yearlyHigh;
     }
 
-    public void setYearlyHigh(long yearlyHigh) {
+    public void setYearlyHigh(BigDecimal yearlyHigh) {
         this.yearlyHigh = yearlyHigh;
     }
 
@@ -161,11 +162,11 @@ public class Contract {
         this.symbol = symbol;
     }
 
-    public long getLotSize() {
+    public Long getLotSize() {
         return lotSize;
     }
 
-    public void setLotSize(long lotSize) {
+    public void setLotSize(Long lotSize) {
         this.lotSize = lotSize;
     }
 
@@ -193,11 +194,11 @@ public class Contract {
         this.openInterest = openInterest;
     }
 
-    public double getTickSize() {
+    public Long getTickSize() {
         return tickSize;
     }
 
-    public void setTickSize(double tickSize) {
+    public void setTickSize(Long tickSize) {
         this.tickSize = tickSize;
     }
 
@@ -209,11 +210,11 @@ public class Contract {
         this.name = name;
     }
 
-    public long getToken() {
+    public Long getToken() {
         return token;
     }
 
-    public void setToken(long token) {
+    public void setToken(Long token) {
         this.token = token;
     }
 
@@ -230,33 +231,33 @@ public class Contract {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Contract contract = (Contract) o;
-        return gn == contract.gn &&
-                gd == contract.gd &&
-                pn == contract.pn &&
-                pd == contract.pd &&
-                yearlyLow == contract.yearlyLow &&
-                yearlyHigh == contract.yearlyHigh &&
-                lotSize == contract.lotSize &&
-                tickSize == contract.tickSize &&
-                token == contract.token &&
-                Objects.equals(lowerCircuit, contract.lowerCircuit) &&
+        return Objects.equals(lowerCircuit, contract.lowerCircuit) &&
                 Objects.equals(upperCircuit, contract.upperCircuit) &&
                 Objects.equals(instrumentName, contract.instrumentName) &&
+                Objects.equals(gn, contract.gn) &&
+                Objects.equals(gd, contract.gd) &&
+                Objects.equals(pn, contract.pn) &&
+                Objects.equals(pd, contract.pd) &&
                 Objects.equals(circuitLimit, contract.circuitLimit) &&
                 Objects.equals(status, contract.status) &&
+                Objects.equals(yearlyLow, contract.yearlyLow) &&
+                Objects.equals(yearlyHigh, contract.yearlyHigh) &&
                 Objects.equals(symbol, contract.symbol) &&
+                Objects.equals(lotSize, contract.lotSize) &&
                 Objects.equals(exchange, contract.exchange) &&
                 Objects.equals(closingPrice, contract.closingPrice) &&
                 Objects.equals(openInterest, contract.openInterest) &&
+                Objects.equals(tickSize, contract.tickSize) &&
                 Objects.equals(name, contract.name) &&
+                Objects.equals(token, contract.token) &&
                 Objects.equals(isin, contract.isin);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(lowerCircuit, upperCircuit, instrumentName, gn, gd, pn, pd, circuitLimit, status,
-                yearlyLow, yearlyHigh, symbol, lotSize, exchange, closingPrice, openInterest, tickSize, name,
-                token, isin);
+        return Objects.hash(lowerCircuit, upperCircuit, instrumentName, gn, gd, pn, pd,
+                circuitLimit, status, yearlyLow, yearlyHigh, symbol, lotSize, exchange,
+                closingPrice, openInterest, tickSize, name, token, isin);
     }
 
     @Override

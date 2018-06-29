@@ -10,7 +10,7 @@ public class Trade {
 
     private String exchange;
 
-    private long token;
+    private Long token;
 
     private String symbol;
 
@@ -23,7 +23,7 @@ public class Trade {
     private String transactionType;
 
     @SerializedName("traded_quantity")
-    private long tradedQuantity;
+    private Long tradedQuantity;
 
     @SerializedName("exchange_order_id")
     private String exchangeOrderId;
@@ -41,7 +41,7 @@ public class Trade {
     private BigDecimal tradedPrice;
 
     @SerializedName("trade_id")
-    private long tradeId;
+    private Long tradeId;
 
     public String getExchange() {
         return exchange;
@@ -51,11 +51,11 @@ public class Trade {
         this.exchange = exchange;
     }
 
-    public long getToken() {
+    public Long getToken() {
         return token;
     }
 
-    public void setToken(long token) {
+    public void setToken(Long token) {
         this.token = token;
     }
 
@@ -91,11 +91,11 @@ public class Trade {
         this.transactionType = transactionType;
     }
 
-    public long getTradedQuantity() {
+    public Long getTradedQuantity() {
         return tradedQuantity;
     }
 
-    public void setTradedQuantity(long tradedQuantity) {
+    public void setTradedQuantity(Long tradedQuantity) {
         this.tradedQuantity = tradedQuantity;
     }
 
@@ -139,11 +139,11 @@ public class Trade {
         this.tradedPrice = tradedPrice;
     }
 
-    public long getTradeId() {
+    public Long getTradeId() {
         return tradeId;
     }
 
-    public void setTradeId(long tradeId) {
+    public void setTradeId(Long tradeId) {
         this.tradeId = tradeId;
     }
 
@@ -152,25 +152,26 @@ public class Trade {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Trade trade = (Trade) o;
-        return token == trade.token &&
-                tradedQuantity == trade.tradedQuantity &&
-                tradeId == trade.tradeId &&
-                Objects.equals(exchange, trade.exchange) &&
+        return Objects.equals(exchange, trade.exchange) &&
+                Objects.equals(token, trade.token) &&
                 Objects.equals(symbol, trade.symbol) &&
                 Objects.equals(product, trade.product) &&
                 Objects.equals(orderType, trade.orderType) &&
                 Objects.equals(transactionType, trade.transactionType) &&
+                Objects.equals(tradedQuantity, trade.tradedQuantity) &&
                 Objects.equals(exchangeOrderId, trade.exchangeOrderId) &&
                 Objects.equals(orderId, trade.orderId) &&
                 Objects.equals(exchangeTime, trade.exchangeTime) &&
                 Objects.equals(timeInMicro, trade.timeInMicro) &&
-                Objects.equals(tradedPrice, trade.tradedPrice);
+                Objects.equals(tradedPrice, trade.tradedPrice) &&
+                Objects.equals(tradeId, trade.tradeId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(exchange, token, symbol, product, orderType, transactionType, tradedQuantity,
-                exchangeOrderId, orderId, exchangeTime, timeInMicro, tradedPrice, tradeId);
+        return Objects.hash(exchange, token, symbol, product, orderType,
+                transactionType, tradedQuantity, exchangeOrderId, orderId,
+                exchangeTime, timeInMicro, tradedPrice, tradeId);
     }
 
     @Override

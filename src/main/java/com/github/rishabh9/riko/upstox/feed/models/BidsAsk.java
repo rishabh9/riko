@@ -7,15 +7,15 @@ import java.util.Objects;
 
 public class BidsAsk {
 
-    private long quantity;
+    private Long quantity;
     private BigDecimal price;
-    private long orders;
+    private Long orders;
 
-    public long getQuantity() {
+    public Long getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(long quantity) {
+    public void setQuantity(Long quantity) {
         this.quantity = quantity;
     }
 
@@ -27,11 +27,11 @@ public class BidsAsk {
         this.price = price;
     }
 
-    public long getOrders() {
+    public Long getOrders() {
         return orders;
     }
 
-    public void setOrders(long orders) {
+    public void setOrders(Long orders) {
         this.orders = orders;
     }
 
@@ -40,9 +40,9 @@ public class BidsAsk {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         BidsAsk bidsAsk = (BidsAsk) o;
-        return quantity == bidsAsk.quantity &&
-                orders == bidsAsk.orders &&
-                Objects.equals(price, bidsAsk.price);
+        return Objects.equals(quantity, bidsAsk.quantity) &&
+                Objects.equals(price, bidsAsk.price) &&
+                Objects.equals(orders, bidsAsk.orders);
     }
 
     @Override

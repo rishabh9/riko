@@ -37,7 +37,7 @@ public class WrappedWebSocket {
         webSocket.cancel();
     }
 
-    public long queueSize() {
+    public Long queueSize() {
         return webSocket.queueSize();
     }
 

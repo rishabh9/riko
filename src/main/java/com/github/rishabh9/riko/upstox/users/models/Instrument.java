@@ -8,7 +8,7 @@ public class Instrument {
 
     private String exchange;
     private String symbol;
-    private long token;
+    private Long token;
 
     public String getExchange() {
         return exchange;
@@ -26,11 +26,11 @@ public class Instrument {
         this.symbol = symbol;
     }
 
-    public long getToken() {
+    public Long getToken() {
         return token;
     }
 
-    public void setToken(long token) {
+    public void setToken(Long token) {
         this.token = token;
     }
 
@@ -39,9 +39,9 @@ public class Instrument {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Instrument that = (Instrument) o;
-        return token == that.token &&
-                Objects.equals(exchange, that.exchange) &&
-                Objects.equals(symbol, that.symbol);
+        return Objects.equals(exchange, that.exchange) &&
+                Objects.equals(symbol, that.symbol) &&
+                Objects.equals(token, that.token);
     }
 
     @Override

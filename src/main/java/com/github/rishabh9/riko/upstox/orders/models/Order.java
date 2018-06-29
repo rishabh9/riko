@@ -10,7 +10,7 @@ public class Order {
 
     private String exchange;
 
-    private long token;
+    private Long token;
 
     private String symbol;
 
@@ -26,10 +26,10 @@ public class Order {
     @SerializedName("trigger_price")
     private BigDecimal triggerPrice;
 
-    private long quantity;
+    private Long quantity;
 
     @SerializedName("disclosed_quantity")
-    private long disclosedQuantity;
+    private Long disclosedQuantity;
 
     @SerializedName("transaction_type")
     private String transactionType;
@@ -38,7 +38,7 @@ public class Order {
     private BigDecimal averagePrice;
 
     @SerializedName("traded_quantity")
-    private long tradedQuantity;
+    private Long tradedQuantity;
 
     private String message;
 
@@ -68,6 +68,13 @@ public class Order {
     @SerializedName("order_request_id")
     private String orderRequestId;
 
+    @SerializedName("fill_leg")
+    private String fillLeg;
+
+    private String report;
+
+    private String text;
+
     public String getExchange() {
         return exchange;
     }
@@ -76,11 +83,11 @@ public class Order {
         this.exchange = exchange;
     }
 
-    public long getToken() {
+    public Long getToken() {
         return token;
     }
 
-    public void setToken(long token) {
+    public void setToken(Long token) {
         this.token = token;
     }
 
@@ -132,19 +139,19 @@ public class Order {
         this.triggerPrice = triggerPrice;
     }
 
-    public long getQuantity() {
+    public Long getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(long quantity) {
+    public void setQuantity(Long quantity) {
         this.quantity = quantity;
     }
 
-    public long getDisclosedQuantity() {
+    public Long getDisclosedQuantity() {
         return disclosedQuantity;
     }
 
-    public void setDisclosedQuantity(long disclosedQuantity) {
+    public void setDisclosedQuantity(Long disclosedQuantity) {
         this.disclosedQuantity = disclosedQuantity;
     }
 
@@ -164,11 +171,11 @@ public class Order {
         this.averagePrice = averagePrice;
     }
 
-    public long getTradedQuantity() {
+    public Long getTradedQuantity() {
         return tradedQuantity;
     }
 
-    public void setTradedQuantity(long tradedQuantity) {
+    public void setTradedQuantity(Long tradedQuantity) {
         this.tradedQuantity = tradedQuantity;
     }
 
@@ -252,25 +259,49 @@ public class Order {
         this.orderRequestId = orderRequestId;
     }
 
+    public String getFillLeg() {
+        return fillLeg;
+    }
+
+    public void setFillLeg(String fillLeg) {
+        this.fillLeg = fillLeg;
+    }
+
+    public String getReport() {
+        return report;
+    }
+
+    public void setReport(String report) {
+        this.report = report;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Order order = (Order) o;
-        return token == order.token &&
-                quantity == order.quantity &&
-                disclosedQuantity == order.disclosedQuantity &&
-                tradedQuantity == order.tradedQuantity &&
-                is_amo == order.is_amo &&
+        return is_amo == order.is_amo &&
                 Objects.equals(exchange, order.exchange) &&
+                Objects.equals(token, order.token) &&
                 Objects.equals(symbol, order.symbol) &&
                 Objects.equals(product, order.product) &&
                 Objects.equals(orderType, order.orderType) &&
                 Objects.equals(duration, order.duration) &&
                 Objects.equals(price, order.price) &&
                 Objects.equals(triggerPrice, order.triggerPrice) &&
+                Objects.equals(quantity, order.quantity) &&
+                Objects.equals(disclosedQuantity, order.disclosedQuantity) &&
                 Objects.equals(transactionType, order.transactionType) &&
                 Objects.equals(averagePrice, order.averagePrice) &&
+                Objects.equals(tradedQuantity, order.tradedQuantity) &&
                 Objects.equals(message, order.message) &&
                 Objects.equals(exchangeOrderId, order.exchangeOrderId) &&
                 Objects.equals(parentOrderId, order.parentOrderId) &&
@@ -279,15 +310,20 @@ public class Order {
                 Objects.equals(timeInMicro, order.timeInMicro) &&
                 Objects.equals(status, order.status) &&
                 Objects.equals(validDate, order.validDate) &&
-                Objects.equals(orderRequestId, order.orderRequestId);
+                Objects.equals(orderRequestId, order.orderRequestId) &&
+                Objects.equals(fillLeg, order.fillLeg) &&
+                Objects.equals(report, order.report) &&
+                Objects.equals(text, order.text);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(exchange, token, symbol, product, orderType, duration, price, triggerPrice,
-                quantity, disclosedQuantity, transactionType, averagePrice, tradedQuantity, message,
-                exchangeOrderId, parentOrderId, orderId, exchangeTime, timeInMicro, status, is_amo, validDate,
-                orderRequestId);
+        return Objects.hash(exchange, token, symbol, product, orderType,
+                duration, price, triggerPrice, quantity, disclosedQuantity,
+                transactionType, averagePrice, tradedQuantity, message,
+                exchangeOrderId, parentOrderId, orderId, exchangeTime,
+                timeInMicro, status, is_amo, validDate, orderRequestId,
+                fillLeg, report, text);
     }
 
     @Override
@@ -316,6 +352,9 @@ public class Order {
                 .add("is_amo", is_amo)
                 .add("validDate", validDate)
                 .add("orderRequestId", orderRequestId)
+                .add("fillLeg", fillLeg)
+                .add("report", report)
+                .add("text", text)
                 .toString();
     }
 }

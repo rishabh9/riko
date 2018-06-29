@@ -10,7 +10,7 @@ import java.util.Objects;
  */
 public class Candle {
 
-    private long timestamp;
+    private Long timestamp;
 
     private BigDecimal open;
 
@@ -20,15 +20,15 @@ public class Candle {
 
     private BigDecimal close;
 
-    private long volume;
+    private Long volume;
 
     private BigDecimal cp;
 
-    public long getTimestamp() {
+    public Long getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(long timestamp) {
+    public void setTimestamp(Long timestamp) {
         this.timestamp = timestamp;
     }
 
@@ -64,11 +64,11 @@ public class Candle {
         this.close = close;
     }
 
-    public long getVolume() {
+    public Long getVolume() {
         return volume;
     }
 
-    public void setVolume(long volume) {
+    public void setVolume(Long volume) {
         this.volume = volume;
     }
 
@@ -85,12 +85,12 @@ public class Candle {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Candle candle = (Candle) o;
-        return timestamp == candle.timestamp &&
-                volume == candle.volume &&
+        return Objects.equals(timestamp, candle.timestamp) &&
                 Objects.equals(open, candle.open) &&
                 Objects.equals(high, candle.high) &&
                 Objects.equals(low, candle.low) &&
                 Objects.equals(close, candle.close) &&
+                Objects.equals(volume, candle.volume) &&
                 Objects.equals(cp, candle.cp);
     }
 

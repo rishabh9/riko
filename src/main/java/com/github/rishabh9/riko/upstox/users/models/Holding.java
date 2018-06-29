@@ -17,12 +17,12 @@ public class Holding {
     private String collateralType;
 
     @SerializedName("cnc_used_quantity")
-    private long cncUsedQuantity;
+    private Long cncUsedQuantity;
 
-    private long quantity;
+    private Long quantity;
 
     @SerializedName("collateral_qty")
-    private long collateralQuantity;
+    private Long collateralQuantity;
 
     @SerializedName("haircut")
     private BigDecimal haircutPercentage;
@@ -54,27 +54,27 @@ public class Holding {
         this.collateralType = collateralType;
     }
 
-    public long getCncUsedQuantity() {
+    public Long getCncUsedQuantity() {
         return cncUsedQuantity;
     }
 
-    public void setCncUsedQuantity(long cncUsedQuantity) {
+    public void setCncUsedQuantity(Long cncUsedQuantity) {
         this.cncUsedQuantity = cncUsedQuantity;
     }
 
-    public long getQuantity() {
+    public Long getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(long quantity) {
+    public void setQuantity(Long quantity) {
         this.quantity = quantity;
     }
 
-    public long getCollateralQuantity() {
+    public Long getCollateralQuantity() {
         return collateralQuantity;
     }
 
-    public void setCollateralQuantity(long collateralQuantity) {
+    public void setCollateralQuantity(Long collateralQuantity) {
         this.collateralQuantity = collateralQuantity;
     }
 
@@ -99,20 +99,20 @@ public class Holding {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Holding holding = (Holding) o;
-        return cncUsedQuantity == holding.cncUsedQuantity &&
-                quantity == holding.quantity &&
-                collateralQuantity == holding.collateralQuantity &&
-                Objects.equals(instruments, holding.instruments) &&
+        return Objects.equals(instruments, holding.instruments) &&
                 Objects.equals(product, holding.product) &&
                 Objects.equals(collateralType, holding.collateralType) &&
+                Objects.equals(cncUsedQuantity, holding.cncUsedQuantity) &&
+                Objects.equals(quantity, holding.quantity) &&
+                Objects.equals(collateralQuantity, holding.collateralQuantity) &&
                 Objects.equals(haircutPercentage, holding.haircutPercentage) &&
                 Objects.equals(averagePrice, holding.averagePrice);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(instruments, product, collateralType, cncUsedQuantity, quantity,
-                collateralQuantity, haircutPercentage, averagePrice);
+        return Objects.hash(instruments, product, collateralType, cncUsedQuantity,
+                quantity, collateralQuantity, haircutPercentage, averagePrice);
     }
 
     @Override

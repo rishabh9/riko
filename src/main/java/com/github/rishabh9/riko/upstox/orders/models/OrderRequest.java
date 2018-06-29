@@ -18,7 +18,7 @@ public class OrderRequest {
 
     private String symbol;
 
-    private long quantity;
+    private Long quantity;
 
     @SerializedName("order_type")
     private String orderType;
@@ -31,7 +31,7 @@ public class OrderRequest {
     private BigDecimal triggerPrice;
 
     @SerializedName("disclosed_quantity")
-    private long disclosedQuantity;
+    private Long disclosedQuantity;
 
     private String duration;
 
@@ -43,7 +43,7 @@ public class OrderRequest {
     private BigDecimal squareoff;
 
     @SerializedName("trailing_ticks")
-    private double tralingTicks;
+    private BigDecimal tralingTicks;
 
     public String getOrderId() {
         return orderId;
@@ -77,11 +77,11 @@ public class OrderRequest {
         this.symbol = symbol;
     }
 
-    public long getQuantity() {
+    public Long getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(long quantity) {
+    public void setQuantity(Long quantity) {
         this.quantity = quantity;
     }
 
@@ -117,11 +117,11 @@ public class OrderRequest {
         this.triggerPrice = triggerPrice;
     }
 
-    public long getDisclosedQuantity() {
+    public Long getDisclosedQuantity() {
         return disclosedQuantity;
     }
 
-    public void setDisclosedQuantity(long disclosedQuantity) {
+    public void setDisclosedQuantity(Long disclosedQuantity) {
         this.disclosedQuantity = disclosedQuantity;
     }
 
@@ -157,11 +157,11 @@ public class OrderRequest {
         this.squareoff = squareoff;
     }
 
-    public double getTralingTicks() {
+    public BigDecimal getTralingTicks() {
         return tralingTicks;
     }
 
-    public void setTralingTicks(double tralingTicks) {
+    public void setTralingTicks(BigDecimal tralingTicks) {
         this.tralingTicks = tralingTicks;
     }
 
@@ -169,28 +169,29 @@ public class OrderRequest {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        OrderRequest that = (OrderRequest) o;
-        return quantity == that.quantity &&
-                disclosedQuantity == that.disclosedQuantity &&
-                is_amo == that.is_amo &&
-                Double.compare(that.tralingTicks, tralingTicks) == 0 &&
-                Objects.equals(orderId, that.orderId) &&
-                Objects.equals(transactionType, that.transactionType) &&
-                Objects.equals(exchange, that.exchange) &&
-                Objects.equals(symbol, that.symbol) &&
-                Objects.equals(orderType, that.orderType) &&
-                Objects.equals(product, that.product) &&
-                Objects.equals(price, that.price) &&
-                Objects.equals(triggerPrice, that.triggerPrice) &&
-                Objects.equals(duration, that.duration) &&
-                Objects.equals(stoploss, that.stoploss) &&
-                Objects.equals(squareoff, that.squareoff);
+        OrderRequest request = (OrderRequest) o;
+        return is_amo == request.is_amo &&
+                Objects.equals(orderId, request.orderId) &&
+                Objects.equals(transactionType, request.transactionType) &&
+                Objects.equals(exchange, request.exchange) &&
+                Objects.equals(symbol, request.symbol) &&
+                Objects.equals(quantity, request.quantity) &&
+                Objects.equals(orderType, request.orderType) &&
+                Objects.equals(product, request.product) &&
+                Objects.equals(price, request.price) &&
+                Objects.equals(triggerPrice, request.triggerPrice) &&
+                Objects.equals(disclosedQuantity, request.disclosedQuantity) &&
+                Objects.equals(duration, request.duration) &&
+                Objects.equals(stoploss, request.stoploss) &&
+                Objects.equals(squareoff, request.squareoff) &&
+                Objects.equals(tralingTicks, request.tralingTicks);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(orderId, transactionType, exchange, symbol, quantity, orderType, product,
-                price, triggerPrice, disclosedQuantity, duration, is_amo, stoploss, squareoff, tralingTicks);
+        return Objects.hash(orderId, transactionType, exchange, symbol, quantity,
+                orderType, product, price, triggerPrice, disclosedQuantity, duration,
+                is_amo, stoploss, squareoff, tralingTicks);
     }
 
     @Override
