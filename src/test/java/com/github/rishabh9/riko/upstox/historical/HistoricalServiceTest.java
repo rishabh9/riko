@@ -29,7 +29,7 @@ class HistoricalServiceTest {
         MockWebServer server = new MockWebServer();
 
         Candle candle = new Candle();
-        candle.setVolume(2345);
+        candle.setVolume(2345L);
         List<Candle> candles = new ArrayList<>(1);
         candles.add(candle);
         UpstoxResponse<List<Candle>> response = new UpstoxResponse<>();
@@ -45,7 +45,7 @@ class HistoricalServiceTest {
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
         AccessToken token = new AccessToken();
-        token.setExpiresIn(86400);
+        token.setExpiresIn(86400L);
         token.setType("Bearer");
         token.setToken("access_token_123456789");
         ApiCredentials credentials =
@@ -82,7 +82,7 @@ class HistoricalServiceTest {
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
         AccessToken token = new AccessToken();
-        token.setExpiresIn(86400);
+        token.setExpiresIn(86400L);
         token.setType("Bearer");
         token.setToken("access_token_123456789");
         ApiCredentials credentials =
@@ -106,7 +106,7 @@ class HistoricalServiceTest {
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
         AccessToken token = new AccessToken();
-        token.setExpiresIn(86400);
+        token.setExpiresIn(86400L);
         token.setType("Bearer");
         token.setToken("access_token_123456789");
         ApiCredentials credentials =
@@ -128,7 +128,7 @@ class HistoricalServiceTest {
                 new ApiCredentials("secretApiKey", "secret-secret");
 
         AccessToken token = new AccessToken();
-        token.setExpiresIn(86400);
+        token.setExpiresIn(86400L);
         token.setType("Bearer");
         token.setToken("access_token_123456789");
 
@@ -170,7 +170,7 @@ class HistoricalServiceTest {
                 "Null check missing for 'AccessToken' from HistoricalService constructor");
 
         AccessToken token = new AccessToken();
-        token.setExpiresIn(86400);
+        token.setExpiresIn(86400L);
         token.setType("Bearer");
         token.setToken("access_token_123456789");
 

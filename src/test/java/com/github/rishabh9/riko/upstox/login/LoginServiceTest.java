@@ -43,7 +43,7 @@ class LoginServiceTest {
             AccessToken accessToken = service.getAccessToken();
 
             assertNotNull(accessToken);
-            assertEquals(86400, accessToken.getExpiresIn());
+            assertEquals(Long.valueOf(86400L), accessToken.getExpiresIn());
             assertEquals("Bearer", accessToken.getType());
             assertEquals("access_token_123456789", accessToken.getToken());
         } catch (ExecutionException | InterruptedException e) {

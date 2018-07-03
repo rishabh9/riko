@@ -44,7 +44,7 @@ class UserServiceTest {
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
         AccessToken token = new AccessToken();
-        token.setExpiresIn(86400);
+        token.setExpiresIn(86400L);
         token.setType("Bearer");
         token.setToken("access_token_123456789");
         ApiCredentials credentials =
@@ -79,7 +79,7 @@ class UserServiceTest {
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
         AccessToken token = new AccessToken();
-        token.setExpiresIn(86400);
+        token.setExpiresIn(86400L);
         token.setType("Bearer");
         token.setToken("access_token_123456789");
         ApiCredentials credentials =
@@ -102,7 +102,7 @@ class UserServiceTest {
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
         AccessToken token = new AccessToken();
-        token.setExpiresIn(86400);
+        token.setExpiresIn(86400L);
         token.setType("Bearer");
         token.setToken("access_token_123456789");
         ApiCredentials credentials =
@@ -139,7 +139,7 @@ class UserServiceTest {
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
         AccessToken token = new AccessToken();
-        token.setExpiresIn(86400);
+        token.setExpiresIn(86400L);
         token.setType("Bearer");
         token.setToken("access_token_123456789");
         ApiCredentials credentials =
@@ -175,7 +175,7 @@ class UserServiceTest {
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
         AccessToken token = new AccessToken();
-        token.setExpiresIn(86400);
+        token.setExpiresIn(86400L);
         token.setType("Bearer");
         token.setToken("access_token_123456789");
         ApiCredentials credentials =
@@ -198,7 +198,7 @@ class UserServiceTest {
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
         AccessToken token = new AccessToken();
-        token.setExpiresIn(86400);
+        token.setExpiresIn(86400L);
         token.setType("Bearer");
         token.setToken("access_token_123456789");
         ApiCredentials credentials =
@@ -235,7 +235,7 @@ class UserServiceTest {
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
         AccessToken token = new AccessToken();
-        token.setExpiresIn(86400);
+        token.setExpiresIn(86400L);
         token.setType("Bearer");
         token.setToken("access_token_123456789");
         ApiCredentials credentials =
@@ -270,7 +270,7 @@ class UserServiceTest {
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
         AccessToken token = new AccessToken();
-        token.setExpiresIn(86400);
+        token.setExpiresIn(86400L);
         token.setType("Bearer");
         token.setToken("access_token_123456789");
         ApiCredentials credentials =
@@ -293,7 +293,7 @@ class UserServiceTest {
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
         AccessToken token = new AccessToken();
-        token.setExpiresIn(86400);
+        token.setExpiresIn(86400L);
         token.setType("Bearer");
         token.setToken("access_token_123456789");
         ApiCredentials credentials =
@@ -314,7 +314,7 @@ class UserServiceTest {
         MockWebServer server = new MockWebServer();
 
         Holding holding = new Holding();
-        holding.setQuantity(1000);
+        holding.setQuantity(1000L);
         List<Holding> holdings = new ArrayList<>(1);
         holdings.add(holding);
         UpstoxResponse<List<Holding>> response = new UpstoxResponse<>();
@@ -330,7 +330,7 @@ class UserServiceTest {
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
         AccessToken token = new AccessToken();
-        token.setExpiresIn(86400);
+        token.setExpiresIn(86400L);
         token.setType("Bearer");
         token.setToken("access_token_123456789");
         ApiCredentials credentials =
@@ -365,7 +365,7 @@ class UserServiceTest {
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
         AccessToken token = new AccessToken();
-        token.setExpiresIn(86400);
+        token.setExpiresIn(86400L);
         token.setType("Bearer");
         token.setToken("access_token_123456789");
         ApiCredentials credentials =
@@ -388,7 +388,7 @@ class UserServiceTest {
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
         AccessToken token = new AccessToken();
-        token.setExpiresIn(86400);
+        token.setExpiresIn(86400L);
         token.setType("Bearer");
         token.setToken("access_token_123456789");
         ApiCredentials credentials =
@@ -424,7 +424,7 @@ class UserServiceTest {
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
         AccessToken token = new AccessToken();
-        token.setExpiresIn(86400);
+        token.setExpiresIn(86400L);
         token.setType("Bearer");
         token.setToken("access_token_123456789");
         ApiCredentials credentials =
@@ -461,7 +461,7 @@ class UserServiceTest {
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
         AccessToken token = new AccessToken();
-        token.setExpiresIn(86400);
+        token.setExpiresIn(86400L);
         token.setType("Bearer");
         token.setToken("access_token_123456789");
         ApiCredentials credentials =
@@ -485,7 +485,7 @@ class UserServiceTest {
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
         AccessToken token = new AccessToken();
-        token.setExpiresIn(86400);
+        token.setExpiresIn(86400L);
         token.setType("Bearer");
         token.setToken("access_token_123456789");
         ApiCredentials credentials =
@@ -507,7 +507,7 @@ class UserServiceTest {
                 new ApiCredentials("secretApiKey", "secret-secret");
 
         AccessToken token = new AccessToken();
-        token.setExpiresIn(86400);
+        token.setExpiresIn(86400L);
         token.setType("Bearer");
         token.setToken("access_token_123456789");
 
@@ -541,7 +541,7 @@ class UserServiceTest {
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
         AccessToken token = new AccessToken();
-        token.setExpiresIn(86400);
+        token.setExpiresIn(86400L);
         token.setType("Bearer");
         token.setToken("access_token_123456789");
         ApiCredentials credentials =
@@ -578,7 +578,7 @@ class UserServiceTest {
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
         AccessToken token = new AccessToken();
-        token.setExpiresIn(86400);
+        token.setExpiresIn(86400L);
         token.setType("Bearer");
         token.setToken("access_token_123456789");
         ApiCredentials credentials =
@@ -602,7 +602,7 @@ class UserServiceTest {
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
         AccessToken token = new AccessToken();
-        token.setExpiresIn(86400);
+        token.setExpiresIn(86400L);
         token.setType("Bearer");
         token.setToken("access_token_123456789");
         ApiCredentials credentials =
@@ -624,7 +624,7 @@ class UserServiceTest {
                 new ApiCredentials("secretApiKey", "secret-secret");
 
         AccessToken token = new AccessToken();
-        token.setExpiresIn(86400);
+        token.setExpiresIn(86400L);
         token.setType("Bearer");
         token.setToken("access_token_123456789");
 
@@ -670,7 +670,7 @@ class UserServiceTest {
                 "Null check missing for 'AccessToken' from UserService constructor");
 
         AccessToken token = new AccessToken();
-        token.setExpiresIn(86400);
+        token.setExpiresIn(86400L);
         token.setType("Bearer");
         token.setToken("access_token_123456789");
 

@@ -42,7 +42,7 @@ class FeedServiceTest {
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
         AccessToken token = new AccessToken();
-        token.setExpiresIn(86400);
+        token.setExpiresIn(86400L);
         token.setType("Bearer");
         token.setToken("access_token_123456789");
         ApiCredentials credentials =
@@ -79,7 +79,7 @@ class FeedServiceTest {
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
         AccessToken token = new AccessToken();
-        token.setExpiresIn(86400);
+        token.setExpiresIn(86400L);
         token.setType("Bearer");
         token.setToken("access_token_123456789");
         ApiCredentials credentials =
@@ -103,7 +103,7 @@ class FeedServiceTest {
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
         AccessToken token = new AccessToken();
-        token.setExpiresIn(86400);
+        token.setExpiresIn(86400L);
         token.setType("Bearer");
         token.setToken("access_token_123456789");
         ApiCredentials credentials =
@@ -125,7 +125,7 @@ class FeedServiceTest {
                 new ApiCredentials("secretApiKey", "secret-secret");
 
         AccessToken token = new AccessToken();
-        token.setExpiresIn(86400);
+        token.setExpiresIn(86400L);
         token.setType("Bearer");
         token.setToken("access_token_123456789");
 
@@ -175,7 +175,7 @@ class FeedServiceTest {
                 "Null check missing for 'AccessToken' from FeedService constructor");
 
         AccessToken token = new AccessToken();
-        token.setExpiresIn(86400);
+        token.setExpiresIn(86400L);
         token.setType("Bearer");
         token.setToken("access_token_123456789");
 
@@ -203,7 +203,7 @@ class FeedServiceTest {
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
         AccessToken token = new AccessToken();
-        token.setExpiresIn(86400);
+        token.setExpiresIn(86400L);
         token.setType("Bearer");
         token.setToken("access_token_123456789");
         ApiCredentials credentials =
@@ -240,7 +240,7 @@ class FeedServiceTest {
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
         AccessToken token = new AccessToken();
-        token.setExpiresIn(86400);
+        token.setExpiresIn(86400L);
         token.setType("Bearer");
         token.setToken("access_token_123456789");
         ApiCredentials credentials =
@@ -264,7 +264,7 @@ class FeedServiceTest {
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
         AccessToken token = new AccessToken();
-        token.setExpiresIn(86400);
+        token.setExpiresIn(86400L);
         token.setType("Bearer");
         token.setToken("access_token_123456789");
         ApiCredentials credentials =
@@ -286,7 +286,7 @@ class FeedServiceTest {
                 new ApiCredentials("secretApiKey", "secret-secret");
 
         AccessToken token = new AccessToken();
-        token.setExpiresIn(86400);
+        token.setExpiresIn(86400L);
         token.setType("Bearer");
         token.setToken("access_token_123456789");
 
@@ -344,7 +344,7 @@ class FeedServiceTest {
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
         AccessToken token = new AccessToken();
-        token.setExpiresIn(86400);
+        token.setExpiresIn(86400L);
         token.setType("Bearer");
         token.setToken("access_token_123456789");
         ApiCredentials credentials =
@@ -381,7 +381,7 @@ class FeedServiceTest {
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
         AccessToken token = new AccessToken();
-        token.setExpiresIn(86400);
+        token.setExpiresIn(86400L);
         token.setType("Bearer");
         token.setToken("access_token_123456789");
         ApiCredentials credentials =
@@ -405,7 +405,7 @@ class FeedServiceTest {
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
         AccessToken token = new AccessToken();
-        token.setExpiresIn(86400);
+        token.setExpiresIn(86400L);
         token.setType("Bearer");
         token.setToken("access_token_123456789");
         ApiCredentials credentials =
@@ -427,7 +427,7 @@ class FeedServiceTest {
                 new ApiCredentials("secretApiKey", "secret-secret");
 
         AccessToken token = new AccessToken();
-        token.setExpiresIn(86400);
+        token.setExpiresIn(86400L);
         token.setType("Bearer");
         token.setToken("access_token_123456789");
 
