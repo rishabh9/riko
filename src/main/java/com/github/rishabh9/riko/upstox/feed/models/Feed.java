@@ -1,5 +1,6 @@
 package com.github.rishabh9.riko.upstox.feed.models;
 
+import com.github.rishabh9.riko.upstox.common.converters.NumberString;
 import com.google.common.base.MoreObjects;
 import com.google.gson.annotations.SerializedName;
 
@@ -29,7 +30,7 @@ public class Feed {
 
     private BigDecimal atp;
 
-    private Long oi;
+    private NumberString oi;
 
     @SerializedName("spot_price")
     private BigDecimal spotPrice;
@@ -138,11 +139,11 @@ public class Feed {
         this.atp = atp;
     }
 
-    public Long getOi() {
+    public NumberString getOi() {
         return oi;
     }
 
-    public void setOi(Long oi) {
+    public void setOi(NumberString oi) {
         this.oi = oi;
     }
 
