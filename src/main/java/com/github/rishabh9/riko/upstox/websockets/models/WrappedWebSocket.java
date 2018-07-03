@@ -30,7 +30,7 @@ public class WrappedWebSocket {
     }
 
     public boolean close() {
-        return webSocket.close(999, "Closing socket as requested by user/client.");
+        return webSocket.close(1000, "Closing socket as requested by user/client.");
     }
 
     public void cancel() {
