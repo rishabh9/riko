@@ -1,6 +1,8 @@
 package com.github.rishabh9.riko.upstox.feed.models;
 
+import com.github.rishabh9.riko.upstox.common.converters.AlwaysListTypeAdapterFactory;
 import com.google.common.base.MoreObjects;
+import com.google.gson.annotations.JsonAdapter;
 
 import java.util.List;
 import java.util.Objects;
@@ -11,6 +13,7 @@ public class SubscriptionResponse {
 
     private String exchange;
 
+    @JsonAdapter(AlwaysListTypeAdapterFactory.class)
     private List<String> symbol;
 
     private String type;

@@ -1,5 +1,6 @@
 package com.github.rishabh9.riko.upstox.common;
 
+import com.github.rishabh9.riko.upstox.common.converters.AlwaysListTypeAdapterFactory;
 import com.github.rishabh9.riko.upstox.common.converters.NumberString;
 import com.github.rishabh9.riko.upstox.common.converters.NumberStringDeserializer;
 import com.github.rishabh9.riko.upstox.common.converters.NumberStringSerializer;
@@ -31,6 +32,7 @@ public class ServiceGenerator {
         final Gson gson = new GsonBuilder()
                 .registerTypeAdapter(NumberString.class, new NumberStringSerializer())
                 .registerTypeAdapter(NumberString.class, new NumberStringDeserializer())
+                .registerTypeAdapterFactory(new AlwaysListTypeAdapterFactory())
                 .create();
         this.httpClient = new OkHttpClient.Builder();
         this.builder =
