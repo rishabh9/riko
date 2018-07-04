@@ -57,9 +57,9 @@ public final class MessageListener
                     // return true; // If we want to re-try once
                 });
         if (lag < 0) {
-            log.error("Dropping {} messages", -lag);
+            log.warn("Dropping {} messages", -lag);
         } else {
-            log.warn("The slowest consumer has {} messages in total to be picked up.", lag);
+            log.debug("The slowest consumer has {} messages in total to be picked up.", lag);
         }
     }
 
