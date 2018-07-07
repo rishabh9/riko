@@ -23,6 +23,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 public class ServiceGenerator {
 
@@ -34,7 +35,22 @@ public class ServiceGenerator {
                 .registerTypeAdapter(NumberString.class, new NumberStringDeserializer())
                 .registerTypeAdapterFactory(new AlwaysListTypeAdapterFactory())
                 .create();
+        String readTimeout = System.getProperty("riko.read.timeout");
+        String writeTimeout = System.getProperty("riko.write.timeout");
+        String connectTimeout = System.getProperty("riko.connect.timeout");
         this.httpClient = new OkHttpClient.Builder();
+        if (!Strings.isNullOrEmpty(readTimeout)) {
+            this.httpClient.readTimeout(
+                    Long.parseLong(readTimeout), TimeUnit.SECONDS);
+        }
+        if (!Strings.isNullOrEmpty(connectTimeout)) {
+            this.httpClient.connectTimeout(
+                    Long.parseLong(connectTimeout), TimeUnit.SECONDS);
+        }
+        if (!Strings.isNullOrEmpty(writeTimeout)) {
+            this.httpClient.writeTimeout(
+                    Long.parseLong(writeTimeout), TimeUnit.SECONDS);
+        }
         this.builder =
                 new Retrofit.Builder()
                         .baseUrl(

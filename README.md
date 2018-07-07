@@ -64,6 +64,13 @@ subscribers (`MessageSubscriber`). Example:
     WebSocketService service = new WebSocketService(accessToken, apiCredentials);
     WrappedWebSocket socket = service.connect(subscribers);
 
+###### System properties
+
+You can configure the read, write and connect time out in *seconds*, between Riko with Upstox.
+You'll need to provide the system properties - `riko.read.timeout`, `riko.write.timeout`
+ and `riko.connect.timeout` respectively. 
+If none are provided, then the defaults of Retrofit2 are maintained.
+
 #### Including Riko in your project
 
 ###### Maven
