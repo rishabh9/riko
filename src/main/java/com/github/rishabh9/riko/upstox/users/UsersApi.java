@@ -2,9 +2,11 @@ package com.github.rishabh9.riko.upstox.users;
 
 import com.github.rishabh9.riko.upstox.common.models.UpstoxResponse;
 import com.github.rishabh9.riko.upstox.users.models.*;
+import okhttp3.ResponseBody;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import retrofit2.http.Streaming;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -63,8 +65,9 @@ public interface UsersApi {
      *                 </ul>
      * @return A CompletableFuture to execute the request (a)synchronously.
      */
+    @Streaming
     @GET("/index/master-contract/{exchange}")
-    CompletableFuture<UpstoxResponse<List<String>>> getAllMasterContracts(@Path("exchange") String exchange);
+    CompletableFuture<ResponseBody> getAllMasterContracts(@Path("exchange") String exchange);
 
     /**
      * Get available contract for given symbol/token.

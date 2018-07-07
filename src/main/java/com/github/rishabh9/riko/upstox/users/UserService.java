@@ -6,11 +6,13 @@ import com.github.rishabh9.riko.upstox.common.models.UpstoxResponse;
 import com.github.rishabh9.riko.upstox.login.models.AccessToken;
 import com.github.rishabh9.riko.upstox.users.models.*;
 import com.google.common.base.Strings;
+import okhttp3.ResponseBody;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
@@ -88,7 +90,7 @@ public class UserService extends Service {
     }
 
     /**
-     * Get all available contracts as a CSV.
+     * Get all available contracts as a Stream.
      *
      * @param exchange Name of the exchange. <em>Mandatory</em>. Valid values are:<br/>
      *                 <ul>
@@ -101,12 +103,14 @@ public class UserService extends Service {
      *                 <li><code>ncd_fo</code> - NSE Currency Futures & Options</li>
      *                 <li><code>mcx_fo</code> - MCX Futures</li>
      *                 </ul>
+     * @return The Json response from Upstox as a Stream, because the Json could be very large.
      * @throws IllegalArgumentException if exchange is not specified.
-     * @implNote The CSV is returned as list of strings.
-     * The first item in the list are the headers for the CSV.
-     * Rest of the items are the individual records.
+     * @implNote You'll need to extract the <em>data</em> element from the stream.
+     * The <em>data</em> element is a list of strings.
+     * The first item in the list contains the headers for the CSV.
+     * Rest of the items in the list are the individual CSV records.
      */
-    public CompletableFuture<UpstoxResponse<List<String>>> getAllMasterContracts(@Nonnull final String exchange) {
+    public CompletableFuture<InputStream> getAllMasterContracts(@Nonnull final String exchange) {
 
         log.debug("Validate parameters - GET All Contracts");
         validateExchange(exchange);
@@ -115,7 +119,8 @@ public class UserService extends Service {
         final UsersApi api = prepareServiceApi(UsersApi.class);
 
         log.debug("Making request - GET All Contracts");
-        return api.getAllMasterContracts(exchange);
+        return api.getAllMasterContracts(exchange)
+                .thenApply(ResponseBody::byteStream);
     }
 
     /**

@@ -6,14 +6,20 @@ import com.github.rishabh9.riko.upstox.common.models.UpstoxResponse;
 import com.github.rishabh9.riko.upstox.login.models.AccessToken;
 import com.github.rishabh9.riko.upstox.users.models.*;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 import java.math.BigDecimal;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -432,9 +438,16 @@ class UserServiceTest {
         UserService service = new UserService(token, credentials);
 
         try {
-            UpstoxResponse<List<String>> serverResponse =
+            InputStream inputStream =
                     service.getAllMasterContracts("NSE")
                             .get();
+
+            String stagedResponse = convert(inputStream, Charset.forName("UTF-8"));
+            Type fooType = new TypeToken<UpstoxResponse<List<String>>>() {}.getType();
+            UpstoxResponse<List<String>> serverResponse =
+                    new Gson().fromJson(stagedResponse, fooType);
+            System.err.println(stagedResponse);
+
             assertEquals(response, serverResponse);
         } catch (ExecutionException | InterruptedException e) {
             log.fatal(e);
@@ -442,6 +455,18 @@ class UserServiceTest {
         } finally {
             server.shutdown();
         }
+    }
+
+    public String convert(InputStream inputStream, Charset charset) throws IOException {
+        StringBuilder stringBuilder = new StringBuilder();
+        String line;
+        try (BufferedReader bufferedReader = new BufferedReader(
+                new InputStreamReader(inputStream, charset))) {
+            while ((line = bufferedReader.readLine()) != null) {
+                stringBuilder.append(line);
+            }
+        }
+        return stringBuilder.toString();
     }
 
     @Test
