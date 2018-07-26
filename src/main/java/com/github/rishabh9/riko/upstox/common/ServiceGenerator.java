@@ -35,9 +35,9 @@ public class ServiceGenerator {
                 .registerTypeAdapter(NumberString.class, new NumberStringDeserializer())
                 .registerTypeAdapterFactory(new AlwaysListTypeAdapterFactory())
                 .create();
-        String readTimeout = System.getProperty("riko.read.timeout");
-        String writeTimeout = System.getProperty("riko.write.timeout");
-        String connectTimeout = System.getProperty("riko.connect.timeout");
+        final String readTimeout = System.getProperty("riko.read.timeout");
+        final String writeTimeout = System.getProperty("riko.write.timeout");
+        final String connectTimeout = System.getProperty("riko.connect.timeout");
         this.httpClient = new OkHttpClient.Builder();
         if (!Strings.isNullOrEmpty(readTimeout)) {
             this.httpClient.readTimeout(
@@ -55,7 +55,10 @@ public class ServiceGenerator {
                 new Retrofit.Builder()
                         .baseUrl(
                                 Objects.requireNonNull(
-                                        HttpUrl.parse("https://api.upstox.com/")))
+                                        HttpUrl.parse(
+                                                System.getProperty(
+                                                        "riko.server.url",
+                                                        "https://api.upstox.com/"))))
                         .addConverterFactory(GsonConverterFactory.create(gson))
                         .addCallAdapterFactory(Java8CallAdapterFactory.create())
                         .client(httpClient.build());
