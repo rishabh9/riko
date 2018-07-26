@@ -71,6 +71,8 @@ You'll need to provide the system properties - `riko.read.timeout`, `riko.write.
  and `riko.connect.timeout` respectively. 
 If none are provided, then the defaults of Retrofit2 are maintained.
 
+Another system property, `riko.server.url` can be used to configure a different base URL for the client.
+
 #### Including Riko in your project
 
 ###### Maven
