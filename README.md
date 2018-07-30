@@ -66,12 +66,20 @@ subscribers (`MessageSubscriber`). Example:
 
 ###### System properties
 
-You can configure the read, write and connect time out in *seconds*, between Riko with Upstox.
-You'll need to provide the system properties - `riko.read.timeout`, `riko.write.timeout`
- and `riko.connect.timeout` respectively. 
-If none are provided, then the defaults of Retrofit2 are maintained.
+The following system properties can be used to configure the library:
 
-Another system property, `riko.server.url` can be used to configure a different base URL for the client.
+|System property|Description|Default value|
+|:---:|:---:|:---:|
+|`riko.read.timeout`|Number of seconds for read to timeout|10|
+|`riko.write.timeout`|Number of seconds for write to timeout|10|
+|`riko.connect.timeout`|Number of seconds for connect to timeout|10|
+|`riko.server.url`|The API URL to use|`api.upstox.com`|
+|`riko.server.port`|The port to use|`80` or `443` based on the scheme specified|
+|`riko.server.scheme`|The scheme to use|`https`|
+|`riko.ws.server.url`|The URL to use for websocket|`ws-api.upstox.com`|
+|`riko.ws.server.port`|The port to use for websocket|`80` or `443` based on the scheme specified|
+|`riko.ws.server.scheme`|The scheme to use|`https`|
+
 
 #### Including Riko in your project
 

@@ -51,14 +51,16 @@ public class ServiceGenerator {
             this.httpClient.writeTimeout(
                     Long.parseLong(writeTimeout), TimeUnit.SECONDS);
         }
+        final HttpUrl.Builder urlBuilder = new HttpUrl.Builder()
+                .scheme(System.getProperty("riko.server.scheme", "https"))
+                .host(System.getProperty("riko.server.url", "api.upstox.com"));
+        final String port = System.getProperty("riko.server.port");
+        if (!Strings.isNullOrEmpty(port)) {
+            urlBuilder.port(Integer.parseInt(port));
+        }
         this.builder =
                 new Retrofit.Builder()
-                        .baseUrl(
-                                Objects.requireNonNull(
-                                        HttpUrl.parse(
-                                                System.getProperty(
-                                                        "riko.server.url",
-                                                        "https://api.upstox.com/"))))
+                        .baseUrl(Objects.requireNonNull(urlBuilder.build()))
                         .addConverterFactory(GsonConverterFactory.create(gson))
                         .addCallAdapterFactory(Java8CallAdapterFactory.create())
                         .client(httpClient.build());

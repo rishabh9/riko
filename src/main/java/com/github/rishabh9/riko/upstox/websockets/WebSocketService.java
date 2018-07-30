@@ -7,6 +7,7 @@ import com.github.rishabh9.riko.upstox.login.models.AccessToken;
 import com.github.rishabh9.riko.upstox.websockets.exceptions.WebRequestException;
 import com.github.rishabh9.riko.upstox.websockets.models.WebsocketParameters;
 import com.github.rishabh9.riko.upstox.websockets.models.WrappedWebSocket;
+import com.google.common.base.Strings;
 import okhttp3.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -100,13 +101,16 @@ public class WebSocketService extends Service {
 
         log.debug("Preparing request");
 
-        final HttpUrl.Builder urlBuilder = new HttpUrl.Builder();
-        final HttpUrl url = urlBuilder
-                .host("ws-api.upstox.com")
-                .scheme("https")
+        final HttpUrl.Builder urlBuilder = new HttpUrl.Builder()
+                .scheme(System.getProperty("riko.ws.server.scheme", "https"))
+                .host(System.getProperty("riko.ws.server.url", "ws-api.upstox.com"));
+        final String port = System.getProperty("riko.ws.server.port");
+        if (!Strings.isNullOrEmpty(port)) {
+            urlBuilder.port(Integer.parseInt(port));
+        }
+        urlBuilder
                 .addQueryParameter("apiKey", credentials.getApiKey())
-                .addQueryParameter("token", accessToken.getToken())
-                .build();
+                .addQueryParameter("token", accessToken.getToken());
 
         final String token = accessToken.getType() + " " + accessToken.getToken();
 
@@ -115,7 +119,7 @@ public class WebSocketService extends Service {
                 .header("Authorization", token)
                 .header("Sec-WebSocket-Key", Double.toString(Math.random()))
                 .header("Sec-WebSocket-Version", "13")
-                .url(url)
+                .url(urlBuilder.build())
                 .build();
     }
 }
