@@ -72,10 +72,10 @@ public class Feed {
     private BigDecimal upperCircuit;
 
     @SerializedName("yearly_low")
-    private BigDecimal yearlyLow;
+    private NumberString yearlyLow;
 
     @SerializedName("yearly_high")
-    private BigDecimal yearlyHigh;
+    private NumberString yearlyHigh;
 
     private List<BidsAsk> bids;
 
@@ -211,19 +211,19 @@ public class Feed {
         this.upperCircuit = upperCircuit;
     }
 
-    public BigDecimal getYearlyLow() {
+    public NumberString getYearlyLow() {
         return yearlyLow;
     }
 
-    public void setYearlyLow(BigDecimal yearlyLow) {
+    public void setYearlyLow(NumberString yearlyLow) {
         this.yearlyLow = yearlyLow;
     }
 
-    public BigDecimal getYearlyHigh() {
+    public NumberString getYearlyHigh() {
         return yearlyHigh;
     }
 
-    public void setYearlyHigh(BigDecimal yearlyHigh) {
+    public void setYearlyHigh(NumberString yearlyHigh) {
         this.yearlyHigh = yearlyHigh;
     }
 
