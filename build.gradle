@@ -47,7 +47,7 @@ dependencyManagement {
 // GroupId
 group = 'com.github.rishabh9'
 // Version
-version = '1.0.0-SNAPSHOT'
+version = '1.0.0'
 archivesBaseName = 'riko'
 
 dependencies {
