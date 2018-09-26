@@ -79,6 +79,7 @@ The following system properties can be used to configure the library:
 |`riko.ws.server.url`|The URL to use for websocket|`ws-api.upstox.com`|
 |`riko.ws.server.port`|The port to use for websocket|`80` or `443` based on the scheme specified|
 |`riko.ws.server.scheme`|The scheme to use|`https`|
+|`riko.ws.reconnect`|Retry websocket connection on failure|`true`|
 
 
 #### Including Riko in your project
@@ -88,13 +89,13 @@ The following system properties can be used to configure the library:
     <dependency>
         <groupId>com.github.rishabh9</groupId>
         <artifactId>riko</artifactId>
-        <version>1.0.0</version>
+        <version>1.0.1</version>
     </dependency>
 
 ###### Gradle
 
     dependencies {
-        implementation 'com.github.rishabh9:riko:1.0.0'
+        implementation 'com.github.rishabh9:riko:1.0.1'
     }
 
 #### Progaurd

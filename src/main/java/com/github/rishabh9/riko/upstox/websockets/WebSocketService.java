@@ -43,6 +43,8 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
+import static com.github.rishabh9.riko.upstox.common.constants.PropertyKeys.*;
+
 public class WebSocketService extends Service {
 
     private static final Logger log = LogManager.getLogger(WebSocketService.class);
@@ -112,6 +114,7 @@ public class WebSocketService extends Service {
                 .readTimeout(parameters.getPythonPingTimeout() * 3, TimeUnit.SECONDS)
                 .writeTimeout(parameters.getPythonPingTimeout() * 3, TimeUnit.SECONDS)
                 .pingInterval(parameters.getPythonPingInterval(), TimeUnit.SECONDS)
+                .retryOnConnectionFailure(Boolean.parseBoolean(System.getProperty(RIKO_WS_RECONNECT, RIKO_WS_RECONNECT_DEFAULT)))
                 .build();
 
         final Request request = prepareRequest();
@@ -126,9 +129,9 @@ public class WebSocketService extends Service {
         log.debug("Preparing request");
 
         final HttpUrl.Builder urlBuilder = new HttpUrl.Builder()
-                .scheme(System.getProperty("riko.ws.server.scheme", "https"))
-                .host(System.getProperty("riko.ws.server.url", "ws-api.upstox.com"));
-        final String port = System.getProperty("riko.ws.server.port");
+                .scheme(System.getProperty(RIKO_WS_SERVER_SCHEME, RIKO_WS_SERVER_SCHEME_DEFAULT))
+                .host(System.getProperty(RIKO_WS_SERVER_URL, RIKO_WS_SERVER_URL_DEFAULT));
+        final String port = System.getProperty(RIKO_WS_SERVER_PORT);
         if (!Strings.isNullOrEmpty(port)) {
             urlBuilder.port(Integer.parseInt(port));
         }

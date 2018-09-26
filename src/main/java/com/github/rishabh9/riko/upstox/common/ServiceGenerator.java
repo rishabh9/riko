@@ -49,6 +49,8 @@ import javax.annotation.Nullable;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
+import static com.github.rishabh9.riko.upstox.common.constants.PropertyKeys.*;
+
 public class ServiceGenerator {
 
     private static final Logger log = LogManager.getLogger(ServiceGenerator.class);
@@ -59,9 +61,9 @@ public class ServiceGenerator {
                 .registerTypeAdapter(NumberString.class, new NumberStringDeserializer())
                 .registerTypeAdapterFactory(new AlwaysListTypeAdapterFactory())
                 .create();
-        final String readTimeout = System.getProperty("riko.read.timeout");
-        final String writeTimeout = System.getProperty("riko.write.timeout");
-        final String connectTimeout = System.getProperty("riko.connect.timeout");
+        final String readTimeout = System.getProperty(RIKO_READ_TIMEOUT);
+        final String writeTimeout = System.getProperty(RIKO_WRITE_TIMEOUT);
+        final String connectTimeout = System.getProperty(RIKO_CONNECT_TIMEOUT);
         this.httpClient = new OkHttpClient.Builder();
         if (!Strings.isNullOrEmpty(readTimeout)) {
             this.httpClient.readTimeout(
@@ -76,9 +78,9 @@ public class ServiceGenerator {
                     Long.parseLong(writeTimeout), TimeUnit.SECONDS);
         }
         final HttpUrl.Builder urlBuilder = new HttpUrl.Builder()
-                .scheme(System.getProperty("riko.server.scheme", "https"))
-                .host(System.getProperty("riko.server.url", "api.upstox.com"));
-        final String port = System.getProperty("riko.server.port");
+                .scheme(System.getProperty(RIKO_SERVER_SCHEME, RIKO_SERVER_SCHEME_DEFAULT))
+                .host(System.getProperty(RIKO_SERVER_URL, RIKO_SERVER_URL_DEFAULT));
+        final String port = System.getProperty(RIKO_SERVER_PORT);
         if (!Strings.isNullOrEmpty(port)) {
             urlBuilder.port(Integer.parseInt(port));
         }
