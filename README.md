@@ -89,13 +89,13 @@ The following system properties can be used to configure the library:
     <dependency>
         <groupId>com.github.rishabh9</groupId>
         <artifactId>riko</artifactId>
-        <version>1.0.1</version>
+        <version>1.0.2</version>
     </dependency>
 
 ###### Gradle
 
     dependencies {
-        implementation 'com.github.rishabh9:riko:1.0.1'
+        implementation 'com.github.rishabh9:riko:1.0.2'
     }
 
 #### Progaurd
