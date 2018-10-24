@@ -25,9 +25,8 @@
 package com.github.rishabh9.riko.upstox.orders;
 
 import com.github.rishabh9.riko.upstox.common.Service;
-import com.github.rishabh9.riko.upstox.common.models.ApiCredentials;
+import com.github.rishabh9.riko.upstox.common.UpstoxAuthService;
 import com.github.rishabh9.riko.upstox.common.models.UpstoxResponse;
-import com.github.rishabh9.riko.upstox.login.models.AccessToken;
 import com.github.rishabh9.riko.upstox.orders.models.Order;
 import com.github.rishabh9.riko.upstox.orders.models.OrderRequest;
 import com.github.rishabh9.riko.upstox.orders.models.Trade;
@@ -37,7 +36,6 @@ import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 public class OrderService extends Service {
@@ -45,13 +43,11 @@ public class OrderService extends Service {
     private static final Logger log = LogManager.getLogger(OrderService.class);
 
     /**
-     * @param accessToken The user's access token
-     * @param credentials The user's API credentials
+     * @param upstoxAuthService The service to retrieve authentication details
      */
-    public OrderService(@Nonnull final AccessToken accessToken,
-                        @Nonnull final ApiCredentials credentials) {
+    public OrderService(@Nonnull final UpstoxAuthService upstoxAuthService) {
 
-        super(Objects.requireNonNull(accessToken), Objects.requireNonNull(credentials));
+        super(upstoxAuthService);
     }
 
     /**

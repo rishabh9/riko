@@ -25,6 +25,7 @@
 package com.github.rishabh9.riko.upstox.login;
 
 import com.github.rishabh9.riko.upstox.common.ServiceGenerator;
+import com.github.rishabh9.riko.upstox.common.UpstoxAuthService;
 import com.github.rishabh9.riko.upstox.common.models.ApiCredentials;
 import com.github.rishabh9.riko.upstox.login.models.AccessToken;
 import com.github.rishabh9.riko.upstox.login.models.TokenRequest;
@@ -60,11 +61,21 @@ class LoginServiceTest {
         TokenRequest request = new TokenRequest("authorization_code_123456789",
                 "authorization_code", "http://localhost:4567/hello");
 
-        ApiCredentials credentials = new ApiCredentials("secretApiKey", "secret-secret");
+        UpstoxAuthService upstoxAuthService = new UpstoxAuthService() {
+            @Override
+            public ApiCredentials getApiCredentials() {
+                return new ApiCredentials("secretApiKey", "secret-secret");
+            }
 
-        LoginService service = new LoginService(request, credentials);
+            @Override
+            public AccessToken getAccessToken() {
+                return null;
+            }
+        };
+
+        LoginService service = new LoginService(upstoxAuthService);
         try {
-            AccessToken accessToken = service.getAccessToken();
+            AccessToken accessToken = service.getAccessToken(request).get();
 
             assertNotNull(accessToken);
             assertEquals(Long.valueOf(86400L), accessToken.getExpiresIn());
@@ -98,11 +109,21 @@ class LoginServiceTest {
         TokenRequest request = new TokenRequest("authorization_code_123456789",
                 "authorization_code", "http://localhost:4567/hello");
 
-        ApiCredentials credentials = new ApiCredentials("secretApiKey", "secret-secret");
+        UpstoxAuthService upstoxAuthService = new UpstoxAuthService() {
+            @Override
+            public ApiCredentials getApiCredentials() {
+                return new ApiCredentials("secretApiKey", "secret-secret");
+            }
 
-        LoginService service = new LoginService(request, credentials);
+            @Override
+            public AccessToken getAccessToken() {
+                return null;
+            }
+        };
 
-        assertThrows(ExecutionException.class, service::getAccessToken);
+        LoginService service = new LoginService(upstoxAuthService);
+
+        assertThrows(ExecutionException.class, () -> service.getAccessToken(request).get());
 
         // Shut down the server. Instances cannot be reused.
         server.shutdown();
@@ -121,12 +142,22 @@ class LoginServiceTest {
         TokenRequest request = new TokenRequest("authorization_code_123456789",
                 "authorization_code", "http://localhost:4567/hello");
 
-        ApiCredentials credentials = new ApiCredentials("secretApiKey", "secret-secret");
+        UpstoxAuthService upstoxAuthService = new UpstoxAuthService() {
+            @Override
+            public ApiCredentials getApiCredentials() {
+                return new ApiCredentials("secretApiKey", "secret-secret");
+            }
 
-        LoginService service = new LoginService(request, credentials);
+            @Override
+            public AccessToken getAccessToken() {
+                return null;
+            }
+        };
+
+        LoginService service = new LoginService(upstoxAuthService);
 
         try {
-            service.getAccessToken();
+            service.getAccessToken(request).get();
         } catch (ExecutionException | InterruptedException e) {
             assertTrue(e.getCause() instanceof IOException);
         } finally {
@@ -136,67 +167,57 @@ class LoginServiceTest {
     }
 
     @Test
-    void getAccessToken_throwNPE_whenParametersAreNotProper() {
+    void getAccessToken_throwNPE_whenMissingTokenRequest() {
+        UpstoxAuthService upstoxAuthService = new UpstoxAuthService() {
+            @Override
+            public ApiCredentials getApiCredentials() {
+                return new ApiCredentials("secretApiKey", "secret-secret");
+            }
 
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
+            @Override
+            public AccessToken getAccessToken() {
+                return null;
+            }
+        };
 
+        LoginService service = new LoginService(upstoxAuthService);
         assertThrows(NullPointerException.class,
-                () -> new LoginService(null, credentials),
+                () -> service.getAccessToken(null),
                 "Null check missing for 'TokenRequest' from LoginService constructor");
+    }
 
+    @Test
+    void getAccessToken_throwNPE_whenMissingGrantType() {
         assertThrows(NullPointerException.class,
-                () -> new LoginService(
-                        new TokenRequest(
-                                "authorization_code_123456789",
-                                null,
-                                "http://localhost:4567/hello"),
-                        credentials),
+                () -> new TokenRequest("authorization_code_123456789", null, "http://localhost:4567/hello"),
                 "Null check missing for 'grantType' from TokenRequest constructor");
+    }
 
+    @Test
+    void getAccessToken_throwNPE_whenMissingCode() {
         assertThrows(NullPointerException.class,
-                () -> new LoginService(
-                        new TokenRequest(
-                                null,
-                                "authorization_code",
-                                "http://localhost:4567/hello"),
-                        credentials),
+                () -> new TokenRequest(null, "authorization_code", "http://localhost:4567/hello"),
                 "Null check missing for 'code' from TokenRequest constructor");
+    }
 
+    @Test
+    void getAccessToken_throwNPE_whenMissingRedirectUri() {
         assertThrows(NullPointerException.class,
-                () -> new LoginService(
-                        new TokenRequest(
-                                "authorization_code_123456789",
-                                "authorization_code",
-                                null),
-                        credentials),
+                () -> new TokenRequest("authorization_code_123456789", "authorization_code", null),
                 "Null check missing for 'redirectUri' from TokenRequest constructor");
+    }
 
-        TokenRequest request = new TokenRequest(
-                "authorization_code_123456789",
-                "authorization_code",
-                "http://localhost:4567/hello");
-
+    @Test
+    void getAccessToken_throwNPE_whenMissingApiKey() {
         assertThrows(NullPointerException.class,
-                () -> new LoginService(
-                        request,
-                        null),
-                "Null check missing for 'ApiCredentials' from LoginService constructor");
-
-        assertThrows(NullPointerException.class,
-                () -> new LoginService(
-                        request,
-                        new ApiCredentials(
-                                null,
-                                "secret-secret")),
+                () -> new ApiCredentials(null, "secret-secret"),
                 "Null check missing for 'apiKey' from ApiCredentials constructor");
+    }
 
+    @Test
+    void getAccessToken_throwNPE_whenMissingApiSecret() {
         assertThrows(NullPointerException.class,
-                () -> new LoginService(
-                        request,
-                        new ApiCredentials(
-                                "secretApiKey",
-                                null)),
+                () -> new ApiCredentials("secretApiKey", null),
                 "Null check missing for 'apiSecret' from ApiCredentials constructor");
     }
 }

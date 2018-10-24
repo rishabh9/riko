@@ -25,6 +25,7 @@
 package com.github.rishabh9.riko.upstox.historical;
 
 import com.github.rishabh9.riko.upstox.common.ServiceGenerator;
+import com.github.rishabh9.riko.upstox.common.UpstoxAuthService;
 import com.github.rishabh9.riko.upstox.common.models.ApiCredentials;
 import com.github.rishabh9.riko.upstox.common.models.UpstoxResponse;
 import com.github.rishabh9.riko.upstox.historical.models.Candle;
@@ -48,6 +49,22 @@ class HistoricalServiceTest {
 
     private static final Logger log = LogManager.getLogger(HistoricalServiceTest.class);
 
+    private UpstoxAuthService upstoxAuthService = new UpstoxAuthService() {
+        @Override
+        public ApiCredentials getApiCredentials() {
+            return new ApiCredentials("secretApiKey", "secret-secret");
+        }
+
+        @Override
+        public AccessToken getAccessToken() {
+            AccessToken token = new AccessToken();
+            token.setExpiresIn(86400L);
+            token.setType("Bearer");
+            token.setToken("access_token_123456789");
+            return token;
+        }
+    };
+
     @Test
     void getOhlc_success_whenAllParametersAreCorrect() throws IOException {
         MockWebServer server = new MockWebServer();
@@ -68,13 +85,7 @@ class HistoricalServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-        HistoricalService service = new HistoricalService(token, credentials);
+        HistoricalService service = new HistoricalService(upstoxAuthService);
 
         try {
             UpstoxResponse<List<Candle>> serverResponse =
@@ -105,13 +116,7 @@ class HistoricalServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-        HistoricalService service = new HistoricalService(token, credentials);
+        HistoricalService service = new HistoricalService(upstoxAuthService);
 
         assertThrows(ExecutionException.class,
                 service.getOhlc("NSE", "RELIANCE", null, null, null)::get);
@@ -129,13 +134,7 @@ class HistoricalServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-        HistoricalService service = new HistoricalService(token, credentials);
+        HistoricalService service = new HistoricalService(upstoxAuthService);
 
         try {
             service.getOhlc("NSE", "RELIANCE", null, null, null).get();
@@ -148,15 +147,7 @@ class HistoricalServiceTest {
 
     @Test
     void getOhlc_throwIAE_whenRequiredParametersAreMissing() {
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-
-        HistoricalService service = new HistoricalService(token, credentials);
+        HistoricalService service = new HistoricalService(upstoxAuthService);
 
         assertThrows(IllegalArgumentException.class, () ->
                         service.getOhlc(null, null, null, null, null),
@@ -186,20 +177,8 @@ class HistoricalServiceTest {
     @Test
     void getOhlc_throwNPE_whenServiceParametersAreMissing() {
 
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-
         assertThrows(NullPointerException.class,
-                () -> new HistoricalService(null, credentials),
-                "Null check missing for 'AccessToken' from HistoricalService constructor");
-
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-
-        assertThrows(NullPointerException.class,
-                () -> new HistoricalService(token, null),
-                "Null check missing for 'ApiCredentials' from HistoricalService constructor");
+                () -> new HistoricalService(null),
+                "Null check missing for 'UpstoxAuthService' from HistoricalService constructor");
     }
 }

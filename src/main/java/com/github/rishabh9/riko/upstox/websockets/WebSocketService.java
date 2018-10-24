@@ -25,6 +25,7 @@
 package com.github.rishabh9.riko.upstox.websockets;
 
 import com.github.rishabh9.riko.upstox.common.Service;
+import com.github.rishabh9.riko.upstox.common.UpstoxAuthService;
 import com.github.rishabh9.riko.upstox.common.models.ApiCredentials;
 import com.github.rishabh9.riko.upstox.common.models.UpstoxResponse;
 import com.github.rishabh9.riko.upstox.login.models.AccessToken;
@@ -38,7 +39,6 @@ import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -50,13 +50,11 @@ public class WebSocketService extends Service {
     private static final Logger log = LogManager.getLogger(WebSocketService.class);
 
     /**
-     * @param accessToken The user's access token
-     * @param credentials The user's API credentials
+     * @param upstoxAuthService The service to retrieve authentication details
      */
-    public WebSocketService(@Nonnull final AccessToken accessToken,
-                            @Nonnull final ApiCredentials credentials) {
+    public WebSocketService(@Nonnull final UpstoxAuthService upstoxAuthService) {
 
-        super(Objects.requireNonNull(accessToken), Objects.requireNonNull(credentials));
+        super(upstoxAuthService);
     }
 
     private CompletableFuture<UpstoxResponse<WebsocketParameters>> getWebsocketParameters() {
@@ -135,6 +133,8 @@ public class WebSocketService extends Service {
         if (!Strings.isNullOrEmpty(port)) {
             urlBuilder.port(Integer.parseInt(port));
         }
+        final AccessToken accessToken = upstoxAuthService.getAccessToken();
+        final ApiCredentials credentials = upstoxAuthService.getApiCredentials();
         urlBuilder
                 .addQueryParameter("apiKey", credentials.getApiKey())
                 .addQueryParameter("token", accessToken.getToken());

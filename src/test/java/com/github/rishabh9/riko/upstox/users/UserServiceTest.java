@@ -25,6 +25,7 @@
 package com.github.rishabh9.riko.upstox.users;
 
 import com.github.rishabh9.riko.upstox.common.ServiceGenerator;
+import com.github.rishabh9.riko.upstox.common.UpstoxAuthService;
 import com.github.rishabh9.riko.upstox.common.models.ApiCredentials;
 import com.github.rishabh9.riko.upstox.common.models.UpstoxResponse;
 import com.github.rishabh9.riko.upstox.login.models.AccessToken;
@@ -55,6 +56,22 @@ class UserServiceTest {
 
     private static final Logger log = LogManager.getLogger(UserServiceTest.class);
 
+    private UpstoxAuthService upstoxAuthService = new UpstoxAuthService() {
+        @Override
+        public ApiCredentials getApiCredentials() {
+            return new ApiCredentials("secretApiKey", "secret-secret");
+        }
+
+        @Override
+        public AccessToken getAccessToken() {
+            AccessToken token = new AccessToken();
+            token.setExpiresIn(86400L);
+            token.setType("Bearer");
+            token.setToken("access_token_123456789");
+            return token;
+        }
+    };
+
     @Test
     void getProfile_success_whenAllParametersAreCorrect() throws IOException {
         MockWebServer server = new MockWebServer();
@@ -73,13 +90,7 @@ class UserServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-        UserService service = new UserService(token, credentials);
+        UserService service = new UserService(upstoxAuthService);
 
         try {
             UpstoxResponse<Profile> serverResponse = service.getProfile().get();
@@ -108,13 +119,7 @@ class UserServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-        UserService service = new UserService(token, credentials);
+        UserService service = new UserService(upstoxAuthService);
 
         assertThrows(ExecutionException.class, service.getProfile()::get);
 
@@ -131,13 +136,7 @@ class UserServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-        UserService service = new UserService(token, credentials);
+        UserService service = new UserService(upstoxAuthService);
 
         try {
             service.getProfile().get();
@@ -168,13 +167,7 @@ class UserServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-        UserService service = new UserService(token, credentials);
+        UserService service = new UserService(upstoxAuthService);
 
         try {
             UpstoxResponse<ProfileBalance> serverResponse =
@@ -204,13 +197,7 @@ class UserServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-        UserService service = new UserService(token, credentials);
+        UserService service = new UserService(upstoxAuthService);
 
         assertThrows(ExecutionException.class, service.getProfileBalance(null)::get);
 
@@ -227,13 +214,7 @@ class UserServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-        UserService service = new UserService(token, credentials);
+        UserService service = new UserService(upstoxAuthService);
 
         try {
             service.getProfileBalance(null).get();
@@ -264,13 +245,7 @@ class UserServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-        UserService service = new UserService(token, credentials);
+        UserService service = new UserService(upstoxAuthService);
 
         try {
             UpstoxResponse<List<Position>> serverResponse = service.getPositions().get();
@@ -299,13 +274,7 @@ class UserServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-        UserService service = new UserService(token, credentials);
+        UserService service = new UserService(upstoxAuthService);
 
         assertThrows(ExecutionException.class, service.getPositions()::get);
 
@@ -322,13 +291,7 @@ class UserServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-        UserService service = new UserService(token, credentials);
+        UserService service = new UserService(upstoxAuthService);
 
         try {
             service.getPositions().get();
@@ -359,13 +322,7 @@ class UserServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-        UserService service = new UserService(token, credentials);
+        UserService service = new UserService(upstoxAuthService);
 
         try {
             UpstoxResponse<List<Holding>> serverResponse = service.getHoldings().get();
@@ -394,13 +351,7 @@ class UserServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-        UserService service = new UserService(token, credentials);
+        UserService service = new UserService(upstoxAuthService);
 
         assertThrows(ExecutionException.class, service.getHoldings()::get);
 
@@ -417,13 +368,7 @@ class UserServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-        UserService service = new UserService(token, credentials);
+        UserService service = new UserService(upstoxAuthService);
 
         try {
             service.getHoldings().get();
@@ -453,13 +398,7 @@ class UserServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-        UserService service = new UserService(token, credentials);
+        UserService service = new UserService(upstoxAuthService);
 
         try {
             InputStream inputStream =
@@ -467,7 +406,8 @@ class UserServiceTest {
                             .get();
 
             String stagedResponse = convert(inputStream, Charset.forName("UTF-8"));
-            Type fooType = new TypeToken<UpstoxResponse<List<String>>>() {}.getType();
+            Type fooType = new TypeToken<UpstoxResponse<List<String>>>() {
+            }.getType();
             UpstoxResponse<List<String>> serverResponse =
                     new Gson().fromJson(stagedResponse, fooType);
             System.err.println(stagedResponse);
@@ -509,13 +449,7 @@ class UserServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-        UserService service = new UserService(token, credentials);
+        UserService service = new UserService(upstoxAuthService);
 
         assertThrows(ExecutionException.class,
                 service.getAllMasterContracts("NSE")::get);
@@ -533,13 +467,7 @@ class UserServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-        UserService service = new UserService(token, credentials);
+        UserService service = new UserService(upstoxAuthService);
 
         try {
             service.getAllMasterContracts("NSE").get();
@@ -552,15 +480,7 @@ class UserServiceTest {
 
     @Test
     void getAllMasterContracts_throwIAE_whenRequiredParametersAreMissing() {
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-
-        UserService service = new UserService(token, credentials);
+        UserService service = new UserService(upstoxAuthService);
 
         assertThrows(IllegalArgumentException.class, () ->
                         service.getAllMasterContracts(null),
@@ -589,13 +509,7 @@ class UserServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-        UserService service = new UserService(token, credentials);
+        UserService service = new UserService(upstoxAuthService);
 
         try {
             UpstoxResponse<Contract> serverResponse =
@@ -626,13 +540,7 @@ class UserServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-        UserService service = new UserService(token, credentials);
+        UserService service = new UserService(upstoxAuthService);
 
         assertThrows(ExecutionException.class,
                 service.getMasterContract("NSE", "RELIANCE", null)::get);
@@ -650,13 +558,7 @@ class UserServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-        UserService service = new UserService(token, credentials);
+        UserService service = new UserService(upstoxAuthService);
 
         try {
             service.getMasterContract("NSE", "RELIANCE", null).get();
@@ -669,15 +571,7 @@ class UserServiceTest {
 
     @Test
     void getMasterContract_throwIAE_whenRequiredParametersAreMissing() {
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-
-        UserService service = new UserService(token, credentials);
+        UserService service = new UserService(upstoxAuthService);
 
         assertThrows(IllegalArgumentException.class, () ->
                         service.getMasterContract(null, null, null),
@@ -710,21 +604,8 @@ class UserServiceTest {
 
     @Test
     void getMasterContract_throwNPE_whenServiceParametersAreMissing() {
-
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-
         assertThrows(NullPointerException.class,
-                () -> new UserService(null, credentials),
-                "Null check missing for 'AccessToken' from UserService constructor");
-
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-
-        assertThrows(NullPointerException.class,
-                () -> new UserService(token, null),
-                "Null check missing for 'ApiCredentials' from UserService constructor");
+                () -> new UserService(null),
+                "Null check missing for 'UpstoxAuthService' from UserService constructor");
     }
 }

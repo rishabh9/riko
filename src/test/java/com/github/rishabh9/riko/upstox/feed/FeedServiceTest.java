@@ -25,6 +25,7 @@
 package com.github.rishabh9.riko.upstox.feed;
 
 import com.github.rishabh9.riko.upstox.common.ServiceGenerator;
+import com.github.rishabh9.riko.upstox.common.UpstoxAuthService;
 import com.github.rishabh9.riko.upstox.common.models.ApiCredentials;
 import com.github.rishabh9.riko.upstox.common.models.UpstoxResponse;
 import com.github.rishabh9.riko.upstox.feed.models.Feed;
@@ -47,6 +48,22 @@ class FeedServiceTest {
 
     private static final Logger log = LogManager.getLogger(FeedServiceTest.class);
 
+    private UpstoxAuthService upstoxAuthService = new UpstoxAuthService() {
+        @Override
+        public ApiCredentials getApiCredentials() {
+            return new ApiCredentials("secretApiKey", "secret-secret");
+        }
+
+        @Override
+        public AccessToken getAccessToken() {
+            AccessToken token = new AccessToken();
+            token.setExpiresIn(86400L);
+            token.setType("Bearer");
+            token.setToken("access_token_123456789");
+            return token;
+        }
+    };
+
     @Test
     void liveFeed_success_whenAllParametersAreCorrect() throws IOException {
         MockWebServer server = new MockWebServer();
@@ -65,13 +82,7 @@ class FeedServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-        FeedService service = new FeedService(token, credentials);
+        FeedService service = new FeedService(upstoxAuthService);
 
         try {
             UpstoxResponse<Feed> serverResponse =
@@ -102,13 +113,7 @@ class FeedServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-        FeedService service = new FeedService(token, credentials);
+        FeedService service = new FeedService(upstoxAuthService);
 
         assertThrows(ExecutionException.class,
                 service.liveFeed("NSE", "RELIANCE", "TYPE")::get);
@@ -126,13 +131,7 @@ class FeedServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-        FeedService service = new FeedService(token, credentials);
+        FeedService service = new FeedService(upstoxAuthService);
 
         try {
             service.liveFeed("NSE", "RELIANCE", "TYPE").get();
@@ -145,15 +144,7 @@ class FeedServiceTest {
 
     @Test
     void liveFeed_throwIAE_whenRequiredParametersAreMissing() {
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-
-        FeedService service = new FeedService(token, credentials);
+        FeedService service = new FeedService(upstoxAuthService);
 
         assertThrows(IllegalArgumentException.class, () ->
                         service.liveFeed(null, null, null),
@@ -191,21 +182,9 @@ class FeedServiceTest {
     @Test
     void liveFeed_throwNPE_whenServiceParametersAreMissing() {
 
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-
         assertThrows(NullPointerException.class,
-                () -> new FeedService(null, credentials),
-                "Null check missing for 'AccessToken' from FeedService constructor");
-
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-
-        assertThrows(NullPointerException.class,
-                () -> new FeedService(token, null),
-                "Null check missing for 'ApiCredentials' from FeedService constructor");
+                () -> new FeedService(null),
+                "Null check missing for 'UpstoxAuthService' from FeedService constructor");
     }
 
     @Test
@@ -226,13 +205,7 @@ class FeedServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-        FeedService service = new FeedService(token, credentials);
+        FeedService service = new FeedService(upstoxAuthService);
 
         try {
             UpstoxResponse<SubscriptionResponse> subResponse =
@@ -263,13 +236,7 @@ class FeedServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-        FeedService service = new FeedService(token, credentials);
+        FeedService service = new FeedService(upstoxAuthService);
 
         assertThrows(ExecutionException.class,
                 service.subscribe("TYPE", "NSE", "ACC,RELIANCE")::get);
@@ -287,13 +254,7 @@ class FeedServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-        FeedService service = new FeedService(token, credentials);
+        FeedService service = new FeedService(upstoxAuthService);
 
         try {
             service.subscribe("TYPE", "NSE", "RELIANCE,ACC").get();
@@ -306,15 +267,7 @@ class FeedServiceTest {
 
     @Test
     void subscribe_throwIAE_whenRequiredParametersAreMissing() {
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-
-        FeedService service = new FeedService(token, credentials);
+        FeedService service = new FeedService(upstoxAuthService);
 
         assertThrows(IllegalArgumentException.class, () ->
                         service.subscribe(null, null, null),
@@ -367,13 +320,7 @@ class FeedServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-        FeedService service = new FeedService(token, credentials);
+        FeedService service = new FeedService(upstoxAuthService);
 
         try {
             UpstoxResponse<SubscriptionResponse> unsubResponse =
@@ -404,13 +351,7 @@ class FeedServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-        FeedService service = new FeedService(token, credentials);
+        FeedService service = new FeedService(upstoxAuthService);
 
         assertThrows(ExecutionException.class,
                 service.unsubscribe("TYPE", "NSE", "ACC,RELIANCE")::get);
@@ -428,13 +369,7 @@ class FeedServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-        FeedService service = new FeedService(token, credentials);
+        FeedService service = new FeedService(upstoxAuthService);
 
         try {
             service.unsubscribe("TYPE", "NSE", "RELIANCE,ACC").get();
@@ -447,15 +382,7 @@ class FeedServiceTest {
 
     @Test
     void unsubscribe_throwIAE_whenRequiredParametersAreMissing() {
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-
-        FeedService service = new FeedService(token, credentials);
+        FeedService service = new FeedService(upstoxAuthService);
 
         assertThrows(IllegalArgumentException.class, () ->
                         service.unsubscribe(null, null, null),

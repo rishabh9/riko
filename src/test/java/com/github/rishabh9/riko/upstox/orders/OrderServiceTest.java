@@ -25,6 +25,7 @@
 package com.github.rishabh9.riko.upstox.orders;
 
 import com.github.rishabh9.riko.upstox.common.ServiceGenerator;
+import com.github.rishabh9.riko.upstox.common.UpstoxAuthService;
 import com.github.rishabh9.riko.upstox.common.models.ApiCredentials;
 import com.github.rishabh9.riko.upstox.common.models.UpstoxResponse;
 import com.github.rishabh9.riko.upstox.login.models.AccessToken;
@@ -50,6 +51,22 @@ class OrderServiceTest {
 
     private static final Logger log = LogManager.getLogger(OrderServiceTest.class);
 
+    private UpstoxAuthService upstoxAuthService = new UpstoxAuthService() {
+        @Override
+        public ApiCredentials getApiCredentials() {
+            return new ApiCredentials("secretApiKey", "secret-secret");
+        }
+
+        @Override
+        public AccessToken getAccessToken() {
+            AccessToken token = new AccessToken();
+            token.setExpiresIn(86400L);
+            token.setType("Bearer");
+            token.setToken("access_token_123456789");
+            return token;
+        }
+    };
+
     @Test
     void getOrderHistory_success_whenAllParametersAreCorrect() throws IOException {
         MockWebServer server = new MockWebServer();
@@ -70,13 +87,7 @@ class OrderServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-        OrderService service = new OrderService(token, credentials);
+        OrderService service = new OrderService(upstoxAuthService);
 
         try {
             UpstoxResponse<List<Order>> serverResponse = service.getOrderHistory().get();
@@ -105,13 +116,7 @@ class OrderServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-        OrderService service = new OrderService(token, credentials);
+        OrderService service = new OrderService(upstoxAuthService);
 
         assertThrows(ExecutionException.class, service.getOrderHistory()::get);
 
@@ -128,13 +133,7 @@ class OrderServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-        OrderService service = new OrderService(token, credentials);
+        OrderService service = new OrderService(upstoxAuthService);
 
         try {
             service.getOrderHistory().get();
@@ -166,13 +165,7 @@ class OrderServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-        OrderService service = new OrderService(token, credentials);
+        OrderService service = new OrderService(upstoxAuthService);
 
         try {
             UpstoxResponse<List<Order>> serverResponse =
@@ -202,13 +195,7 @@ class OrderServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-        OrderService service = new OrderService(token, credentials);
+        OrderService service = new OrderService(upstoxAuthService);
 
         assertThrows(ExecutionException.class, service.getOrderDetails("ORD_ID_1")::get);
 
@@ -225,13 +212,7 @@ class OrderServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-        OrderService service = new OrderService(token, credentials);
+        OrderService service = new OrderService(upstoxAuthService);
 
         try {
             service.getOrderDetails("ORD_ID_1").get();
@@ -245,15 +226,7 @@ class OrderServiceTest {
 
     @Test
     void getOrderDetails_throwIAE_whenRequiredParametersAreMissing() {
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-
-        OrderService service = new OrderService(token, credentials);
+        OrderService service = new OrderService(upstoxAuthService);
 
         assertThrows(IllegalArgumentException.class, () ->
                         service.getOrderDetails(null),
@@ -284,13 +257,7 @@ class OrderServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-        OrderService service = new OrderService(token, credentials);
+        OrderService service = new OrderService(upstoxAuthService);
 
         try {
             UpstoxResponse<List<Trade>> serverResponse = service.getTradeBook().get();
@@ -319,13 +286,7 @@ class OrderServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-        OrderService service = new OrderService(token, credentials);
+        OrderService service = new OrderService(upstoxAuthService);
 
         assertThrows(ExecutionException.class, service.getTradeBook()::get);
 
@@ -342,13 +303,7 @@ class OrderServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-        OrderService service = new OrderService(token, credentials);
+        OrderService service = new OrderService(upstoxAuthService);
 
         try {
             service.getTradeBook().get();
@@ -380,13 +335,7 @@ class OrderServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-        OrderService service = new OrderService(token, credentials);
+        OrderService service = new OrderService(upstoxAuthService);
 
         try {
             UpstoxResponse<List<Trade>> serverResponse =
@@ -416,13 +365,7 @@ class OrderServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-        OrderService service = new OrderService(token, credentials);
+        OrderService service = new OrderService(upstoxAuthService);
 
         assertThrows(ExecutionException.class, service.getTradeHistory("ORD_ID_1")::get);
 
@@ -439,13 +382,7 @@ class OrderServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-        OrderService service = new OrderService(token, credentials);
+        OrderService service = new OrderService(upstoxAuthService);
 
         try {
             service.getTradeHistory("ORD_ID_1").get();
@@ -459,15 +396,7 @@ class OrderServiceTest {
 
     @Test
     void getTradeHistory_throwIAE_whenRequiredParametersAreMissing() {
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-
-        OrderService service = new OrderService(token, credentials);
+        OrderService service = new OrderService(upstoxAuthService);
 
         assertThrows(IllegalArgumentException.class, () ->
                         service.getTradeHistory(null),
@@ -496,13 +425,7 @@ class OrderServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-        OrderService service = new OrderService(token, credentials);
+        OrderService service = new OrderService(upstoxAuthService);
 
         OrderRequest request = new OrderRequest();
         request.setOrderId("ORD_ID_1");
@@ -534,13 +457,7 @@ class OrderServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-        OrderService service = new OrderService(token, credentials);
+        OrderService service = new OrderService(upstoxAuthService);
 
         assertThrows(ExecutionException.class, service.placeOrder(new OrderRequest())::get);
 
@@ -557,13 +474,7 @@ class OrderServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-        OrderService service = new OrderService(token, credentials);
+        OrderService service = new OrderService(upstoxAuthService);
 
         try {
             service.placeOrder(new OrderRequest()).get();
@@ -577,15 +488,7 @@ class OrderServiceTest {
 
     @Test
     void placeOrder_throwIAE_whenRequiredParametersAreMissing() {
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-
-        OrderService service = new OrderService(token, credentials);
+        OrderService service = new OrderService(upstoxAuthService);
 
         assertThrows(IllegalArgumentException.class, () ->
                         service.placeOrder(null),
@@ -610,13 +513,7 @@ class OrderServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-        OrderService service = new OrderService(token, credentials);
+        OrderService service = new OrderService(upstoxAuthService);
 
         OrderRequest request = new OrderRequest();
         request.setOrderId("ORD_ID_1");
@@ -649,13 +546,7 @@ class OrderServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-        OrderService service = new OrderService(token, credentials);
+        OrderService service = new OrderService(upstoxAuthService);
 
         assertThrows(ExecutionException.class,
                 service.modifyOrder("ORD_ID_1", new OrderRequest())::get);
@@ -673,13 +564,7 @@ class OrderServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-        OrderService service = new OrderService(token, credentials);
+        OrderService service = new OrderService(upstoxAuthService);
 
         try {
             service.modifyOrder("ORD_ID_1", new OrderRequest()).get();
@@ -693,15 +578,7 @@ class OrderServiceTest {
 
     @Test
     void modifyOrder_throwIAE_whenRequiredParametersAreMissing() {
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-
-        OrderService service = new OrderService(token, credentials);
+        OrderService service = new OrderService(upstoxAuthService);
 
         assertThrows(IllegalArgumentException.class, () ->
                         service.modifyOrder(null, new OrderRequest()),
@@ -732,13 +609,7 @@ class OrderServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-        OrderService service = new OrderService(token, credentials);
+        OrderService service = new OrderService(upstoxAuthService);
 
         try {
             UpstoxResponse<String> serverResponse =
@@ -768,13 +639,7 @@ class OrderServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-        OrderService service = new OrderService(token, credentials);
+        OrderService service = new OrderService(upstoxAuthService);
 
         assertThrows(ExecutionException.class, service.cancelOrders("ORDER_ID_1")::get);
 
@@ -791,13 +656,7 @@ class OrderServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-        OrderService service = new OrderService(token, credentials);
+        OrderService service = new OrderService(upstoxAuthService);
 
         try {
             service.cancelOrders("ORD_ID_1,ORD_ID_2").get();
@@ -811,15 +670,7 @@ class OrderServiceTest {
 
     @Test
     void cancelOrders_throwIAE_whenRequiredParametersAreMissing() {
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-
-        OrderService service = new OrderService(token, credentials);
+        OrderService service = new OrderService(upstoxAuthService);
 
         assertThrows(IllegalArgumentException.class, () ->
                         service.cancelOrders(null),
@@ -846,13 +697,7 @@ class OrderServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-        OrderService service = new OrderService(token, credentials);
+        OrderService service = new OrderService(upstoxAuthService);
 
         try {
             UpstoxResponse<String> serverResponse = service.cancelAllOrders().get();
@@ -881,13 +726,7 @@ class OrderServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-        OrderService service = new OrderService(token, credentials);
+        OrderService service = new OrderService(upstoxAuthService);
 
         assertThrows(ExecutionException.class, service.cancelAllOrders()::get);
 
@@ -904,13 +743,7 @@ class OrderServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-        OrderService service = new OrderService(token, credentials);
+        OrderService service = new OrderService(upstoxAuthService);
 
         try {
             service.cancelAllOrders().get();
@@ -924,20 +757,8 @@ class OrderServiceTest {
 
     @Test
     void cancelAllOrders_throwNPE_whenServiceParametersAreMissing() {
-        ApiCredentials credentials =
-                new ApiCredentials("secretApiKey", "secret-secret");
-
         assertThrows(NullPointerException.class,
-                () -> new OrderService(null, credentials),
-                "Null check missing for 'AccessToken' from OrderService constructor");
-
-        AccessToken token = new AccessToken();
-        token.setExpiresIn(86400L);
-        token.setType("Bearer");
-        token.setToken("access_token_123456789");
-
-        assertThrows(NullPointerException.class,
-                () -> new OrderService(token, null),
-                "Null check missing for 'ApiCredentials' from OrderService constructor");
+                () -> new OrderService(null),
+                "Null check missing for 'UpstoxAuthService' from OrderService constructor");
     }
 }

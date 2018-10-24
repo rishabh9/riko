@@ -25,39 +25,21 @@
 package com.github.rishabh9.riko.upstox.common;
 
 import com.github.rishabh9.riko.upstox.common.models.ApiCredentials;
-import com.github.rishabh9.riko.upstox.common.models.AuthHeaders;
 import com.github.rishabh9.riko.upstox.login.models.AccessToken;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import javax.annotation.Nonnull;
-import java.util.Objects;
 
 /**
- * Parent class for every Service class. Holds common methods.
+ * The implementations of this interface are responsible to <em>always return
+ * the latest version</em> of the {@link ApiCredentials} and {@link AccessToken}.
  */
-public abstract class Service {
-
-    private static final Logger log = LogManager.getLogger(Service.class);
-
-    protected final UpstoxAuthService upstoxAuthService;
+public interface UpstoxAuthService {
 
     /**
-     * @param upstoxAuthService The service to retrieve authentication details
+     * @return The latest API Key and API Secret of an Upstox account.
      */
-    public Service(@Nonnull final UpstoxAuthService upstoxAuthService) {
+    ApiCredentials getApiCredentials();
 
-        this.upstoxAuthService = Objects.requireNonNull(upstoxAuthService);
-    }
-
-    protected <T> T prepareServiceApi(@Nonnull final Class<T> type) {
-
-        log.debug("Preparing service API: {}", type.getName());
-        final AccessToken accessToken = upstoxAuthService.getAccessToken();
-        final ApiCredentials credentials = upstoxAuthService.getApiCredentials();
-
-        final String token = accessToken.getType() + " " + accessToken.getToken();
-        return ServiceGenerator.getInstance()
-                .createService(type, new AuthHeaders(token, credentials.getApiKey()));
-    }
+    /**
+     * @return The latest access token
+     */
+    AccessToken getAccessToken();
 }

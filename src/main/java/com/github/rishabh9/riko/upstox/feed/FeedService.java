@@ -25,27 +25,27 @@
 package com.github.rishabh9.riko.upstox.feed;
 
 import com.github.rishabh9.riko.upstox.common.Service;
-import com.github.rishabh9.riko.upstox.common.models.ApiCredentials;
+import com.github.rishabh9.riko.upstox.common.UpstoxAuthService;
 import com.github.rishabh9.riko.upstox.common.models.UpstoxResponse;
 import com.github.rishabh9.riko.upstox.feed.models.Feed;
 import com.github.rishabh9.riko.upstox.feed.models.SubscriptionResponse;
-import com.github.rishabh9.riko.upstox.login.models.AccessToken;
 import com.google.common.base.Strings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
-import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 public class FeedService extends Service {
 
     private static final Logger log = LogManager.getLogger(FeedService.class);
 
-    public FeedService(@Nonnull final AccessToken accessToken,
-                       @Nonnull final ApiCredentials credentials) {
+    /**
+     * @param upstoxAuthService The service to retrieve authentication details
+     */
+    public FeedService(@Nonnull final UpstoxAuthService upstoxAuthService) {
 
-        super(Objects.requireNonNull(accessToken), Objects.requireNonNull(credentials));
+        super(upstoxAuthService);
     }
 
     /**

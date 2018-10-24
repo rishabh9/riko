@@ -12,18 +12,18 @@ Checkout the [wiki](https://github.com/rishabh9/riko/wiki) for more details.
 <dependency>
     <groupId>com.github.rishabh9</groupId>
     <artifactId>riko</artifactId>
-    <version>1.0.2</version>
+    <version>2.0.0</version>
 </dependency>
 ```
 
 ### For Gradle based project
 ```groovy
 dependencies {
-    implementation 'com.github.rishabh9:riko:1.0.2'
+    implementation 'com.github.rishabh9:riko:2.0.0'
 }
 ```
 
 ### For SBT based project
 ```scala
-libraryDependencies += "com.github.rishabh9" % "riko" % "1.0.2"
+libraryDependencies += "com.github.rishabh9" % "riko" % "2.0.0"
 ```
