@@ -29,6 +29,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 import java.io.IOException;
+import java.util.Objects;
 
 /**
  * Retrofit2 interceptor to add common authentication headers to every request.
@@ -53,5 +54,19 @@ public class AuthenticationInterceptor implements Interceptor {
 
         Request request = builder.build();
         return chain.proceed(request);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AuthenticationInterceptor that = (AuthenticationInterceptor) o;
+        return Objects.equals(authToken, that.authToken) &&
+                Objects.equals(apiKey, that.apiKey);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(authToken, apiKey);
     }
 }

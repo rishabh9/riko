@@ -166,6 +166,8 @@ public class ServiceGenerator {
     public <S> S createService(@Nonnull final Class<S> serviceClass,
                                @Nullable final AuthHeaders headers) {
 
+        httpClient.interceptors().clear(); // Fix StackOverFlowError
+
         enableAuthentication(headers);
         if (log.isDebugEnabled()) {
             enableHttpLogging();
