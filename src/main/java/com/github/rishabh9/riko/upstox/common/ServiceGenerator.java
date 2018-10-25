@@ -29,6 +29,7 @@ import com.github.rishabh9.riko.upstox.common.converters.NumberString;
 import com.github.rishabh9.riko.upstox.common.converters.NumberStringDeserializer;
 import com.github.rishabh9.riko.upstox.common.converters.NumberStringSerializer;
 import com.github.rishabh9.riko.upstox.common.interceptors.AuthenticationInterceptor;
+import com.github.rishabh9.riko.upstox.common.interceptors.HttpErrorLoggingInterceptor;
 import com.github.rishabh9.riko.upstox.common.models.AuthHeaders;
 import com.google.common.base.Strings;
 import com.google.gson.Gson;
@@ -169,11 +170,16 @@ public class ServiceGenerator {
         httpClient.interceptors().clear(); // Fix StackOverFlowError
 
         enableAuthentication(headers);
+        enableHttpErrorLogging();
         if (log.isDebugEnabled()) {
             enableHttpLogging();
         }
         log.debug("Creating service with authorization headers");
         return retrofit.create(Objects.requireNonNull(serviceClass));
+    }
+
+    private void enableHttpErrorLogging() {
+        addInterceptor(new HttpErrorLoggingInterceptor());
     }
 
     private void enableAuthentication(final AuthHeaders headers) {
