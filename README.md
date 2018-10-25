@@ -6,6 +6,9 @@ Riko is a third-party Java library for accessing Upstox API.
 
 Checkout the [wiki](https://github.com/rishabh9/riko/wiki) for more details.
 
+There's a demo project `riko-starter`, available for your reference [here](https://github.com/rishabh9/riko-starter), 
+demonstrating the usage of Riko. Feel free to use it as a starter for your own project.
+
 ### For Maven based project
 
 ```xml
