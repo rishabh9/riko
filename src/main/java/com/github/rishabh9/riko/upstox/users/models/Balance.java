@@ -27,85 +27,84 @@ package com.github.rishabh9.riko.upstox.users.models;
 import com.google.common.base.MoreObjects;
 import com.google.gson.annotations.SerializedName;
 
-import java.math.BigDecimal;
 import java.util.Objects;
 
 public class Balance {
 
     @SerializedName("used_margin")
-    private BigDecimal usedMargin;
+    private Double usedMargin;
 
     @SerializedName("payin_amount")
-    private BigDecimal payinAmount;
+    private Double payinAmount;
 
     @SerializedName("span_margin")
-    private BigDecimal spanMargin;
+    private Double spanMargin;
 
     @SerializedName("adhoc_margin")
-    private BigDecimal adhocMargin;
+    private Double adhocMargin;
 
     @SerializedName("notional_cash")
-    private BigDecimal notionalCash;
+    private Double notionalCash;
 
     @SerializedName("available_margin")
-    private BigDecimal availableMargin;
+    private Double availableMargin;
 
     @SerializedName("exposure_margin")
-    private BigDecimal exposureMargin;
+    private Double exposureMargin;
 
-    public BigDecimal getUsedMargin() {
+    public Double getUsedMargin() {
         return usedMargin;
     }
 
-    public void setUsedMargin(BigDecimal usedMargin) {
+    public void setUsedMargin(Double usedMargin) {
         this.usedMargin = usedMargin;
     }
 
-    public BigDecimal getPayinAmount() {
+    public Double getPayinAmount() {
         return payinAmount;
     }
 
-    public void setPayinAmount(BigDecimal payinAmount) {
+    public void setPayinAmount(Double payinAmount) {
         this.payinAmount = payinAmount;
     }
 
-    public BigDecimal getSpanMargin() {
+    public Double getSpanMargin() {
         return spanMargin;
     }
 
-    public void setSpanMargin(BigDecimal spanMargin) {
+    public void setSpanMargin(Double spanMargin) {
         this.spanMargin = spanMargin;
     }
 
-    public BigDecimal getAdhocMargin() {
+    public Double getAdhocMargin() {
         return adhocMargin;
     }
 
-    public void setAdhocMargin(BigDecimal adhocMargin) {
+    public void setAdhocMargin(Double adhocMargin) {
         this.adhocMargin = adhocMargin;
     }
 
-    public BigDecimal getNotionalCash() {
+    public Double getNotionalCash() {
         return notionalCash;
     }
 
-    public void setNotionalCash(BigDecimal notionalCash) {
+    public void setNotionalCash(Double notionalCash) {
         this.notionalCash = notionalCash;
     }
 
-    public BigDecimal getAvailableMargin() {
+    public Double getAvailableMargin() {
         return availableMargin;
     }
 
-    public void setAvailableMargin(BigDecimal availableMargin) {
+    public void setAvailableMargin(Double availableMargin) {
         this.availableMargin = availableMargin;
     }
 
-    public BigDecimal getExposureMargin() {
+    public Double getExposureMargin() {
         return exposureMargin;
     }
 
-    public void setExposureMargin(BigDecimal exposureMargin) {
+    public void setExposureMargin(Double exposureMargin) {
         this.exposureMargin = exposureMargin;
     }
 

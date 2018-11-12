@@ -27,7 +27,6 @@ package com.github.rishabh9.riko.upstox.users.models;
 import com.google.common.base.MoreObjects;
 import com.google.gson.annotations.SerializedName;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 
@@ -49,10 +48,10 @@ public class Holding {
     private Long collateralQuantity;
 
     @SerializedName("haircut")
-    private BigDecimal haircutPercentage;
+    private Double haircutPercentage;
 
     @SerializedName("avg_price")
-    private BigDecimal averagePrice;
+    private Double averagePrice;
 
     public List<Instrument> getInstruments() {
         return instruments;
@@ -102,19 +101,19 @@ public class Holding {
         this.collateralQuantity = collateralQuantity;
     }
 
-    public BigDecimal getHaircutPercentage() {
+    public Double getHaircutPercentage() {
         return haircutPercentage;
     }
 
-    public void setHaircutPercentage(BigDecimal haircutPercentage) {
+    public void setHaircutPercentage(Double haircutPercentage) {
         this.haircutPercentage = haircutPercentage;
     }
 
-    public BigDecimal getAveragePrice() {
+    public Double getAveragePrice() {
         return averagePrice;
     }
 
-    public void setAveragePrice(BigDecimal averagePrice) {
+    public void setAveragePrice(Double averagePrice) {
         this.averagePrice = averagePrice;
     }
 

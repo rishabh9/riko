@@ -27,7 +27,6 @@ package com.github.rishabh9.riko.upstox.orders.models;
 import com.google.common.base.MoreObjects;
 import com.google.gson.annotations.SerializedName;
 
-import java.math.BigDecimal;
 import java.util.Objects;
 
 public class Order {
@@ -45,10 +44,10 @@ public class Order {
 
     private String duration;
 
-    private BigDecimal price;
+    private Double price;
 
     @SerializedName("trigger_price")
-    private BigDecimal triggerPrice;
+    private Double triggerPrice;
 
     private Long quantity;
 
@@ -59,7 +58,7 @@ public class Order {
     private String transactionType;
 
     @SerializedName("average_price")
-    private BigDecimal averagePrice;
+    private Double averagePrice;
 
     @SerializedName("traded_quantity")
     private Long tradedQuantity;
@@ -147,19 +146,19 @@ public class Order {
         this.duration = duration;
     }
 
-    public BigDecimal getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(BigDecimal price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 
-    public BigDecimal getTriggerPrice() {
+    public Double getTriggerPrice() {
         return triggerPrice;
     }
 
-    public void setTriggerPrice(BigDecimal triggerPrice) {
+    public void setTriggerPrice(Double triggerPrice) {
         this.triggerPrice = triggerPrice;
     }
 
@@ -187,11 +186,11 @@ public class Order {
         this.transactionType = transactionType;
     }
 
-    public BigDecimal getAveragePrice() {
+    public Double getAveragePrice() {
         return averagePrice;
     }
 
-    public void setAveragePrice(BigDecimal averagePrice) {
+    public void setAveragePrice(Double averagePrice) {
         this.averagePrice = averagePrice;
     }
 

@@ -28,7 +28,6 @@ import com.github.rishabh9.riko.upstox.common.converters.NumberString;
 import com.google.common.base.MoreObjects;
 import com.google.gson.annotations.SerializedName;
 
-import java.math.BigDecimal;
 import java.util.Objects;
 
 public class Position {
@@ -42,10 +41,10 @@ public class Position {
     private Long token;
 
     @SerializedName("buy_amount")
-    private BigDecimal buyAmount;
+    private Double buyAmount;
 
     @SerializedName("sell_amount")
-    private BigDecimal sellAmount;
+    private Double sellAmount;
 
     @SerializedName("buy_quantity")
     private Long buyQuantity;
@@ -54,10 +53,10 @@ public class Position {
     private Long sellQuantity;
 
     @SerializedName("cf_buy_amount")
-    private BigDecimal cfBuyAmount;
+    private Double cfBuyAmount;
 
     @SerializedName("cf_sell_amount")
-    private BigDecimal cfSellAmount;
+    private Double cfSellAmount;
 
     @SerializedName("cf_buy_quantity")
     private Long cfBuyQuantity;
@@ -75,7 +74,7 @@ public class Position {
     private Long netQuantity;
 
     @SerializedName("close_price")
-    private BigDecimal closePrice;
+    private Double closePrice;
 
     @SerializedName("last_traded_price")
     private NumberString lastTradedPrice;
@@ -87,7 +86,7 @@ public class Position {
     private NumberString unrealizedProfit;
 
     @SerializedName("cf_avg_price")
-    private BigDecimal cfAveragePrice;
+    private Double cfAveragePrice;
 
     public String getExchange() {
         return exchange;
@@ -121,19 +120,19 @@ public class Position {
         this.token = token;
     }
 
-    public BigDecimal getBuyAmount() {
+    public Double getBuyAmount() {
         return buyAmount;
     }
 
-    public void setBuyAmount(BigDecimal buyAmount) {
+    public void setBuyAmount(Double buyAmount) {
         this.buyAmount = buyAmount;
     }
 
-    public BigDecimal getSellAmount() {
+    public Double getSellAmount() {
         return sellAmount;
     }
 
-    public void setSellAmount(BigDecimal sellAmount) {
+    public void setSellAmount(Double sellAmount) {
         this.sellAmount = sellAmount;
     }
 
@@ -153,19 +152,19 @@ public class Position {
         this.sellQuantity = sellQuantity;
     }
 
-    public BigDecimal getCfBuyAmount() {
+    public Double getCfBuyAmount() {
         return cfBuyAmount;
     }
 
-    public void setCfBuyAmount(BigDecimal cfBuyAmount) {
+    public void setCfBuyAmount(Double cfBuyAmount) {
         this.cfBuyAmount = cfBuyAmount;
     }
 
-    public BigDecimal getCfSellAmount() {
+    public Double getCfSellAmount() {
         return cfSellAmount;
     }
 
-    public void setCfSellAmount(BigDecimal cfSellAmount) {
+    public void setCfSellAmount(Double cfSellAmount) {
         this.cfSellAmount = cfSellAmount;
     }
 
@@ -209,11 +208,11 @@ public class Position {
         this.netQuantity = netQuantity;
     }
 
-    public BigDecimal getClosePrice() {
+    public Double getClosePrice() {
         return closePrice;
     }
 
-    public void setClosePrice(BigDecimal closePrice) {
+    public void setClosePrice(Double closePrice) {
         this.closePrice = closePrice;
     }
 
@@ -241,11 +240,11 @@ public class Position {
         this.unrealizedProfit = unrealizedProfit;
     }
 
-    public BigDecimal getCfAveragePrice() {
+    public Double getCfAveragePrice() {
         return cfAveragePrice;
     }
 
-    public void setCfAveragePrice(BigDecimal cfAveragePrice) {
+    public void setCfAveragePrice(Double cfAveragePrice) {
         this.cfAveragePrice = cfAveragePrice;
     }
 

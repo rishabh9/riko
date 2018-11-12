@@ -27,7 +27,6 @@ package com.github.rishabh9.riko.upstox.orders.models;
 import com.google.common.base.MoreObjects;
 import com.google.gson.annotations.SerializedName;
 
-import java.math.BigDecimal;
 import java.util.Objects;
 
 public class OrderRequest {
@@ -49,10 +48,10 @@ public class OrderRequest {
 
     private String product;
 
-    private BigDecimal price;
+    private Double price;
 
     @SerializedName("trigger_price")
-    private BigDecimal triggerPrice;
+    private Double triggerPrice;
 
     @SerializedName("disclosed_quantity")
     private Long disclosedQuantity;
@@ -62,12 +61,12 @@ public class OrderRequest {
     @SerializedName("is_amo")
     private boolean is_amo;
 
-    private BigDecimal stoploss;
+    private Double stoploss;
 
-    private BigDecimal squareoff;
+    private Double squareoff;
 
     @SerializedName("trailing_ticks")
-    private BigDecimal tralingTicks;
+    private Double tralingTicks;
 
     public String getOrderId() {
         return orderId;
@@ -125,19 +124,19 @@ public class OrderRequest {
         this.product = product;
     }
 
-    public BigDecimal getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(BigDecimal price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 
-    public BigDecimal getTriggerPrice() {
+    public Double getTriggerPrice() {
         return triggerPrice;
     }
 
-    public void setTriggerPrice(BigDecimal triggerPrice) {
+    public void setTriggerPrice(Double triggerPrice) {
         this.triggerPrice = triggerPrice;
     }
 
@@ -165,27 +164,27 @@ public class OrderRequest {
         this.is_amo = is_amo;
     }
 
-    public BigDecimal getStoploss() {
+    public Double getStoploss() {
         return stoploss;
     }
 
-    public void setStoploss(BigDecimal stoploss) {
+    public void setStoploss(Double stoploss) {
         this.stoploss = stoploss;
     }
 
-    public BigDecimal getSquareoff() {
+    public Double getSquareoff() {
         return squareoff;
     }
 
-    public void setSquareoff(BigDecimal squareoff) {
+    public void setSquareoff(Double squareoff) {
         this.squareoff = squareoff;
     }
 
-    public BigDecimal getTralingTicks() {
+    public Double getTralingTicks() {
         return tralingTicks;
     }
 
-    public void setTralingTicks(BigDecimal tralingTicks) {
+    public void setTralingTicks(Double tralingTicks) {
         this.tralingTicks = tralingTicks;
     }
 

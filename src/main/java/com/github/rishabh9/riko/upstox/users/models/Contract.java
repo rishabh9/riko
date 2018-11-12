@@ -27,16 +27,15 @@ package com.github.rishabh9.riko.upstox.users.models;
 import com.google.common.base.MoreObjects;
 import com.google.gson.annotations.SerializedName;
 
-import java.math.BigDecimal;
 import java.util.Objects;
 
 public class Contract {
 
     @SerializedName("lower_circuit")
-    private BigDecimal lowerCircuit;
+    private Double lowerCircuit;
 
     @SerializedName("upper_circuit")
-    private BigDecimal upperCircuit;
+    private Double upperCircuit;
 
     @SerializedName("instrument_name")
     private String instrumentName;
@@ -59,10 +58,10 @@ public class Contract {
     private String status;
 
     @SerializedName("yearly_low")
-    private BigDecimal yearlyLow;
+    private Double yearlyLow;
 
     @SerializedName("yearly_high")
-    private BigDecimal yearlyHigh;
+    private Double yearlyHigh;
 
     @SerializedName("symbol")
     private String symbol;
@@ -73,7 +72,7 @@ public class Contract {
     private String exchange;
 
     @SerializedName("closing_price")
-    private BigDecimal closingPrice;
+    private Double closingPrice;
 
     @SerializedName("open_interest")
     private String openInterest;
@@ -90,19 +89,19 @@ public class Contract {
     @SerializedName("isin")
     private String isin;
 
-    public BigDecimal getLowerCircuit() {
+    public Double getLowerCircuit() {
         return lowerCircuit;
     }
 
-    public void setLowerCircuit(BigDecimal lowerCircuit) {
+    public void setLowerCircuit(Double lowerCircuit) {
         this.lowerCircuit = lowerCircuit;
     }
 
-    public BigDecimal getUpperCircuit() {
+    public Double getUpperCircuit() {
         return upperCircuit;
     }
 
-    public void setUpperCircuit(BigDecimal upperCircuit) {
+    public void setUpperCircuit(Double upperCircuit) {
         this.upperCircuit = upperCircuit;
     }
 
@@ -162,19 +161,19 @@ public class Contract {
         this.status = status;
     }
 
-    public BigDecimal getYearlyLow() {
+    public Double getYearlyLow() {
         return yearlyLow;
     }
 
-    public void setYearlyLow(BigDecimal yearlyLow) {
+    public void setYearlyLow(Double yearlyLow) {
         this.yearlyLow = yearlyLow;
     }
 
-    public BigDecimal getYearlyHigh() {
+    public Double getYearlyHigh() {
         return yearlyHigh;
     }
 
-    public void setYearlyHigh(BigDecimal yearlyHigh) {
+    public void setYearlyHigh(Double yearlyHigh) {
         this.yearlyHigh = yearlyHigh;
     }
 
@@ -202,11 +201,11 @@ public class Contract {
         this.exchange = exchange;
     }
 
-    public BigDecimal getClosingPrice() {
+    public Double getClosingPrice() {
         return closingPrice;
     }
 
-    public void setClosingPrice(BigDecimal closingPrice) {
+    public void setClosingPrice(Double closingPrice) {
         this.closingPrice = closingPrice;
     }
 

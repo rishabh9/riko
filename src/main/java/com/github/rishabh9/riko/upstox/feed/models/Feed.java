@@ -28,7 +28,6 @@ import com.github.rishabh9.riko.upstox.common.converters.NumberString;
 import com.google.common.base.MoreObjects;
 import com.google.gson.annotations.SerializedName;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 
@@ -40,24 +39,24 @@ public class Feed {
 
     private String symbol;
 
-    private BigDecimal ltp;
+    private Double ltp;
 
-    private BigDecimal open;
+    private Double open;
 
-    private BigDecimal high;
+    private Double high;
 
-    private BigDecimal low;
+    private Double low;
 
-    private BigDecimal close;
+    private Double close;
 
     private Long vtt;
 
-    private BigDecimal atp;
+    private Double atp;
 
     private NumberString oi;
 
     @SerializedName("spot_price")
-    private BigDecimal spotPrice;
+    private Double spotPrice;
 
     @SerializedName("total_buy_qty")
     private Long totalBuyQuantity;
@@ -66,10 +65,10 @@ public class Feed {
     private Long totalSellQuantity;
 
     @SerializedName("lower_circuit")
-    private BigDecimal lowerCircuit;
+    private Double lowerCircuit;
 
     @SerializedName("upper_circuit")
-    private BigDecimal upperCircuit;
+    private Double upperCircuit;
 
     @SerializedName("yearly_low")
     private NumberString yearlyLow;
@@ -107,43 +106,43 @@ public class Feed {
         this.symbol = symbol;
     }
 
-    public BigDecimal getLtp() {
+    public Double getLtp() {
         return ltp;
     }
 
-    public void setLtp(BigDecimal ltp) {
+    public void setLtp(Double ltp) {
         this.ltp = ltp;
     }
 
-    public BigDecimal getOpen() {
+    public Double getOpen() {
         return open;
     }
 
-    public void setOpen(BigDecimal open) {
+    public void setOpen(Double open) {
         this.open = open;
     }
 
-    public BigDecimal getHigh() {
+    public Double getHigh() {
         return high;
     }
 
-    public void setHigh(BigDecimal high) {
+    public void setHigh(Double high) {
         this.high = high;
     }
 
-    public BigDecimal getLow() {
+    public Double getLow() {
         return low;
     }
 
-    public void setLow(BigDecimal low) {
+    public void setLow(Double low) {
         this.low = low;
     }
 
-    public BigDecimal getClose() {
+    public Double getClose() {
         return close;
     }
 
-    public void setClose(BigDecimal close) {
+    public void setClose(Double close) {
         this.close = close;
     }
 
@@ -155,11 +154,11 @@ public class Feed {
         this.vtt = vtt;
     }
 
-    public BigDecimal getAtp() {
+    public Double getAtp() {
         return atp;
     }
 
-    public void setAtp(BigDecimal atp) {
+    public void setAtp(Double atp) {
         this.atp = atp;
     }
 
@@ -171,11 +170,11 @@ public class Feed {
         this.oi = oi;
     }
 
-    public BigDecimal getSpotPrice() {
+    public Double getSpotPrice() {
         return spotPrice;
     }
 
-    public void setSpotPrice(BigDecimal spotPrice) {
+    public void setSpotPrice(Double spotPrice) {
         this.spotPrice = spotPrice;
     }
 
@@ -195,19 +194,19 @@ public class Feed {
         this.totalSellQuantity = totalSellQuantity;
     }
 
-    public BigDecimal getLowerCircuit() {
+    public Double getLowerCircuit() {
         return lowerCircuit;
     }
 
-    public void setLowerCircuit(BigDecimal lowerCircuit) {
+    public void setLowerCircuit(Double lowerCircuit) {
         this.lowerCircuit = lowerCircuit;
     }
 
-    public BigDecimal getUpperCircuit() {
+    public Double getUpperCircuit() {
         return upperCircuit;
     }
 
-    public void setUpperCircuit(BigDecimal upperCircuit) {
+    public void setUpperCircuit(Double upperCircuit) {
         this.upperCircuit = upperCircuit;
     }
 

@@ -24,7 +24,6 @@
 
 package com.github.rishabh9.riko.upstox.common.converters;
 
-import java.math.BigDecimal;
 import java.util.Objects;
 
 /**
@@ -42,16 +41,16 @@ import java.util.Objects;
  */
 public class NumberString {
 
-    private BigDecimal value;
+    private Double value;
 
-    public NumberString(BigDecimal value) {
+    public NumberString(Double value) {
         this.value = value;
     }
 
     /**
      * @return The actual value. Run {@link NumberString#isNumber isNumber()} to validate and prevent NPE.
      */
-    public BigDecimal value() {
+    public Double value() {
         return value;
     }
 
@@ -80,6 +79,6 @@ public class NumberString {
         if (null == value) {
             return "";
         }
-        return value.toPlainString();
+        return value.toString();
     }
 }

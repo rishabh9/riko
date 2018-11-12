@@ -26,7 +26,6 @@ package com.github.rishabh9.riko.upstox.historical.models;
 
 import com.google.common.base.MoreObjects;
 
-import java.math.BigDecimal;
 import java.util.Objects;
 
 /**
@@ -36,17 +35,17 @@ public class Candle {
 
     private Long timestamp;
 
-    private BigDecimal open;
+    private Double open;
 
-    private BigDecimal high;
+    private Double high;
 
-    private BigDecimal low;
+    private Double low;
 
-    private BigDecimal close;
+    private Double close;
 
     private Long volume;
 
-    private BigDecimal cp;
+    private Double cp;
 
     public Long getTimestamp() {
         return timestamp;
@@ -56,35 +55,35 @@ public class Candle {
         this.timestamp = timestamp;
     }
 
-    public BigDecimal getOpen() {
+    public Double getOpen() {
         return open;
     }
 
-    public void setOpen(BigDecimal open) {
+    public void setOpen(Double open) {
         this.open = open;
     }
 
-    public BigDecimal getHigh() {
+    public Double getHigh() {
         return high;
     }
 
-    public void setHigh(BigDecimal high) {
+    public void setHigh(Double high) {
         this.high = high;
     }
 
-    public BigDecimal getLow() {
+    public Double getLow() {
         return low;
     }
 
-    public void setLow(BigDecimal low) {
+    public void setLow(Double low) {
         this.low = low;
     }
 
-    public BigDecimal getClose() {
+    public Double getClose() {
         return close;
     }
 
-    public void setClose(BigDecimal close) {
+    public void setClose(Double close) {
         this.close = close;
     }
 
@@ -96,11 +95,11 @@ public class Candle {
         this.volume = volume;
     }
 
-    public BigDecimal getCp() {
+    public Double getCp() {
         return cp;
     }
 
-    public void setCp(BigDecimal cp) {
+    public void setCp(Double cp) {
         this.cp = cp;
     }
 

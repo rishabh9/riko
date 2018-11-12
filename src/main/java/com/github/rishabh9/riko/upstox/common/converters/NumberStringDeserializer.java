@@ -30,7 +30,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
-import java.math.BigDecimal;
 
 /**
  * Deserializer for Json, to support the custom data type {@link NumberString}.
@@ -43,10 +42,10 @@ public class NumberStringDeserializer implements JsonDeserializer<NumberString> 
                                     final JsonDeserializationContext context)
             throws JsonParseException {
 
-        BigDecimal value;
+        Double value;
         try {
             // Is it a number?
-            value = json.getAsJsonPrimitive().getAsBigDecimal();
+            value = json.getAsJsonPrimitive().getAsDouble();
         } catch (NumberFormatException | ClassCastException e) {
             // No it is a stupid empty string!
             value = null;

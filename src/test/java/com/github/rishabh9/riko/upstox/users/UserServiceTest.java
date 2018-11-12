@@ -43,7 +43,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
-import java.math.BigDecimal;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
@@ -152,7 +151,7 @@ class UserServiceTest {
         MockWebServer server = new MockWebServer();
 
         Balance balance = new Balance();
-        balance.setAvailableMargin(BigDecimal.TEN);
+        balance.setAvailableMargin(10.00D);
         ProfileBalance profileBalance = new ProfileBalance();
         profileBalance.setCommodity(balance);
         UpstoxResponse<ProfileBalance> response = new UpstoxResponse<>();

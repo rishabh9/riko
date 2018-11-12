@@ -27,7 +27,6 @@ package com.github.rishabh9.riko.upstox.orders.models;
 import com.google.common.base.MoreObjects;
 import com.google.gson.annotations.SerializedName;
 
-import java.math.BigDecimal;
 import java.util.Objects;
 
 public class Trade {
@@ -62,7 +61,7 @@ public class Trade {
     private String timeInMicro;
 
     @SerializedName("traded_price")
-    private BigDecimal tradedPrice;
+    private Double tradedPrice;
 
     @SerializedName("trade_id")
     private Long tradeId;
@@ -155,11 +154,11 @@ public class Trade {
         this.timeInMicro = timeInMicro;
     }
 
-    public BigDecimal getTradedPrice() {
+    public Double getTradedPrice() {
         return tradedPrice;
     }
 
-    public void setTradedPrice(BigDecimal tradedPrice) {
+    public void setTradedPrice(Double tradedPrice) {
         this.tradedPrice = tradedPrice;
     }
 
