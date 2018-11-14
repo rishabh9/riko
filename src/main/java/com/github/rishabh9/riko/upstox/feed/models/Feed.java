@@ -24,7 +24,6 @@
 
 package com.github.rishabh9.riko.upstox.feed.models;
 
-import com.github.rishabh9.riko.upstox.common.converters.NumberString;
 import com.google.common.base.MoreObjects;
 import com.google.gson.annotations.SerializedName;
 
@@ -53,7 +52,7 @@ public class Feed {
 
     private Double atp;
 
-    private NumberString oi;
+    private Double oi;
 
     @SerializedName("spot_price")
     private Double spotPrice;
@@ -71,10 +70,10 @@ public class Feed {
     private Double upperCircuit;
 
     @SerializedName("yearly_low")
-    private NumberString yearlyLow;
+    private Double yearlyLow;
 
     @SerializedName("yearly_high")
-    private NumberString yearlyHigh;
+    private Double yearlyHigh;
 
     private List<BidsAsk> bids;
 
@@ -162,11 +161,11 @@ public class Feed {
         this.atp = atp;
     }
 
-    public NumberString getOi() {
+    public Double getOi() {
         return oi;
     }
 
-    public void setOi(NumberString oi) {
+    public void setOi(Double oi) {
         this.oi = oi;
     }
 
@@ -210,19 +209,19 @@ public class Feed {
         this.upperCircuit = upperCircuit;
     }
 
-    public NumberString getYearlyLow() {
+    public Double getYearlyLow() {
         return yearlyLow;
     }
 
-    public void setYearlyLow(NumberString yearlyLow) {
+    public void setYearlyLow(Double yearlyLow) {
         this.yearlyLow = yearlyLow;
     }
 
-    public NumberString getYearlyHigh() {
+    public Double getYearlyHigh() {
         return yearlyHigh;
     }
 
-    public void setYearlyHigh(NumberString yearlyHigh) {
+    public void setYearlyHigh(Double yearlyHigh) {
         this.yearlyHigh = yearlyHigh;
     }
 

@@ -24,7 +24,6 @@
 
 package com.github.rishabh9.riko.upstox.users.models;
 
-import com.github.rishabh9.riko.upstox.common.converters.NumberString;
 import com.google.common.base.MoreObjects;
 import com.google.gson.annotations.SerializedName;
 
@@ -65,10 +64,10 @@ public class Position {
     private Long cfSellQuantity;
 
     @SerializedName("avg_buy_price")
-    private NumberString averageBuyPrice;
+    private Double averageBuyPrice;
 
     @SerializedName("avg_sell_price")
-    private NumberString averageSellPrice;
+    private Double averageSellPrice;
 
     @SerializedName("net_quantity")
     private Long netQuantity;
@@ -77,13 +76,13 @@ public class Position {
     private Double closePrice;
 
     @SerializedName("last_traded_price")
-    private NumberString lastTradedPrice;
+    private Double lastTradedPrice;
 
     @SerializedName("realized_profit")
-    private NumberString realizedProfit;
+    private Double realizedProfit;
 
     @SerializedName("unrealized_profit")
-    private NumberString unrealizedProfit;
+    private Double unrealizedProfit;
 
     @SerializedName("cf_avg_price")
     private Double cfAveragePrice;
@@ -184,19 +183,19 @@ public class Position {
         this.cfSellQuantity = cfSellQuantity;
     }
 
-    public NumberString getAverageBuyPrice() {
+    public Double getAverageBuyPrice() {
         return averageBuyPrice;
     }
 
-    public void setAverageBuyPrice(NumberString averageBuyPrice) {
+    public void setAverageBuyPrice(Double averageBuyPrice) {
         this.averageBuyPrice = averageBuyPrice;
     }
 
-    public NumberString getAverageSellPrice() {
+    public Double getAverageSellPrice() {
         return averageSellPrice;
     }
 
-    public void setAverageSellPrice(NumberString averageSellPrice) {
+    public void setAverageSellPrice(Double averageSellPrice) {
         this.averageSellPrice = averageSellPrice;
     }
 
@@ -216,27 +215,27 @@ public class Position {
         this.closePrice = closePrice;
     }
 
-    public NumberString getLastTradedPrice() {
+    public Double getLastTradedPrice() {
         return lastTradedPrice;
     }
 
-    public void setLastTradedPrice(NumberString lastTradedPrice) {
+    public void setLastTradedPrice(Double lastTradedPrice) {
         this.lastTradedPrice = lastTradedPrice;
     }
 
-    public NumberString getRealizedProfit() {
+    public Double getRealizedProfit() {
         return realizedProfit;
     }
 
-    public void setRealizedProfit(NumberString realizedProfit) {
+    public void setRealizedProfit(Double realizedProfit) {
         this.realizedProfit = realizedProfit;
     }
 
-    public NumberString getUnrealizedProfit() {
+    public Double getUnrealizedProfit() {
         return unrealizedProfit;
     }
 
-    public void setUnrealizedProfit(NumberString unrealizedProfit) {
+    public void setUnrealizedProfit(Double unrealizedProfit) {
         this.unrealizedProfit = unrealizedProfit;
     }
 

@@ -30,19 +30,14 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
 import java.lang.reflect.Type;
+import java.util.Objects;
 
-/**
- * Serializer for Json, to support the custom data type {@link NumberString}.
- */
-public class NumberStringSerializer implements JsonSerializer<NumberString> {
+public class DoubleSerializer implements JsonSerializer<Double> {
 
     @Override
-    public JsonElement serialize(final NumberString src,
+    public JsonElement serialize(final Double src,
                                  final Type typeOfSrc,
                                  final JsonSerializationContext context) {
-        if (null == src) {
-            return new JsonPrimitive("");
-        }
-        return new JsonPrimitive(src.value());
+        return new JsonPrimitive(Objects.requireNonNullElse(src, 0.0));
     }
 }

@@ -31,25 +31,22 @@ import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
 
-/**
- * Deserializer for Json, to support the custom data type {@link NumberString}.
- */
-public class NumberStringDeserializer implements JsonDeserializer<NumberString> {
+public class DoubleDeserializer implements JsonDeserializer<Double> {
 
     @Override
-    public NumberString deserialize(final JsonElement json,
-                                    final Type typeOfT,
-                                    final JsonDeserializationContext context)
+    public Double deserialize(final JsonElement json,
+                              final Type typeOfT,
+                              final JsonDeserializationContext context)
             throws JsonParseException {
 
-        Double value;
+        double value;
         try {
             // Is it a number?
             value = json.getAsJsonPrimitive().getAsDouble();
         } catch (NumberFormatException | ClassCastException e) {
             // No it is a stupid empty string!
-            value = null;
+            value = 0;
         }
-        return new NumberString(value);
+        return value;
     }
 }

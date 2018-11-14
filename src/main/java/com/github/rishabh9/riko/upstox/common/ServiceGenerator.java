@@ -25,9 +25,6 @@
 package com.github.rishabh9.riko.upstox.common;
 
 import com.github.rishabh9.riko.upstox.common.converters.AlwaysListTypeAdapterFactory;
-import com.github.rishabh9.riko.upstox.common.converters.NumberString;
-import com.github.rishabh9.riko.upstox.common.converters.NumberStringDeserializer;
-import com.github.rishabh9.riko.upstox.common.converters.NumberStringSerializer;
 import com.github.rishabh9.riko.upstox.common.interceptors.AuthenticationInterceptor;
 import com.github.rishabh9.riko.upstox.common.interceptors.HttpErrorLoggingInterceptor;
 import com.github.rishabh9.riko.upstox.common.models.AuthHeaders;
@@ -58,8 +55,8 @@ public class ServiceGenerator {
 
     private ServiceGenerator() {
         final Gson gson = new GsonBuilder()
-                .registerTypeAdapter(NumberString.class, new NumberStringSerializer())
-                .registerTypeAdapter(NumberString.class, new NumberStringDeserializer())
+                //.registerTypeAdapter(Double.class, new DoubleSerializer())
+                //.registerTypeAdapter(Double.class, new DoubleDeserializer())
                 .registerTypeAdapterFactory(new AlwaysListTypeAdapterFactory())
                 .create();
         final String readTimeout = System.getProperty(RIKO_READ_TIMEOUT);
