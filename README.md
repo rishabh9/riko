@@ -15,18 +15,18 @@ demonstrating the usage of Riko. Feel free to use it as a starter for your own p
 <dependency>
     <groupId>com.github.rishabh9</groupId>
     <artifactId>riko</artifactId>
-    <version>2.0.1</version>
+    <version>2.0.2-SNAPSHOT</version>
 </dependency>
 ```
 
 ### For Gradle based project
 ```groovy
 dependencies {
-    implementation 'com.github.rishabh9:riko:2.0.1'
+    implementation 'com.github.rishabh9:riko:2.0.2-SNAPSHOT'
 }
 ```
 
 ### For SBT based project
 ```scala
-libraryDependencies += "com.github.rishabh9" % "riko" % "2.0.1"
+libraryDependencies += "com.github.rishabh9" % "riko" % "2.0.2-SNAPSHOT"
 ```

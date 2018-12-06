@@ -29,19 +29,18 @@ import com.github.rishabh9.riko.upstox.common.UpstoxAuthService;
 import com.github.rishabh9.riko.upstox.common.models.ApiCredentials;
 import com.github.rishabh9.riko.upstox.common.models.UpstoxResponse;
 import com.github.rishabh9.riko.upstox.login.models.AccessToken;
-import com.github.rishabh9.riko.upstox.websockets.exceptions.WebRequestException;
 import com.github.rishabh9.riko.upstox.websockets.models.WebsocketParameters;
 import com.github.rishabh9.riko.upstox.websockets.models.WrappedWebSocket;
 import com.google.common.base.Strings;
+import net.jodah.failsafe.Failsafe;
+import net.jodah.failsafe.RetryPolicy;
 import okhttp3.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 import static com.github.rishabh9.riko.upstox.common.constants.PropertyKeys.*;
 
@@ -49,12 +48,19 @@ public class WebSocketService extends Service {
 
     private static final Logger log = LogManager.getLogger(WebSocketService.class);
 
+    private final RetryPolicy retryPolicy;
+    private final ScheduledExecutorService executorService;
+
     /**
      * @param upstoxAuthService The service to retrieve authentication details
      */
     public WebSocketService(@Nonnull final UpstoxAuthService upstoxAuthService) {
-
         super(upstoxAuthService);
+        retryPolicy = new RetryPolicy()
+                .retryOn(Throwable.class)
+                .withBackoff(1, 180, TimeUnit.SECONDS)
+                .withMaxRetries(10);
+        this.executorService = Executors.newScheduledThreadPool(4);
     }
 
     private CompletableFuture<UpstoxResponse<WebsocketParameters>> getWebsocketParameters() {
@@ -84,21 +90,30 @@ public class WebSocketService extends Service {
             throw new IllegalArgumentException("Subscribers not provided. Not connecting to the socket.");
         }
 
-        // Retrieve the webSocket parameters before connecting, as per Upstox documentation.
-        return getWebsocketParameters()
-                .thenApplyAsync((response) -> {
-                    if (null == response || response.getCode() != 200) {
-                        log.fatal("Unable to retrieve websocket parameters. " +
-                                "Response was {} with response code: {}", response, response.getCode());
-                        throw new WebRequestException(
-                                "Unable to retrieve parameters for making a websocket connection.");
-                    }
-                    return makeConnection(response.getData(), subscribers);
+        // Step 1: Retrieve the webSocket parameters before connecting, as per Upstox documentation.
+        final UpstoxResponse<WebsocketParameters> response = Failsafe.with(retryPolicy)
+                .with(executorService)
+                .onFailure(failure -> {
+                    log.fatal("Failed completely to retrieve web-socket parameters. ", failure);
                 })
-                .exceptionally((throwable) -> {
-                    log.error("Error opening and connecting to WebSocket", throwable);
-                    return null;
+                .onSuccess(webSocketParams -> {
+                    log.info("Received parameters to connect to web-socket.");
+                    log.debug("Web socket connection parameters are: {}", webSocketParams);
                 })
+                .onRetry((c, f, ctx) ->
+                        log.warn("Failure #" + ctx.getExecutions()
+                                + ". Unable to retrieve web-socket parameters, retrying.", f))
+                .future(this::getWebsocketParameters)
+                .get();
+
+        // Step 2: Make connection
+        return Failsafe.with(retryPolicy)
+                .with(executorService)
+                .onFailure(failure -> log.fatal("Failed completely to make web-socket connection. ", failure))
+                .onSuccess(connection -> log.info("WebSocket connection is successful!"))
+                .onRetry((c, f, ctx) ->
+                        log.warn("Failure #" + ctx.getExecutions() + ". Unable to connect to web-socket, retrying.", f))
+                .get(() -> this.makeConnection(response.getData(), subscribers))
                 .get();
     }
 
