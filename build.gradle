@@ -57,6 +57,7 @@ dependencies {
     // These dependencies are used internally, and not exposed to consumers on their own compile classpath.
     // Developer's toolkit
     implementation 'com.google.guava:guava:23.0'
+    implementation 'net.jodah:failsafe:1.1.1'
     // Making API calls
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
