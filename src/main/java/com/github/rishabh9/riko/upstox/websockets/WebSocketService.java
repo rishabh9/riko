@@ -40,7 +40,10 @@ import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import java.util.List;
-import java.util.concurrent.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import static com.github.rishabh9.riko.upstox.common.constants.PropertyKeys.*;
 
@@ -80,11 +83,9 @@ public class WebSocketService extends Service {
      * @param subscribers The subscribers interested in the messages received at the web socket.
      *                    <em>Mandatory.</em>
      * @return The web socket wrapped in custom class for usability.
-     * @throws ExecutionException   When there is an exception creating the connection.
-     * @throws InterruptedException When there is an error while waiting for the connection to complete.
+     * @throws Exception When there is an exception creating the connection.
      */
-    public WrappedWebSocket connect(final List<MessageSubscriber> subscribers)
-            throws ExecutionException, InterruptedException {
+    public WrappedWebSocket connect(final List<MessageSubscriber> subscribers) throws Exception {
 
         if (null == subscribers || subscribers.isEmpty()) {
             throw new IllegalArgumentException("Subscribers not provided. Not connecting to the socket.");
