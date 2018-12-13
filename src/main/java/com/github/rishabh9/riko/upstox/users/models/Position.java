@@ -87,7 +87,7 @@ public class Position {
     private NumberString unrealizedProfit;
 
     @SerializedName("cf_avg_price")
-    private BigDecimal cfAveragePrice;
+    private NumberString cfAveragePrice;
 
     public String getExchange() {
         return exchange;
@@ -241,11 +241,11 @@ public class Position {
         this.unrealizedProfit = unrealizedProfit;
     }
 
-    public BigDecimal getCfAveragePrice() {
+    public NumberString getCfAveragePrice() {
         return cfAveragePrice;
     }
 
-    public void setCfAveragePrice(BigDecimal cfAveragePrice) {
+    public void setCfAveragePrice(NumberString cfAveragePrice) {
         this.cfAveragePrice = cfAveragePrice;
     }
 
