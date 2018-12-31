@@ -24,13 +24,13 @@
 
 package com.github.rishabh9.riko.upstox.feed;
 
+import com.github.rishabh9.riko.upstox.BaseTest;
 import com.github.rishabh9.riko.upstox.common.ServiceGenerator;
-import com.github.rishabh9.riko.upstox.common.UpstoxAuthService;
-import com.github.rishabh9.riko.upstox.common.models.ApiCredentials;
 import com.github.rishabh9.riko.upstox.common.models.UpstoxResponse;
 import com.github.rishabh9.riko.upstox.feed.models.Feed;
+import com.github.rishabh9.riko.upstox.feed.models.Subscription;
 import com.github.rishabh9.riko.upstox.feed.models.SubscriptionResponse;
-import com.github.rishabh9.riko.upstox.login.models.AccessToken;
+import com.github.rishabh9.riko.upstox.feed.models.SymbolSubscribed;
 import com.google.gson.Gson;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -39,30 +39,15 @@ import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import static okhttp3.mockwebserver.SocketPolicy.DISCONNECT_AFTER_REQUEST;
 import static org.junit.jupiter.api.Assertions.*;
 
-class FeedServiceTest {
+class FeedServiceTest extends BaseTest {
 
     private static final Logger log = LogManager.getLogger(FeedServiceTest.class);
-
-    private UpstoxAuthService upstoxAuthService = new UpstoxAuthService() {
-        @Override
-        public ApiCredentials getApiCredentials() {
-            return new ApiCredentials("secretApiKey", "secret-secret");
-        }
-
-        @Override
-        public AccessToken getAccessToken() {
-            AccessToken token = new AccessToken();
-            token.setExpiresIn(86400L);
-            token.setType("Bearer");
-            token.setToken("access_token_123456789");
-            return token;
-        }
-    };
 
     @Test
     void liveFeed_success_whenAllParametersAreCorrect() throws IOException {
@@ -82,11 +67,11 @@ class FeedServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        FeedService service = new FeedService(upstoxAuthService);
+        FeedService service = new FeedService(upstoxAuthService, retryPolicyFactory);
 
         try {
             UpstoxResponse<Feed> serverResponse =
-                    service.liveFeed("NSE", "RELIANCE", "TYPE")
+                    service.liveFeed("NSE", "RELIANCE", "FULL")
                             .get();
             assertEquals(response, serverResponse);
         } catch (ExecutionException | InterruptedException e) {
@@ -113,10 +98,10 @@ class FeedServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        FeedService service = new FeedService(upstoxAuthService);
+        FeedService service = new FeedService(upstoxAuthService, retryPolicyFactory);
 
         assertThrows(ExecutionException.class,
-                service.liveFeed("NSE", "RELIANCE", "TYPE")::get);
+                service.liveFeed("NSE", "RELIANCE", "FULL")::get);
 
         server.shutdown();
     }
@@ -131,10 +116,10 @@ class FeedServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        FeedService service = new FeedService(upstoxAuthService);
+        FeedService service = new FeedService(upstoxAuthService, retryPolicyFactory);
 
         try {
-            service.liveFeed("NSE", "RELIANCE", "TYPE").get();
+            service.liveFeed("NSE", "RELIANCE", "FULL").get();
         } catch (ExecutionException | InterruptedException e) {
             assertTrue(e.getCause() instanceof IOException);
         } finally {
@@ -144,7 +129,7 @@ class FeedServiceTest {
 
     @Test
     void liveFeed_throwIAE_whenRequiredParametersAreMissing() {
-        FeedService service = new FeedService(upstoxAuthService);
+        FeedService service = new FeedService(upstoxAuthService, retryPolicyFactory);
 
         assertThrows(IllegalArgumentException.class, () ->
                         service.liveFeed(null, null, null),
@@ -183,7 +168,7 @@ class FeedServiceTest {
     void liveFeed_throwNPE_whenServiceParametersAreMissing() {
 
         assertThrows(NullPointerException.class,
-                () -> new FeedService(null),
+                () -> new FeedService(null, retryPolicyFactory),
                 "Null check missing for 'UpstoxAuthService' from FeedService constructor");
     }
 
@@ -205,7 +190,7 @@ class FeedServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        FeedService service = new FeedService(upstoxAuthService);
+        FeedService service = new FeedService(upstoxAuthService, retryPolicyFactory);
 
         try {
             UpstoxResponse<SubscriptionResponse> subResponse =
@@ -236,7 +221,7 @@ class FeedServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        FeedService service = new FeedService(upstoxAuthService);
+        FeedService service = new FeedService(upstoxAuthService, retryPolicyFactory);
 
         assertThrows(ExecutionException.class,
                 service.subscribe("TYPE", "NSE", "ACC,RELIANCE")::get);
@@ -254,7 +239,7 @@ class FeedServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        FeedService service = new FeedService(upstoxAuthService);
+        FeedService service = new FeedService(upstoxAuthService, retryPolicyFactory);
 
         try {
             service.subscribe("TYPE", "NSE", "RELIANCE,ACC").get();
@@ -267,7 +252,7 @@ class FeedServiceTest {
 
     @Test
     void subscribe_throwIAE_whenRequiredParametersAreMissing() {
-        FeedService service = new FeedService(upstoxAuthService);
+        FeedService service = new FeedService(upstoxAuthService, retryPolicyFactory);
 
         assertThrows(IllegalArgumentException.class, () ->
                         service.subscribe(null, null, null),
@@ -320,7 +305,7 @@ class FeedServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        FeedService service = new FeedService(upstoxAuthService);
+        FeedService service = new FeedService(upstoxAuthService, retryPolicyFactory);
 
         try {
             UpstoxResponse<SubscriptionResponse> unsubResponse =
@@ -351,7 +336,7 @@ class FeedServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        FeedService service = new FeedService(upstoxAuthService);
+        FeedService service = new FeedService(upstoxAuthService, retryPolicyFactory);
 
         assertThrows(ExecutionException.class,
                 service.unsubscribe("TYPE", "NSE", "ACC,RELIANCE")::get);
@@ -369,7 +354,7 @@ class FeedServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        FeedService service = new FeedService(upstoxAuthService);
+        FeedService service = new FeedService(upstoxAuthService, retryPolicyFactory);
 
         try {
             service.unsubscribe("TYPE", "NSE", "RELIANCE,ACC").get();
@@ -382,7 +367,7 @@ class FeedServiceTest {
 
     @Test
     void unsubscribe_throwIAE_whenRequiredParametersAreMissing() {
-        FeedService service = new FeedService(upstoxAuthService);
+        FeedService service = new FeedService(upstoxAuthService, retryPolicyFactory);
 
         assertThrows(IllegalArgumentException.class, () ->
                         service.unsubscribe(null, null, null),
@@ -416,4 +401,96 @@ class FeedServiceTest {
                         service.unsubscribe("TYPE", "NSE", ""),
                 "Symbols cannot be empty. Mandatory validation missing.");
     }
+
+    @Test
+    void symbolsSubscribed_success_whenAllParametersAreCorrect() throws IOException {
+        MockWebServer server = new MockWebServer();
+
+        Subscription subscription = new Subscription();
+        SymbolSubscribed symbolSubscribed = new SymbolSubscribed();
+        symbolSubscribed.setExchange("NSE");
+        symbolSubscribed.setSymbol("ACC");
+        subscription.setFull(List.of(symbolSubscribed));
+        UpstoxResponse<Subscription> response = new UpstoxResponse<>();
+        response.setCode(200);
+        response.setData(subscription);
+
+        server.enqueue(
+                new MockResponse().setBody(
+                        new Gson().toJson(response)));
+
+        server.start();
+
+        ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
+
+        FeedService service = new FeedService(upstoxAuthService, retryPolicyFactory);
+
+        try {
+            UpstoxResponse<Subscription> serverResponse = service.symbolsSubscribed("FULL").get();
+            assertEquals(response, serverResponse);
+        } catch (ExecutionException | InterruptedException e) {
+            log.fatal(e);
+            fail();
+        } finally {
+            server.shutdown();
+        }
+    }
+
+    @Test
+    void symbolsSubscribed_failure_whenUpstoxReturnsError() throws IOException {
+        MockWebServer server = new MockWebServer();
+
+        server.enqueue(new MockResponse()
+                .setResponseCode(400)
+                .setBody("{\"code\":400," +
+                        "\"status\":\"Bad Request\"," +
+                        "\"timestamp\":\"2018-06-19T20:11:57+05:30\"," +
+                        "\"message\":\"Random error\"," +
+                        "\"error\":{\"name\":\"Error\",\"reason\":\"Random error\"}}"));
+
+        server.start();
+
+        ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
+
+        FeedService service = new FeedService(upstoxAuthService, retryPolicyFactory);
+
+        assertThrows(ExecutionException.class, service.symbolsSubscribed("FULL")::get);
+
+        server.shutdown();
+    }
+
+    @Test
+    void symbolsSubscribed_failure_onNetworkError() throws IOException {
+        MockWebServer server = new MockWebServer();
+
+        server.enqueue(new MockResponse().setSocketPolicy(DISCONNECT_AFTER_REQUEST));
+
+        server.start();
+
+        ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
+
+        FeedService service = new FeedService(upstoxAuthService, retryPolicyFactory);
+
+        try {
+            service.symbolsSubscribed("FULL").get();
+        } catch (ExecutionException | InterruptedException e) {
+            assertTrue(e.getCause() instanceof IOException);
+        } finally {
+            server.shutdown();
+        }
+    }
+
+    @Test
+    void symbolsSubscribed_throwIAE_whenRequiredParametersAreMissing() {
+        FeedService service = new FeedService(upstoxAuthService, retryPolicyFactory);
+
+        assertThrows(IllegalArgumentException.class, () ->
+                        service.symbolsSubscribed(null),
+                "Type cannot be null. Mandatory validation missing.");
+
+        assertThrows(IllegalArgumentException.class, () ->
+                        service.symbolsSubscribed(""),
+                "Type cannot be empty. Mandatory validation missing.");
+    }
+
 }

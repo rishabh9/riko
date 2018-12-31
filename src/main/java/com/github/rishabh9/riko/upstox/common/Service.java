@@ -27,11 +27,13 @@ package com.github.rishabh9.riko.upstox.common;
 import com.github.rishabh9.riko.upstox.common.models.ApiCredentials;
 import com.github.rishabh9.riko.upstox.common.models.AuthHeaders;
 import com.github.rishabh9.riko.upstox.login.models.AccessToken;
+import net.jodah.failsafe.RetryPolicy;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import java.util.Objects;
+import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * Parent class for every Service class. Holds common methods.
@@ -41,13 +43,20 @@ public abstract class Service {
     private static final Logger log = LogManager.getLogger(Service.class);
 
     protected final UpstoxAuthService upstoxAuthService;
+    protected final RetryPolicy retryPolicy;
+    protected final ScheduledExecutorService retryExecutor;
 
     /**
      * @param upstoxAuthService The service to retrieve authentication details
      */
-    public Service(@Nonnull final UpstoxAuthService upstoxAuthService) {
+    public Service(@Nonnull final UpstoxAuthService upstoxAuthService,
+                   @Nonnull final RetryPolicyFactory retryPolicyFactory) {
 
         this.upstoxAuthService = Objects.requireNonNull(upstoxAuthService);
+        this.retryPolicy = Objects.requireNonNull(retryPolicyFactory).createRetryPolicy()
+                // The default behaviour is not to re-try.
+                .orElse(new RetryPolicy().withMaxRetries(0));
+        this.retryExecutor = Objects.requireNonNull(retryPolicyFactory).createExecutorService();
     }
 
     protected <T> T prepareServiceApi(@Nonnull final Class<T> type) {

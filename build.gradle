@@ -47,7 +47,7 @@ dependencyManagement {
 // GroupId
 group = 'com.github.rishabh9'
 // Version
-version = '2.0.2-SNAPSHOT'
+version = '3.0.0-SNAPSHOT'
 archivesBaseName = 'riko'
 
 dependencies {
@@ -56,7 +56,7 @@ dependencies {
 
     // These dependencies are used internally, and not exposed to consumers on their own compile classpath.
     // Developer's toolkit
-    implementation 'com.google.guava:guava:23.0'
+    implementation 'com.google.guava:guava:27.0.1-jre'
     implementation 'net.jodah:failsafe:1.1.1'
     // Making API calls
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'

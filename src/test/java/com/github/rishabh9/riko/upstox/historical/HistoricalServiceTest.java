@@ -24,12 +24,10 @@
 
 package com.github.rishabh9.riko.upstox.historical;
 
+import com.github.rishabh9.riko.upstox.BaseTest;
 import com.github.rishabh9.riko.upstox.common.ServiceGenerator;
-import com.github.rishabh9.riko.upstox.common.UpstoxAuthService;
-import com.github.rishabh9.riko.upstox.common.models.ApiCredentials;
 import com.github.rishabh9.riko.upstox.common.models.UpstoxResponse;
 import com.github.rishabh9.riko.upstox.historical.models.Candle;
-import com.github.rishabh9.riko.upstox.login.models.AccessToken;
 import com.google.gson.Gson;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -45,25 +43,9 @@ import java.util.concurrent.ExecutionException;
 import static okhttp3.mockwebserver.SocketPolicy.DISCONNECT_AFTER_REQUEST;
 import static org.junit.jupiter.api.Assertions.*;
 
-class HistoricalServiceTest {
+class HistoricalServiceTest extends BaseTest {
 
     private static final Logger log = LogManager.getLogger(HistoricalServiceTest.class);
-
-    private UpstoxAuthService upstoxAuthService = new UpstoxAuthService() {
-        @Override
-        public ApiCredentials getApiCredentials() {
-            return new ApiCredentials("secretApiKey", "secret-secret");
-        }
-
-        @Override
-        public AccessToken getAccessToken() {
-            AccessToken token = new AccessToken();
-            token.setExpiresIn(86400L);
-            token.setType("Bearer");
-            token.setToken("access_token_123456789");
-            return token;
-        }
-    };
 
     @Test
     void getOhlc_success_whenAllParametersAreCorrect() throws IOException {
@@ -85,11 +67,11 @@ class HistoricalServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        HistoricalService service = new HistoricalService(upstoxAuthService);
+        HistoricalService service = new HistoricalService(upstoxAuthService, retryPolicyFactory);
 
         try {
             UpstoxResponse<List<Candle>> serverResponse =
-                    service.getOhlc("NSE", "RELIANCE", "", "", "")
+                    service.getOhlc("NSE", "RELIANCE", "1", "", "")
                             .get();
             assertEquals(response, serverResponse);
         } catch (ExecutionException | InterruptedException e) {
@@ -116,10 +98,10 @@ class HistoricalServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        HistoricalService service = new HistoricalService(upstoxAuthService);
+        HistoricalService service = new HistoricalService(upstoxAuthService, retryPolicyFactory);
 
         assertThrows(ExecutionException.class,
-                service.getOhlc("NSE", "RELIANCE", null, null, null)::get);
+                service.getOhlc("NSE", "RELIANCE", "1", null, null)::get);
 
         server.shutdown();
     }
@@ -134,10 +116,10 @@ class HistoricalServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        HistoricalService service = new HistoricalService(upstoxAuthService);
+        HistoricalService service = new HistoricalService(upstoxAuthService, retryPolicyFactory);
 
         try {
-            service.getOhlc("NSE", "RELIANCE", null, null, null).get();
+            service.getOhlc("NSE", "RELIANCE", "1", null, null).get();
         } catch (ExecutionException | InterruptedException e) {
             assertTrue(e.getCause() instanceof IOException);
         } finally {
@@ -147,7 +129,7 @@ class HistoricalServiceTest {
 
     @Test
     void getOhlc_throwIAE_whenRequiredParametersAreMissing() {
-        HistoricalService service = new HistoricalService(upstoxAuthService);
+        HistoricalService service = new HistoricalService(upstoxAuthService, retryPolicyFactory);
 
         assertThrows(IllegalArgumentException.class, () ->
                         service.getOhlc(null, null, null, null, null),
@@ -178,7 +160,7 @@ class HistoricalServiceTest {
     void getOhlc_throwNPE_whenServiceParametersAreMissing() {
 
         assertThrows(NullPointerException.class,
-                () -> new HistoricalService(null),
+                () -> new HistoricalService(null, retryPolicyFactory),
                 "Null check missing for 'UpstoxAuthService' from HistoricalService constructor");
     }
 }

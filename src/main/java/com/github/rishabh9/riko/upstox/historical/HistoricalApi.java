@@ -45,24 +45,26 @@ public interface HistoricalApi {
      * @param symbol    Trading symbol. <em>Mandatory.</em>
      * @param interval  Allowed Values:
      *                  <ul>
-     *                  <li><code>1MINUTE</code></li>
-     *                  <li><code>5MINUTE</code></li>
-     *                  <li><code>10MINUTE</code></li>
-     *                  <li><code>30MINUTE</code></li>
-     *                  <li><code>60MINUTE</code></li>
-     *                  <li><code>1DAY</code> <em>(default)</em></li>
-     *                  <li><code>1WEEK</code></li>
-     *                  <li><code>1MONTH</code></li>
+     *                  <li><code>1</code></li>
+     *                  <li><code>3</code></li>
+     *                  <li><code>5</code></li>
+     *                  <li><code>10</code></li>
+     *                  <li><code>15</code></li>
+     *                  <li><code>30</code></li>
+     *                  <li><code>60</code></li>
+     *                  <li><code>day</code></li>
+     *                  <li><code>week</code></li>
+     *                  <li><code>month</code></li>
      *                  </ul>
-     * @param startDate Date in the format: <code>DD-MM-YYYY</code>. Default value is 15 days before today.
+     * @param startDate Date in the format: <code>DD-MM-YYYY</code>. Default value is 7 days before today.
      * @param endDate   Date in the format: <code>DD-MM-YYYY</code>. Default value is today.
      * @param format    Response format - 'csv' or 'json'.
      * @return A Call to execute the request (a)synchronously.
      */
-    @GET("/historical/ohlc/{exchange}/{symbol}")
+    @GET("/historical/ohlc/{exchange}/{symbol}/{interval}")
     CompletableFuture<UpstoxResponse<List<Candle>>> getOhlc(@Path("exchange") String exchange,
                                                             @Path("symbol") String symbol,
-                                                            @Query("interval") String interval,
+                                                            @Path("interval") String interval,
                                                             @Query("start_date") String startDate,
                                                             @Query("end_date") String endDate,
                                                             @Query("format") String format);

@@ -24,28 +24,41 @@
 
 package com.github.rishabh9.riko.upstox.feed;
 
+import com.github.rishabh9.riko.upstox.common.RetryPolicyFactory;
 import com.github.rishabh9.riko.upstox.common.Service;
 import com.github.rishabh9.riko.upstox.common.UpstoxAuthService;
 import com.github.rishabh9.riko.upstox.common.models.UpstoxResponse;
 import com.github.rishabh9.riko.upstox.feed.models.Feed;
+import com.github.rishabh9.riko.upstox.feed.models.Subscription;
 import com.github.rishabh9.riko.upstox.feed.models.SubscriptionResponse;
 import com.google.common.base.Strings;
+import com.google.common.util.concurrent.RateLimiter;
+import net.jodah.failsafe.Failsafe;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import java.util.concurrent.CompletableFuture;
 
+import static com.github.rishabh9.riko.upstox.common.constants.RateLimits.*;
+
+@SuppressWarnings("UnstableApiUsage")
 public class FeedService extends Service {
 
     private static final Logger log = LogManager.getLogger(FeedService.class);
 
+    private static final RateLimiter liveFeedRateLimiter = RateLimiter.create(LIVE_FEED_RATE_LIMIT);
+    private static final RateLimiter subscribeRateLimiter = RateLimiter.create(SUBSCRIBE_RATE_LIMIT);
+    private static final RateLimiter unsubscribeRateLimiter = RateLimiter.create(UNSUBSCRIBE_RATE_LIMIT);
+    private static final RateLimiter symbolsSubscribedRateLimiter = RateLimiter.create(SYMBOLS_SUBSCRIBED_RATE_LIMIT);
+
     /**
      * @param upstoxAuthService The service to retrieve authentication details
      */
-    public FeedService(@Nonnull final UpstoxAuthService upstoxAuthService) {
+    public FeedService(@Nonnull final UpstoxAuthService upstoxAuthService,
+                       @Nonnull final RetryPolicyFactory retryPolicyFactory) {
 
-        super(upstoxAuthService);
+        super(upstoxAuthService, retryPolicyFactory);
     }
 
     /**
@@ -67,7 +80,17 @@ public class FeedService extends Service {
         final FeedApi api = prepareServiceApi(FeedApi.class);
 
         log.debug("Making request - GET Live Feed");
-        return api.liveFeed(exchange, symbol, type);
+        return Failsafe.with(retryPolicy)
+                .with(retryExecutor)
+                .onFailure(failure -> log.fatal("Failed completely to GET Live Feed.", failure))
+                .onSuccess(response -> log.debug("GET Live Feed successful!", response))
+                .onRetry((c, f, ctx) ->
+                        log.warn("Failure #" + ctx.getExecutions()
+                                + ". Unable to GET Live Feed, retrying. REASON: {}", f.getCause().getMessage()))
+                .future(() -> {
+                    liveFeedRateLimiter.acquire(1);
+                    return api.liveFeed(exchange, symbol, type);
+                });
     }
 
     /**
@@ -89,7 +112,17 @@ public class FeedService extends Service {
         final FeedApi api = prepareServiceApi(FeedApi.class);
 
         log.debug("Making request - GET Subscribe");
-        return api.subscribe(type, exchange, symbolsCsv);
+        return Failsafe.with(retryPolicy)
+                .with(retryExecutor)
+                .onFailure(failure -> log.fatal("Failed completely to GET Subscribe.", failure))
+                .onSuccess(response -> log.debug("GET Subscribe successful!", response))
+                .onRetry((c, f, ctx) ->
+                        log.warn("Failure #" + ctx.getExecutions()
+                                + ". Unable to GET Subscribe, retrying. REASON: {}", f.getCause().getMessage()))
+                .future(() -> {
+                    subscribeRateLimiter.acquire(1);
+                    return api.subscribe(type, exchange, symbolsCsv);
+                });
     }
 
     /**
@@ -111,7 +144,46 @@ public class FeedService extends Service {
         final FeedApi api = prepareServiceApi(FeedApi.class);
 
         log.debug("Making request - GET Unsubscribe");
-        return api.unsubscribe(type, exchange, symbolsCsv);
+        return Failsafe.with(retryPolicy)
+                .with(retryExecutor)
+                .onFailure(failure -> log.fatal("Failed completely to GET Unsubscribe.", failure))
+                .onSuccess(response -> log.debug("GET Unsubscribe successful!", response))
+                .onRetry((c, f, ctx) ->
+                        log.warn("Failure #" + ctx.getExecutions()
+                                + ". Unable to GET Unsubscribe, retrying. REASON: {}", f.getCause().getMessage()))
+                .future(() -> {
+                    unsubscribeRateLimiter.acquire(1);
+                    return api.unsubscribe(type, exchange, symbolsCsv);
+                });
+    }
+
+
+    /**
+     * Get list of symbols subscribed.
+     *
+     * @param type 'all' or 'ltp' or 'full'. <em>Any. Mandatory.</em>
+     * @return List of symbols subscribed
+     */
+    public CompletableFuture<UpstoxResponse<Subscription>> symbolsSubscribed(@Nonnull final String type) {
+
+        log.debug("Validate parameters - GET Symbols Subscribed");
+        validatePathParameter(type);
+
+        log.debug("Preparing service - GET Symbols Subscribed");
+        final FeedApi api = prepareServiceApi(FeedApi.class);
+
+        log.debug("Making request - GET Symbols Subscribed");
+        return Failsafe.with(retryPolicy)
+                .with(retryExecutor)
+                .onFailure(failure -> log.fatal("Failed completely to GET Symbols Subscribed.", failure))
+                .onSuccess(response -> log.debug("GET Symbols Subscribed successful!", response))
+                .onRetry((c, f, ctx) ->
+                        log.warn("Failure #" + ctx.getExecutions()
+                                + ". Unable to GET Symbols Subscribed, retrying. REASON: {}", f.getCause().getMessage()))
+                .future(() -> {
+                    symbolsSubscribedRateLimiter.acquire(1);
+                    return api.symbolsSubscribed(type);
+                });
     }
 
     private void validatePathParameters(String... values) {
@@ -123,6 +195,13 @@ public class FeedService extends Service {
                         "Arguments 'exchange', 'symbol(s)' and 'type' are mandatory. " +
                                 "They cannot be null nor empty.");
             }
+        }
+    }
+
+    private void validatePathParameter(String value) {
+        if (Strings.isNullOrEmpty(value)) {
+            log.error("Argument validation failed. Arguments 'type' is mandatory.");
+            throw new IllegalArgumentException("Argument validation failed. Arguments 'type' is mandatory.");
         }
     }
 }

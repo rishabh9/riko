@@ -22,10 +22,38 @@
  * SOFTWARE.
  */
 
-package com.github.rishabh9.riko.upstox.common.constants;
+package com.github.rishabh9.riko.upstox.common;
 
-public final class LiveFeedType {
-    public static final String LTP = "ltp";
-    public static final String FULL = "full";
-    public static final String ALL = "all";
+import net.jodah.failsafe.RetryPolicy;
+
+import java.util.Optional;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
+/**
+ * The Riko's default retry policy factory.
+ *
+ * @see RetryPolicyFactory
+ */
+public class RikoRetryPolicyFactory implements RetryPolicyFactory {
+
+    /**
+     * @return The default {@link RetryPolicy}
+     */
+    @Override
+    public Optional<RetryPolicy> createRetryPolicy() {
+        return Optional.of(new RetryPolicy()
+                .retryOn(Throwable.class)
+                .withBackoff(1, 5, TimeUnit.SECONDS)
+                .withMaxRetries(3));
+    }
+
+    /**
+     * @return The default {@link ScheduledExecutorService} to be used by {@link RetryPolicy}.
+     */
+    @Override
+    public ScheduledExecutorService createExecutorService() {
+        return Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors());
+    }
 }

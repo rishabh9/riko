@@ -128,7 +128,7 @@ public class ServiceGenerator {
     public <S> S createService(@Nonnull final Class<S> serviceClass) {
 
         log.debug("Creating service without authentication");
-        return createService(Objects.requireNonNull(serviceClass), null, null);
+        return createService(Objects.requireNonNull(serviceClass), null);
     }
 
     /**
@@ -141,19 +141,14 @@ public class ServiceGenerator {
      * @return The retrofitted service
      */
     public <S> S createService(@Nonnull final Class<S> serviceClass,
-                               @Nullable final String username,
-                               @Nullable final String password) {
+                               @Nonnull final String username,
+                               @Nonnull final String password) {
 
-        if (!Strings.isNullOrEmpty(username)
-                && !Strings.isNullOrEmpty(password)) {
             final String authToken = Credentials.basic(username, password);
             log.debug("Creating service with Basic authentication");
             return createService(
                     Objects.requireNonNull(serviceClass),
-                    new AuthHeaders(authToken, username));
-        }
-        // Setup request headers without any auth
-        return createService(Objects.requireNonNull(serviceClass), null);
+                    new AuthHeaders(Objects.requireNonNull(authToken), Objects.requireNonNull(username)));
     }
 
     /**

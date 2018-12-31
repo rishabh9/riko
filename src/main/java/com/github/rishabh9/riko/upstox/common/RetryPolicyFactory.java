@@ -22,10 +22,34 @@
  * SOFTWARE.
  */
 
-package com.github.rishabh9.riko.upstox.common.constants;
+package com.github.rishabh9.riko.upstox.common;
 
-public final class LiveFeedType {
-    public static final String LTP = "ltp";
-    public static final String FULL = "full";
-    public static final String ALL = "all";
+import net.jodah.failsafe.RetryPolicy;
+
+import javax.annotation.Nonnull;
+import java.util.Optional;
+import java.util.concurrent.ScheduledExecutorService;
+
+/**
+ * A simple factory to create policies for retrying when an API call fails.
+ * Riko uses the open source <a href="https://github.com/jhalterman/failsafe">Failsafe</a>
+ * library for implementing retries.
+ *
+ * @see RikoRetryPolicyFactory
+ */
+public interface RetryPolicyFactory {
+
+    /**
+     * @return A {@link RetryPolicy} that expresses when retries should be performed.
+     * An {@code empty} {@link RetryPolicy} indicates retries should be disabled.
+     */
+    @Nonnull
+    Optional<RetryPolicy> createRetryPolicy();
+
+    /**
+     * @return A {@link ScheduledExecutorService} to allow for asynchronous executions.
+     * Cannot be {@code null}.
+     */
+    @Nonnull
+    ScheduledExecutorService createExecutorService();
 }

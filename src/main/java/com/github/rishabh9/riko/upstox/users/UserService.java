@@ -24,11 +24,14 @@
 
 package com.github.rishabh9.riko.upstox.users;
 
+import com.github.rishabh9.riko.upstox.common.RetryPolicyFactory;
 import com.github.rishabh9.riko.upstox.common.Service;
 import com.github.rishabh9.riko.upstox.common.UpstoxAuthService;
 import com.github.rishabh9.riko.upstox.common.models.UpstoxResponse;
 import com.github.rishabh9.riko.upstox.users.models.*;
 import com.google.common.base.Strings;
+import com.google.common.util.concurrent.RateLimiter;
+import net.jodah.failsafe.Failsafe;
 import okhttp3.ResponseBody;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -39,16 +42,26 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+import static com.github.rishabh9.riko.upstox.common.constants.RateLimits.*;
+
+@SuppressWarnings("UnstableApiUsage")
 public class UserService extends Service {
 
     private static final Logger log = LogManager.getLogger(UserService.class);
 
+    private static final RateLimiter profileRateLimiter = RateLimiter.create(PROFILE_RATE_LIMIT);
+    private static final RateLimiter balanceRateLimiter = RateLimiter.create(BALANCE_RATE_LIMIT);
+    private static final RateLimiter positionsRateLimiter = RateLimiter.create(POSITIONS_RATE_LIMIT);
+    private static final RateLimiter holdingsRateLimiter = RateLimiter.create(HOLDINGS_RATE_LIMIT);
+    private static final RateLimiter masterContractRateLimiter = RateLimiter.create(MASTER_CONTRACT_RATE_LIMIT);
+
     /**
      * @param upstoxAuthService The service to retrieve authentication details
      */
-    public UserService(@Nonnull final UpstoxAuthService upstoxAuthService) {
+    public UserService(@Nonnull final UpstoxAuthService upstoxAuthService,
+                       @Nonnull final RetryPolicyFactory retryPolicyFactory) {
 
-        super(upstoxAuthService);
+        super(upstoxAuthService, retryPolicyFactory);
     }
 
     /**
@@ -62,7 +75,17 @@ public class UserService extends Service {
         final UsersApi api = prepareServiceApi(UsersApi.class);
 
         log.debug("Making request - GET Profile");
-        return api.getProfile();
+        return Failsafe.with(retryPolicy)
+                .with(retryExecutor)
+                .onFailure(failure -> log.fatal("Failed completely to GET Profile.", failure))
+                .onSuccess(response -> log.debug("GET Profile successful!", response))
+                .onRetry((c, f, ctx) ->
+                        log.warn("Failure #" + ctx.getExecutions()
+                                + ". Unable to GET Profile, retrying. REASON: {}", f.getCause().getMessage()))
+                .future(() -> {
+                    profileRateLimiter.acquire(1);
+                    return api.getProfile();
+                });
     }
 
     /**
@@ -78,7 +101,17 @@ public class UserService extends Service {
         final UsersApi api = prepareServiceApi(UsersApi.class);
 
         log.debug("Making request - GET Profile Balance");
-        return api.getProfileBalance(accountType);
+        return Failsafe.with(retryPolicy)
+                .with(retryExecutor)
+                .onFailure(failure -> log.fatal("Failed completely to GET Profile Balance.", failure))
+                .onSuccess(response -> log.debug("GET Profile Balance successful!", response))
+                .onRetry((c, f, ctx) ->
+                        log.warn("Failure #" + ctx.getExecutions()
+                                + ". Unable to GET Profile Balance, retrying. REASON: {}", f.getCause().getMessage()))
+                .future(() -> {
+                    balanceRateLimiter.acquire(1);
+                    return api.getProfileBalance(accountType);
+                });
     }
 
     /**
@@ -92,7 +125,17 @@ public class UserService extends Service {
         final UsersApi api = prepareServiceApi(UsersApi.class);
 
         log.debug("Making request - GET Positions");
-        return api.getPositions();
+        return Failsafe.with(retryPolicy)
+                .with(retryExecutor)
+                .onFailure(failure -> log.fatal("Failed completely to GET Positions.", failure))
+                .onSuccess(response -> log.debug("GET Positions successful!", response))
+                .onRetry((c, f, ctx) ->
+                        log.warn("Failure #" + ctx.getExecutions()
+                                + ". Unable to GET Positions, retrying. REASON: {}", f.getCause().getMessage()))
+                .future(() -> {
+                    positionsRateLimiter.acquire(1);
+                    return api.getPositions();
+                });
     }
 
     /**
@@ -106,7 +149,17 @@ public class UserService extends Service {
         final UsersApi api = prepareServiceApi(UsersApi.class);
 
         log.debug("Making request - GET Holdings");
-        return api.getHoldings();
+        return Failsafe.with(retryPolicy)
+                .with(retryExecutor)
+                .onFailure(failure -> log.fatal("Failed completely to GET Holdings.", failure))
+                .onSuccess(response -> log.debug("GET Holdings successful!", response))
+                .onRetry((c, f, ctx) ->
+                        log.warn("Failure #" + ctx.getExecutions()
+                                + ". Unable to GET Holdings, retrying. REASON: {}", f.getCause().getMessage()))
+                .future(() -> {
+                    holdingsRateLimiter.acquire(1);
+                    return api.getHoldings();
+                });
     }
 
     /**
@@ -139,7 +192,17 @@ public class UserService extends Service {
         final UsersApi api = prepareServiceApi(UsersApi.class);
 
         log.debug("Making request - GET All Contracts");
-        return api.getAllMasterContracts(exchange)
+        return Failsafe.with(retryPolicy)
+                .with(retryExecutor)
+                .onFailure(failure -> log.fatal("Failed completely to GET All Contracts.", failure))
+                .onSuccess(response -> log.debug("GET All Contracts successful!", response))
+                .onRetry((c, f, ctx) ->
+                        log.warn("Failure #" + ctx.getExecutions()
+                                + ". Unable to GET All Contracts, retrying. REASON: {}", f.getCause().getMessage()))
+                .future(() -> {
+                    masterContractRateLimiter.acquire(1);
+                    return api.getAllMasterContracts(exchange);
+                })
                 .thenApply(ResponseBody::byteStream);
     }
 
@@ -164,8 +227,8 @@ public class UserService extends Service {
      *                                  Also, if both symbol and token are null or empty.
      */
     public CompletableFuture<UpstoxResponse<Contract>> getMasterContract(@Nonnull final String exchange,
-                                                                         @Nullable final String symbol,
-                                                                         @Nullable final String token) {
+                                                                         final String symbol,
+                                                                         final String token) {
 
         log.debug("Validate parameters - GET Contract");
         validateExchange(exchange);
@@ -175,7 +238,17 @@ public class UserService extends Service {
         final UsersApi api = prepareServiceApi(UsersApi.class);
 
         log.debug("Making request - GET Contract");
-        return api.getMasterContract(exchange, symbol, token);
+        return Failsafe.with(retryPolicy)
+                .with(retryExecutor)
+                .onFailure(failure -> log.fatal("Failed completely to GET Contract.", failure))
+                .onSuccess(response -> log.debug("GET Contract successful!", response))
+                .onRetry((c, f, ctx) ->
+                        log.warn("Failure #" + ctx.getExecutions()
+                                + ". Unable to GET Contract, retrying. REASON: {}", f.getCause().getMessage()))
+                .future(() -> {
+                    masterContractRateLimiter.acquire(1);
+                    return api.getMasterContract(exchange, symbol, token);
+                });
     }
 
     private void validateSymbolAndToken(final String symbol, final String token) {

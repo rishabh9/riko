@@ -24,6 +24,7 @@
 
 package com.github.rishabh9.riko.upstox.websockets;
 
+import com.github.rishabh9.riko.upstox.common.RetryPolicyFactory;
 import com.github.rishabh9.riko.upstox.common.Service;
 import com.github.rishabh9.riko.upstox.common.UpstoxAuthService;
 import com.github.rishabh9.riko.upstox.common.models.ApiCredentials;
@@ -32,8 +33,8 @@ import com.github.rishabh9.riko.upstox.login.models.AccessToken;
 import com.github.rishabh9.riko.upstox.websockets.models.WebsocketParameters;
 import com.github.rishabh9.riko.upstox.websockets.models.WrappedWebSocket;
 import com.google.common.base.Strings;
+import com.google.common.util.concurrent.RateLimiter;
 import net.jodah.failsafe.Failsafe;
-import net.jodah.failsafe.RetryPolicy;
 import okhttp3.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -41,29 +42,27 @@ import org.apache.logging.log4j.Logger;
 import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import static com.github.rishabh9.riko.upstox.common.constants.PropertyKeys.*;
+import static com.github.rishabh9.riko.upstox.common.constants.RateLimits.WEB_SOCKET_RATE_LIMIT;
+import static com.github.rishabh9.riko.upstox.common.constants.RateLimits.WS_PARAMS_RATE_LIMIT;
 
+@SuppressWarnings("UnstableApiUsage")
 public class WebSocketService extends Service {
 
     private static final Logger log = LogManager.getLogger(WebSocketService.class);
 
-    private final RetryPolicy retryPolicy;
-    private final ScheduledExecutorService executorService;
+    private static final RateLimiter wsParamsRateLimiter = RateLimiter.create(WS_PARAMS_RATE_LIMIT);
+    private static final RateLimiter webSocketRateLimiter = RateLimiter.create(WEB_SOCKET_RATE_LIMIT);
 
     /**
      * @param upstoxAuthService The service to retrieve authentication details
      */
-    public WebSocketService(@Nonnull final UpstoxAuthService upstoxAuthService) {
-        super(upstoxAuthService);
-        retryPolicy = new RetryPolicy()
-                .retryOn(Throwable.class)
-                .withBackoff(1, 180, TimeUnit.SECONDS)
-                .withMaxRetries(10);
-        this.executorService = Executors.newScheduledThreadPool(4);
+    public WebSocketService(@Nonnull final UpstoxAuthService upstoxAuthService,
+                            @Nonnull final RetryPolicyFactory retryPolicyFactory) {
+
+        super(upstoxAuthService, retryPolicyFactory);
     }
 
     private CompletableFuture<UpstoxResponse<WebsocketParameters>> getWebsocketParameters() {
@@ -91,9 +90,8 @@ public class WebSocketService extends Service {
             throw new IllegalArgumentException("Subscribers not provided. Not connecting to the socket.");
         }
 
-        // Step 1: Retrieve the webSocket parameters before connecting, as per Upstox documentation.
-        final UpstoxResponse<WebsocketParameters> response = Failsafe.with(retryPolicy)
-                .with(executorService)
+        return Failsafe.with(retryPolicy)
+                .with(retryExecutor)
                 .onFailure(failure -> {
                     log.fatal("Failed completely to retrieve web-socket parameters. ", failure);
                 })
@@ -103,19 +101,26 @@ public class WebSocketService extends Service {
                 })
                 .onRetry((c, f, ctx) ->
                         log.warn("Failure #" + ctx.getExecutions()
-                                + ". Unable to retrieve web-socket parameters, retrying.", f))
-                .future(this::getWebsocketParameters)
-                .get();
-
-        // Step 2: Make connection
-        return Failsafe.with(retryPolicy)
-                .with(executorService)
-                .onFailure(failure -> log.fatal("Failed completely to make web-socket connection. ", failure))
-                .onSuccess(connection -> log.info("WebSocket connection is successful!"))
-                .onRetry((c, f, ctx) ->
-                        log.warn("Failure #" + ctx.getExecutions() + ". Unable to connect to web-socket, retrying.", f))
-                .get(() -> this.makeConnection(response.getData(), subscribers))
-                .get();
+                                + ". Unable to retrieve web-socket parameters, retrying. REASON: {}", f.getCause().getMessage()))
+                .future(() -> {
+                    // Step 1: Retrieve the webSocket parameters before connecting, as per Upstox documentation.
+                    wsParamsRateLimiter.acquire(1);
+                    return getWebsocketParameters();
+                })
+                .thenApply(paramResponse -> Failsafe.with(retryPolicy)
+                        .with(retryExecutor)
+                        .onFailure(failure -> log.fatal("Failed completely to make web-socket connection. ", failure))
+                        .onSuccess(connection -> log.info("WebSocket connection is successful!"))
+                        .onRetry((c, f, ctx) ->
+                                log.warn("Failure #" + ctx.getExecutions()
+                                        + ". Unable to connect to web-socket, retrying. REASON: {}", f.getCause().getMessage()))
+                        .get(() -> {
+                            // Step 2: Make connection
+                            webSocketRateLimiter.acquire(1);
+                            return this.makeConnection(paramResponse.getData(), subscribers);
+                        }))
+                .get()
+                .get(); // block until complete
     }
 
     private WrappedWebSocket makeConnection(final WebsocketParameters parameters,
