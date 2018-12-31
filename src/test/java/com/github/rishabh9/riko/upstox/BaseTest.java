@@ -22,10 +22,30 @@
  * SOFTWARE.
  */
 
-package com.github.rishabh9.riko.upstox.common.constants;
+package com.github.rishabh9.riko.upstox;
 
-public final class LiveFeedType {
-    public static final String LTP = "ltp";
-    public static final String FULL = "full";
-    public static final String ALL = "all";
+import com.github.rishabh9.riko.upstox.common.RetryPolicyFactory;
+import com.github.rishabh9.riko.upstox.common.UpstoxAuthService;
+import com.github.rishabh9.riko.upstox.common.models.ApiCredentials;
+import com.github.rishabh9.riko.upstox.login.models.AccessToken;
+
+public class BaseTest {
+
+    protected RetryPolicyFactory retryPolicyFactory = new TestRetryPolicyFactory();
+
+    protected UpstoxAuthService upstoxAuthService = new UpstoxAuthService() {
+        @Override
+        public ApiCredentials getApiCredentials() {
+            return new ApiCredentials("secretApiKey", "secret-secret");
+        }
+
+        @Override
+        public AccessToken getAccessToken() {
+            AccessToken token = new AccessToken();
+            token.setExpiresIn(86400L);
+            token.setType("Bearer");
+            token.setToken("access_token_123456789");
+            return token;
+        }
+    };
 }

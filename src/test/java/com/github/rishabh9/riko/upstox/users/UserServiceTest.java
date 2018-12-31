@@ -24,11 +24,9 @@
 
 package com.github.rishabh9.riko.upstox.users;
 
+import com.github.rishabh9.riko.upstox.BaseTest;
 import com.github.rishabh9.riko.upstox.common.ServiceGenerator;
-import com.github.rishabh9.riko.upstox.common.UpstoxAuthService;
-import com.github.rishabh9.riko.upstox.common.models.ApiCredentials;
 import com.github.rishabh9.riko.upstox.common.models.UpstoxResponse;
-import com.github.rishabh9.riko.upstox.login.models.AccessToken;
 import com.github.rishabh9.riko.upstox.users.models.*;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -52,25 +50,9 @@ import java.util.concurrent.ExecutionException;
 import static okhttp3.mockwebserver.SocketPolicy.DISCONNECT_AFTER_REQUEST;
 import static org.junit.jupiter.api.Assertions.*;
 
-class UserServiceTest {
+class UserServiceTest extends BaseTest {
 
     private static final Logger log = LogManager.getLogger(UserServiceTest.class);
-
-    private UpstoxAuthService upstoxAuthService = new UpstoxAuthService() {
-        @Override
-        public ApiCredentials getApiCredentials() {
-            return new ApiCredentials("secretApiKey", "secret-secret");
-        }
-
-        @Override
-        public AccessToken getAccessToken() {
-            AccessToken token = new AccessToken();
-            token.setExpiresIn(86400L);
-            token.setType("Bearer");
-            token.setToken("access_token_123456789");
-            return token;
-        }
-    };
 
     @Test
     void getProfile_success_whenAllParametersAreCorrect() throws IOException {
@@ -90,7 +72,7 @@ class UserServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        UserService service = new UserService(upstoxAuthService);
+        UserService service = new UserService(upstoxAuthService, retryPolicyFactory);
 
         try {
             UpstoxResponse<Profile> serverResponse = service.getProfile().get();
@@ -119,7 +101,7 @@ class UserServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        UserService service = new UserService(upstoxAuthService);
+        UserService service = new UserService(upstoxAuthService, retryPolicyFactory);
 
         assertThrows(ExecutionException.class, service.getProfile()::get);
 
@@ -136,7 +118,7 @@ class UserServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        UserService service = new UserService(upstoxAuthService);
+        UserService service = new UserService(upstoxAuthService, retryPolicyFactory);
 
         try {
             service.getProfile().get();
@@ -167,7 +149,7 @@ class UserServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        UserService service = new UserService(upstoxAuthService);
+        UserService service = new UserService(upstoxAuthService, retryPolicyFactory);
 
         try {
             UpstoxResponse<ProfileBalance> serverResponse =
@@ -197,7 +179,7 @@ class UserServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        UserService service = new UserService(upstoxAuthService);
+        UserService service = new UserService(upstoxAuthService, retryPolicyFactory);
 
         assertThrows(ExecutionException.class, service.getProfileBalance(null)::get);
 
@@ -214,7 +196,7 @@ class UserServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        UserService service = new UserService(upstoxAuthService);
+        UserService service = new UserService(upstoxAuthService, retryPolicyFactory);
 
         try {
             service.getProfileBalance(null).get();
@@ -245,7 +227,7 @@ class UserServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        UserService service = new UserService(upstoxAuthService);
+        UserService service = new UserService(upstoxAuthService, retryPolicyFactory);
 
         try {
             UpstoxResponse<List<Position>> serverResponse = service.getPositions().get();
@@ -274,7 +256,7 @@ class UserServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        UserService service = new UserService(upstoxAuthService);
+        UserService service = new UserService(upstoxAuthService, retryPolicyFactory);
 
         assertThrows(ExecutionException.class, service.getPositions()::get);
 
@@ -291,7 +273,7 @@ class UserServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        UserService service = new UserService(upstoxAuthService);
+        UserService service = new UserService(upstoxAuthService, retryPolicyFactory);
 
         try {
             service.getPositions().get();
@@ -322,7 +304,7 @@ class UserServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        UserService service = new UserService(upstoxAuthService);
+        UserService service = new UserService(upstoxAuthService, retryPolicyFactory);
 
         try {
             UpstoxResponse<List<Holding>> serverResponse = service.getHoldings().get();
@@ -351,7 +333,7 @@ class UserServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        UserService service = new UserService(upstoxAuthService);
+        UserService service = new UserService(upstoxAuthService, retryPolicyFactory);
 
         assertThrows(ExecutionException.class, service.getHoldings()::get);
 
@@ -368,7 +350,7 @@ class UserServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        UserService service = new UserService(upstoxAuthService);
+        UserService service = new UserService(upstoxAuthService, retryPolicyFactory);
 
         try {
             service.getHoldings().get();
@@ -398,7 +380,7 @@ class UserServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        UserService service = new UserService(upstoxAuthService);
+        UserService service = new UserService(upstoxAuthService, retryPolicyFactory);
 
         try {
             InputStream inputStream =
@@ -449,7 +431,7 @@ class UserServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        UserService service = new UserService(upstoxAuthService);
+        UserService service = new UserService(upstoxAuthService, retryPolicyFactory);
 
         assertThrows(ExecutionException.class,
                 service.getAllMasterContracts("NSE")::get);
@@ -467,7 +449,7 @@ class UserServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        UserService service = new UserService(upstoxAuthService);
+        UserService service = new UserService(upstoxAuthService, retryPolicyFactory);
 
         try {
             service.getAllMasterContracts("NSE").get();
@@ -480,7 +462,7 @@ class UserServiceTest {
 
     @Test
     void getAllMasterContracts_throwIAE_whenRequiredParametersAreMissing() {
-        UserService service = new UserService(upstoxAuthService);
+        UserService service = new UserService(upstoxAuthService, retryPolicyFactory);
 
         assertThrows(IllegalArgumentException.class, () ->
                         service.getAllMasterContracts(null),
@@ -509,7 +491,7 @@ class UserServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        UserService service = new UserService(upstoxAuthService);
+        UserService service = new UserService(upstoxAuthService, retryPolicyFactory);
 
         try {
             UpstoxResponse<Contract> serverResponse =
@@ -540,7 +522,7 @@ class UserServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        UserService service = new UserService(upstoxAuthService);
+        UserService service = new UserService(upstoxAuthService, retryPolicyFactory);
 
         assertThrows(ExecutionException.class,
                 service.getMasterContract("NSE", "RELIANCE", null)::get);
@@ -558,7 +540,7 @@ class UserServiceTest {
 
         ServiceGenerator.getInstance().rebuildWithUrl(server.url("/"));
 
-        UserService service = new UserService(upstoxAuthService);
+        UserService service = new UserService(upstoxAuthService, retryPolicyFactory);
 
         try {
             service.getMasterContract("NSE", "RELIANCE", null).get();
@@ -571,7 +553,7 @@ class UserServiceTest {
 
     @Test
     void getMasterContract_throwIAE_whenRequiredParametersAreMissing() {
-        UserService service = new UserService(upstoxAuthService);
+        UserService service = new UserService(upstoxAuthService, retryPolicyFactory);
 
         assertThrows(IllegalArgumentException.class, () ->
                         service.getMasterContract(null, null, null),
@@ -605,7 +587,7 @@ class UserServiceTest {
     @Test
     void getMasterContract_throwNPE_whenServiceParametersAreMissing() {
         assertThrows(NullPointerException.class,
-                () -> new UserService(null),
+                () -> new UserService(null, retryPolicyFactory),
                 "Null check missing for 'UpstoxAuthService' from UserService constructor");
     }
 }

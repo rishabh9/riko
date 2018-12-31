@@ -53,5 +53,5 @@ public class PropertyKeys {
     public static final int RIKO_WS_SERVER_PORT_DEFAULT = 443;
 
     public static final String RIKO_WS_RECONNECT = "riko.ws.reconnect";
-    public static final String RIKO_WS_RECONNECT_DEFAULT = "true";
+    public static final String RIKO_WS_RECONNECT_DEFAULT = "false";
 }

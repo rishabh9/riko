@@ -24,6 +24,7 @@
 
 package com.github.rishabh9.riko.upstox.login;
 
+import com.github.rishabh9.riko.upstox.BaseTest;
 import com.github.rishabh9.riko.upstox.common.ServiceGenerator;
 import com.github.rishabh9.riko.upstox.common.UpstoxAuthService;
 import com.github.rishabh9.riko.upstox.common.models.ApiCredentials;
@@ -41,7 +42,7 @@ import java.util.concurrent.ExecutionException;
 import static okhttp3.mockwebserver.SocketPolicy.DISCONNECT_AFTER_REQUEST;
 import static org.junit.jupiter.api.Assertions.*;
 
-class LoginServiceTest {
+class LoginServiceTest extends BaseTest {
 
     private static final Logger log = LogManager.getLogger(LoginServiceTest.class);
 
@@ -73,7 +74,7 @@ class LoginServiceTest {
             }
         };
 
-        LoginService service = new LoginService(upstoxAuthService);
+        LoginService service = new LoginService(upstoxAuthService, retryPolicyFactory);
         try {
             AccessToken accessToken = service.getAccessToken(request).get();
 
@@ -121,7 +122,7 @@ class LoginServiceTest {
             }
         };
 
-        LoginService service = new LoginService(upstoxAuthService);
+        LoginService service = new LoginService(upstoxAuthService, retryPolicyFactory);
 
         assertThrows(ExecutionException.class, () -> service.getAccessToken(request).get());
 
@@ -154,7 +155,7 @@ class LoginServiceTest {
             }
         };
 
-        LoginService service = new LoginService(upstoxAuthService);
+        LoginService service = new LoginService(upstoxAuthService, retryPolicyFactory);
 
         try {
             service.getAccessToken(request).get();
@@ -180,7 +181,7 @@ class LoginServiceTest {
             }
         };
 
-        LoginService service = new LoginService(upstoxAuthService);
+        LoginService service = new LoginService(upstoxAuthService, retryPolicyFactory);
         assertThrows(NullPointerException.class,
                 () -> service.getAccessToken(null),
                 "Null check missing for 'TokenRequest' from LoginService constructor");

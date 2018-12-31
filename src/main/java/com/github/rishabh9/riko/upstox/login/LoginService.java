@@ -24,11 +24,15 @@
 
 package com.github.rishabh9.riko.upstox.login;
 
+import com.github.rishabh9.riko.upstox.common.RetryPolicyFactory;
+import com.github.rishabh9.riko.upstox.common.Service;
 import com.github.rishabh9.riko.upstox.common.ServiceGenerator;
 import com.github.rishabh9.riko.upstox.common.UpstoxAuthService;
 import com.github.rishabh9.riko.upstox.login.models.AccessToken;
 import com.github.rishabh9.riko.upstox.login.models.TokenRequest;
 import com.google.common.base.Strings;
+import com.google.common.util.concurrent.RateLimiter;
+import net.jodah.failsafe.Failsafe;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -36,18 +40,22 @@ import javax.annotation.Nonnull;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
-public class LoginService {
+import static com.github.rishabh9.riko.upstox.common.constants.RateLimits.LOGIN_RATE_LIMIT;
+
+@SuppressWarnings("UnstableApiUsage")
+public class LoginService extends Service {
 
     private static final Logger log = LogManager.getLogger(LoginService.class);
 
-    private final UpstoxAuthService upstoxAuthService;
+    private static final RateLimiter loginRateLimiter = RateLimiter.create(LOGIN_RATE_LIMIT);
 
     /**
      * @param upstoxAuthService The service to retrieve authentication details.
      */
-    public LoginService(@Nonnull final UpstoxAuthService upstoxAuthService) {
+    public LoginService(@Nonnull final UpstoxAuthService upstoxAuthService,
+                        @Nonnull final RetryPolicyFactory retryPolicyFactory) {
 
-        this.upstoxAuthService = Objects.requireNonNull(upstoxAuthService);
+        super(upstoxAuthService, retryPolicyFactory);
     }
 
     /**
@@ -71,6 +79,16 @@ public class LoginService {
                         upstoxAuthService.getApiCredentials().getApiKey(),
                         upstoxAuthService.getApiCredentials().getApiSecret());
 
-        return loginApi.getAccessToken(request);
+        return Failsafe.with(retryPolicy)
+                .with(retryExecutor)
+                .onFailure(failure -> log.fatal("Failed completely to GET AccessToken.", failure))
+                .onSuccess(response -> log.debug("GET AccessToken successful!", response))
+                .onRetry((c, f, ctx) ->
+                        log.warn("Failure #" + ctx.getExecutions()
+                                + ". Unable to GET AccessToken, retrying. REASON: {}", f.getCause().getMessage()))
+                .future(() -> {
+                    loginRateLimiter.acquire(1);
+                    return loginApi.getAccessToken(request);
+                });
     }
 }

@@ -26,6 +26,7 @@ package com.github.rishabh9.riko.upstox.feed;
 
 import com.github.rishabh9.riko.upstox.common.models.UpstoxResponse;
 import com.github.rishabh9.riko.upstox.feed.models.Feed;
+import com.github.rishabh9.riko.upstox.feed.models.Subscription;
 import com.github.rishabh9.riko.upstox.feed.models.SubscriptionResponse;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
@@ -76,4 +77,13 @@ public interface FeedApi {
     CompletableFuture<UpstoxResponse<SubscriptionResponse>> unsubscribe(@Path("type") String type,
                                                                         @Path("exchange") String exchange,
                                                                         @Query("symbol") String symbolsCsv);
+
+    /**
+     * Get list of symbols subscribed.
+     *
+     * @param type 'all' or 'ltp' or 'full'.
+     * @return A CompletableFuture to execute the request (a)synchronously.
+     */
+    @GET("/live/feed/{type}")
+    CompletableFuture<UpstoxResponse<Subscription>> symbolsSubscribed(@Path("type") String type);
 }

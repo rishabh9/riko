@@ -24,6 +24,7 @@
 
 package com.github.rishabh9.riko.upstox.orders;
 
+import com.github.rishabh9.riko.upstox.common.RetryPolicyFactory;
 import com.github.rishabh9.riko.upstox.common.Service;
 import com.github.rishabh9.riko.upstox.common.UpstoxAuthService;
 import com.github.rishabh9.riko.upstox.common.models.UpstoxResponse;
@@ -31,6 +32,8 @@ import com.github.rishabh9.riko.upstox.orders.models.Order;
 import com.github.rishabh9.riko.upstox.orders.models.OrderRequest;
 import com.github.rishabh9.riko.upstox.orders.models.Trade;
 import com.google.common.base.Strings;
+import com.google.common.util.concurrent.RateLimiter;
+import net.jodah.failsafe.Failsafe;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -38,16 +41,28 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+import static com.github.rishabh9.riko.upstox.common.constants.RateLimits.*;
+
+@SuppressWarnings("UnstableApiUsage")
 public class OrderService extends Service {
 
     private static final Logger log = LogManager.getLogger(OrderService.class);
 
+    private static final RateLimiter orderHistoryRateLimiter = RateLimiter.create(ORDER_HISTORY_RATE_LIMIT);
+    private static final RateLimiter orderDetailsRateLimiter = RateLimiter.create(ORDER_DETAILS_RATE_LIMIT);
+    private static final RateLimiter tradeBookRateLimiter = RateLimiter.create(TRADE_BOOK_RATE_LIMIT);
+    private static final RateLimiter tradeHistoryRateLimiter = RateLimiter.create(TRADE_HISTORY_RATE_LIMIT);
+    private static final RateLimiter placeOrderRateLimiter = RateLimiter.create(PLACE_ORDER_RATE_LIMIT);
+    private static final RateLimiter modifyOrderRateLimiter = RateLimiter.create(MODIFY_ORDER_RATE_LIMIT);
+    private static final RateLimiter cancelOrderRateLimiter = RateLimiter.create(CANCEL_ORDER_RATE_LIMIT);
+
     /**
      * @param upstoxAuthService The service to retrieve authentication details
      */
-    public OrderService(@Nonnull final UpstoxAuthService upstoxAuthService) {
+    public OrderService(@Nonnull final UpstoxAuthService upstoxAuthService,
+                        @Nonnull final RetryPolicyFactory retryPolicyFactory) {
 
-        super(upstoxAuthService);
+        super(upstoxAuthService, retryPolicyFactory);
     }
 
     /**
@@ -61,7 +76,17 @@ public class OrderService extends Service {
         final OrderApi api = prepareServiceApi(OrderApi.class);
 
         log.debug("Making request - GET Order History");
-        return api.getOrderHistory();
+        return Failsafe.with(retryPolicy)
+                .with(retryExecutor)
+                .onFailure(failure -> log.fatal("Failed completely to GET Order History.", failure))
+                .onSuccess(response -> log.debug("GET Order History successful!", response))
+                .onRetry((c, f, ctx) ->
+                        log.warn("Failure #" + ctx.getExecutions()
+                                + ". Unable to GET Order History, retrying. REASON: {}", f.getCause().getMessage()))
+                .future(() -> {
+                    orderHistoryRateLimiter.acquire(1);
+                    return api.getOrderHistory();
+                });
     }
 
     /**
@@ -79,7 +104,17 @@ public class OrderService extends Service {
         final OrderApi api = prepareServiceApi(OrderApi.class);
 
         log.debug("Making request - GET Order Details");
-        return api.getOrderDetails(orderId);
+        return Failsafe.with(retryPolicy)
+                .with(retryExecutor)
+                .onFailure(failure -> log.fatal("Failed completely to GET Order Details. ", failure))
+                .onSuccess(response -> log.debug("GET Order Details successful!", response))
+                .onRetry((c, f, ctx) ->
+                        log.warn("Failure #" + ctx.getExecutions()
+                                + ". Unable to GET Order Details, retrying. REASON: {}", f.getCause().getMessage()))
+                .future(() -> {
+                    orderDetailsRateLimiter.acquire(1);
+                    return api.getOrderDetails(orderId);
+                });
     }
 
     /**
@@ -93,7 +128,17 @@ public class OrderService extends Service {
         final OrderApi api = prepareServiceApi(OrderApi.class);
 
         log.debug("Making request - GET Trade Book");
-        return api.getTradeBook();
+        return Failsafe.with(retryPolicy)
+                .with(retryExecutor)
+                .onFailure(failure -> log.fatal("Failed completely to GET Trade Book. ", failure))
+                .onSuccess(response -> log.debug("GET Trade Book successful!", response))
+                .onRetry((c, f, ctx) ->
+                        log.warn("Failure #" + ctx.getExecutions()
+                                + ". Unable to GET Trade Book, retrying. REASON: {}", f.getCause().getMessage()))
+                .future(() -> {
+                    tradeBookRateLimiter.acquire(1);
+                    return api.getTradeBook();
+                });
     }
 
     /**
@@ -111,7 +156,17 @@ public class OrderService extends Service {
         final OrderApi api = prepareServiceApi(OrderApi.class);
 
         log.debug("Making request - GET Trade History");
-        return api.getTradeHistory(orderId);
+        return Failsafe.with(retryPolicy)
+                .with(retryExecutor)
+                .onFailure(failure -> log.fatal("Failed completely to GET Trade History. ", failure))
+                .onSuccess(response -> log.debug("GET Trade History successful!", response))
+                .onRetry((c, f, ctx) ->
+                        log.warn("Failure #" + ctx.getExecutions()
+                                + ". Unable to GET Trade History, retrying. REASON: {}", f.getCause().getMessage()))
+                .future(() -> {
+                    tradeHistoryRateLimiter.acquire(1);
+                    return api.getTradeHistory(orderId);
+                });
     }
 
     /**
@@ -129,7 +184,17 @@ public class OrderService extends Service {
         final OrderApi api = prepareServiceApi(OrderApi.class);
 
         log.debug("Making request - POST Place Order");
-        return api.placeOrder(request);
+        return Failsafe.with(retryPolicy)
+                .with(retryExecutor)
+                .onFailure(failure -> log.fatal("Failed completely to POST Place Order.", failure))
+                .onSuccess(response -> log.debug("POST Place Order successful!", response))
+                .onRetry((c, f, ctx) ->
+                        log.warn("Failure #" + ctx.getExecutions()
+                                + ". Unable to POST Place Order, retrying. REASON: {}", f.getCause().getMessage()))
+                .future(() -> {
+                    placeOrderRateLimiter.acquire(1);
+                    return api.placeOrder(request);
+                });
     }
 
     /**
@@ -150,7 +215,17 @@ public class OrderService extends Service {
         final OrderApi api = prepareServiceApi(OrderApi.class);
 
         log.debug("Making request - PUT Modify Order");
-        return api.modifyOrder(orderId, request);
+        return Failsafe.with(retryPolicy)
+                .with(retryExecutor)
+                .onFailure(failure -> log.fatal("Failed completely to PUT Modify Order.", failure))
+                .onSuccess(response -> log.debug("PUT Modify Order successful!", response))
+                .onRetry((c, f, ctx) ->
+                        log.warn("Failure #" + ctx.getExecutions()
+                                + ". Unable to PUT Modify Order, retrying. REASON: {}", f.getCause().getMessage()))
+                .future(() -> {
+                    modifyOrderRateLimiter.acquire(1);
+                    return api.modifyOrder(orderId, request);
+                });
     }
 
     /**
@@ -168,7 +243,17 @@ public class OrderService extends Service {
         final OrderApi api = prepareServiceApi(OrderApi.class);
 
         log.debug("Making request - DELETE Orders");
-        return api.cancelOrders(orderIdsCsv);
+        return Failsafe.with(retryPolicy)
+                .with(retryExecutor)
+                .onFailure(failure -> log.fatal("Failed completely to DELETE Orders.", failure))
+                .onSuccess(response -> log.debug("DELETE Orders successful!", response))
+                .onRetry((c, f, ctx) ->
+                        log.warn("Failure #" + ctx.getExecutions()
+                                + ". Unable to DELETE Orders, retrying. REASON: {}", f.getCause().getMessage()))
+                .future(() -> {
+                    cancelOrderRateLimiter.acquire(1);
+                    return api.cancelOrders(orderIdsCsv);
+                });
     }
 
     /**
@@ -182,7 +267,17 @@ public class OrderService extends Service {
         OrderApi api = prepareServiceApi(OrderApi.class);
 
         log.debug("Making request - DELETE All Orders");
-        return api.cancelAllOrders();
+        return Failsafe.with(retryPolicy)
+                .with(retryExecutor)
+                .onFailure(failure -> log.fatal("Failed completely to DELETE All Orders.", failure))
+                .onSuccess(response -> log.debug("DELETE All Orders successful!", response))
+                .onRetry((c, f, ctx) ->
+                        log.warn("Failure #" + ctx.getExecutions()
+                                + ". Unable to DELETE All Orders, retrying. REASON: {}", f.getCause().getMessage()))
+                .future(() -> {
+                    cancelOrderRateLimiter.acquire(1);
+                    return api.cancelAllOrders();
+                });
     }
 
     private void validateOrderRequest(OrderRequest request) {
