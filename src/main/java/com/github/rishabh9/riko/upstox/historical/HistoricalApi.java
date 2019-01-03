@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2018 Rishabh Joshi
+ * Copyright (c) 2019 Rishabh Joshi
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -61,7 +61,7 @@ public interface HistoricalApi {
      * @param format    Response format - 'csv' or 'json'.
      * @return A Call to execute the request (a)synchronously.
      */
-    @GET("/historical/ohlc/{exchange}/{symbol}/{interval}")
+    @GET("/historical/{exchange}/{symbol}/{interval}")
     CompletableFuture<UpstoxResponse<List<Candle>>> getOhlc(@Path("exchange") String exchange,
                                                             @Path("symbol") String symbol,
                                                             @Path("interval") String interval,
