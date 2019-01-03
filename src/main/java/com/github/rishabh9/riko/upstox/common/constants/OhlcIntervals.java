@@ -26,13 +26,15 @@ package com.github.rishabh9.riko.upstox.common.constants;
 
 public final class OhlcIntervals {
 
-    public static final String ONE_MINUTE = "1MINUTE";
-    public static final String FIVE_MINUTES = "5MINUTE";
-    public static final String TEN_MINUTES = "10MINUTE";
-    public static final String THIRTY_MINUTES = "30MINUTE";
-    public static final String SIXTY_MINUTES = "60MINUTE";
-    public static final String ONE_DAY = "1DAY";
-    public static final String ONE_WEEK = "1WEEK";
-    public static final String ONE_MONTH = "1MONTH";
+    public static final String ONE_MINUTE = "1";
+    public static final String THREE_MINUTES = "3";
+    public static final String FIVE_MINUTES = "5";
+    public static final String TEN_MINUTES = "10";
+    public static final String FIFTEEN_MINUTES = "15";
+    public static final String THIRTY_MINUTES = "30";
+    public static final String SIXTY_MINUTES = "60";
+    public static final String ONE_DAY = "day";
+    public static final String ONE_WEEK = "week";
+    public static final String ONE_MONTH = "month";
 
 }
