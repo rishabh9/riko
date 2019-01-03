@@ -29,7 +29,6 @@ import net.jodah.failsafe.RetryPolicy;
 import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 /**
  * The Riko's default retry policy factory.
@@ -45,8 +44,7 @@ public class RikoRetryPolicyFactory implements RetryPolicyFactory {
     public Optional<RetryPolicy> createRetryPolicy() {
         return Optional.of(new RetryPolicy()
                 .retryOn(Throwable.class)
-                .withBackoff(1, 5, TimeUnit.SECONDS)
-                .withMaxRetries(3));
+                .withMaxRetries(10));
     }
 
     /**
