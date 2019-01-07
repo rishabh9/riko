@@ -169,8 +169,10 @@ publishing {
             url version.endsWith("SNAPSHOT") ? snapshotsRepoUrl : releasesRepoUrl
 
             credentials {
-                username sonatypeUsername
-                password sonatypePassword
+//                username sonatypeUsername
+//                password sonatypePassword
+                username "$System.env.SONATYPE_USERNAME"
+                password "$System.env.SONATYPE_PASSWORD"
             }
         }
     }

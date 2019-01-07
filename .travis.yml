@@ -1,0 +1,29 @@
+language: java
+branches:
+  except:
+    - no-big
+    - vanilla
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+jdk:
+  - openjdk9
+before_install:
+  - echo $GPG_SECRET_KEYS | base64 --decode | $GPG_EXECUTABLE --import
+  - echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust
+install:
+  - ./gradlew build
+script:
+  - ./gradlew publish
+#deploy:
+#  provider: releases
+#  api_key:
+#    secure: kEmbwstj
+#  skip_cleanup: true
+#  on:
+#    repo: rishabh9/riko
+#  name: 3.0.0-SNAPSHOT
