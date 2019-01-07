@@ -3,27 +3,30 @@ branches:
   except:
     - no-big
     - vanilla
-before_cache:
-  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
-  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
-cache:
-  directories:
-    - $HOME/.gradle/caches/
-    - $HOME/.gradle/wrapper/
 jdk:
   - openjdk9
 before_install:
   - echo $GPG_SECRET_KEYS | base64 --decode | $GPG_EXECUTABLE --import
   - echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust
 install:
-  - ./gradlew build
+  - "./gradlew assemble"
 script:
-  - ./gradlew publish
-#deploy:
-#  provider: releases
-#  api_key:
-#    secure: kEmbwstj
-#  skip_cleanup: true
-#  on:
-#    repo: rishabh9/riko
-#  name: 3.0.0-SNAPSHOT
+  - "./gradlew publish"
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+cache:
+  directories:
+    - "$HOME/.gradle/caches/"
+    - "$HOME/.gradle/wrapper/"
+deploy:
+  provider: releases
+  api_key:
+    secure: g4MaGCeOCoVGnj5ebEmhF3IYUDaiaGjdZTw9KGzehEi7qWhFnvkJPyUyNItmH/uGrnN12pdOQMgaBgSrWRlkQVyFkvhMjX+RvVEAijR2f7P5Kiur1yXfMndzF7W/r8EnCAYAPEfP5S5Pw3qKBGWYPIjU9DrgehcXU2UqsrX4PyWqnmpDugpAY3SBSLlZD4/Fy3DZCESuSYI8lAkn1BJfbgNVP9T6kpm432XsHfuCSgdpTDcpqTHu9cXeKZbj74NFRARu7PpULMaMPdgCf7OhZL1UysC8D6t7HIqMu4KWOJ1JuwErjxf8iSjCzTZkNSv8tqx6WsAJy82e3qIPGQ/9xrIc7MhqjRuHCtU1tK0QizwFDHXQiOvnQ+yvhy2pQppEHB90pTJK/EzVDA6SAjLByu7xkS1MuoczCrmO5mrSfwpcB4wBEuvv97vUyQgemqn1zb8XfmOJC0aJ20WIoXiTOcueJydoorHmKkA7KWY6+GmCtL1I8VLLtiegivUxzagRaaNvaYjWu3KqRu0dsYl7OB+LhYJ4+ubnkhcK2P0WixVpYoLoH0YlSr316HdDYUniq6yn7DOByeZxNSSEU/2W3jmjZmg1OzE4c4rlytlQuWe5Vocp5fEJc5Op05mnxw7vyBeI98dDv3s7INfbzgTeTO7rgjbgpTMT8aUEPSjL1jQ=
+  file:
+    - build/libs/riko-$project_version.jar
+    - build/libs/riko-$project_version-javadoc.jar
+    - build/libs/riko-$project_version-sources.jar
+  on:
+    repo: rishabh9/riko
+  name: $project_version

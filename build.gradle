@@ -246,3 +246,11 @@ tasks.withType(com.github.spotbugs.SpotBugsTask) {
         html.enabled = true
     }
 }
+
+build.doFirst {
+    environment 'project_version', version
+}
+
+publish.doFirst {
+    environment 'project_version', version
+}
