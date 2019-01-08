@@ -169,10 +169,8 @@ publishing {
             url version.endsWith("SNAPSHOT") ? snapshotsRepoUrl : releasesRepoUrl
 
             credentials {
-//                username sonatypeUsername
-//                password sonatypePassword
-                username "$System.env.SONATYPE_USERNAME"
-                password "$System.env.SONATYPE_PASSWORD"
+                username sonatypeUsername
+                password sonatypePassword
             }
         }
     }
@@ -187,6 +185,15 @@ model {
     }
     tasks.publishMavenJavaPublicationToMavenRepository {
         dependsOn project.tasks.signArchives
+    }
+}
+
+gradle.taskGraph.whenReady { taskGraph ->
+    // Do not sign archives by default (a local build without gpg keyring should succeed)
+    if (taskGraph.allTasks.any { it.name == 'build' || it.name == 'assemble' }) {
+        tasks.findAll { it.name == 'signArchives' || it.name == 'signDocsJar' || it.name == 'signTestJar' }.each { task ->
+            task.enabled = false
+        }
     }
 }
 
@@ -248,9 +255,5 @@ tasks.withType(com.github.spotbugs.SpotBugsTask) {
 }
 
 build.doFirst {
-    environment 'project_version', version
-}
-
-publish.doFirst {
     environment 'project_version', version
 }
