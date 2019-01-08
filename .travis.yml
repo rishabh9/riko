@@ -22,13 +22,15 @@ cache:
     - "$HOME/.gradle/wrapper/"
 deploy:
   provider: releases
-  prerelease: true
+  #  prerelease: true
   api_key:
     secure: g4MaGCeOCoVGnj5ebEmhF3IYUDaiaGjdZTw9KGzehEi7qWhFnvkJPyUyNItmH/uGrnN12pdOQMgaBgSrWRlkQVyFkvhMjX+RvVEAijR2f7P5Kiur1yXfMndzF7W/r8EnCAYAPEfP5S5Pw3qKBGWYPIjU9DrgehcXU2UqsrX4PyWqnmpDugpAY3SBSLlZD4/Fy3DZCESuSYI8lAkn1BJfbgNVP9T6kpm432XsHfuCSgdpTDcpqTHu9cXeKZbj74NFRARu7PpULMaMPdgCf7OhZL1UysC8D6t7HIqMu4KWOJ1JuwErjxf8iSjCzTZkNSv8tqx6WsAJy82e3qIPGQ/9xrIc7MhqjRuHCtU1tK0QizwFDHXQiOvnQ+yvhy2pQppEHB90pTJK/EzVDA6SAjLByu7xkS1MuoczCrmO5mrSfwpcB4wBEuvv97vUyQgemqn1zb8XfmOJC0aJ20WIoXiTOcueJydoorHmKkA7KWY6+GmCtL1I8VLLtiegivUxzagRaaNvaYjWu3KqRu0dsYl7OB+LhYJ4+ubnkhcK2P0WixVpYoLoH0YlSr316HdDYUniq6yn7DOByeZxNSSEU/2W3jmjZmg1OzE4c4rlytlQuWe5Vocp5fEJc5Op05mnxw7vyBeI98dDv3s7INfbzgTeTO7rgjbgpTMT8aUEPSjL1jQ=
   file:
-    - build/libs/riko-$TRAVIS_BRANCH.jar
-    - build/libs/riko-$TRAVIS_BRANCH-javadoc.jar
-    - build/libs/riko-$TRAVIS_BRANCH-sources.jar
+    - build/libs/riko-$TRAVIS_TAG.jar
+    - build/libs/riko-$TRAVIS_TAG-javadoc.jar
+    - build/libs/riko-$TRAVIS_TAG-sources.jar
   on:
     repo: rishabh9/riko
-  name: $TRAVIS_BRANCH
+    tags: true
+  skip_cleanup: true
+  name: $TRAVIS_TAG

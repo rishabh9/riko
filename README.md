@@ -9,6 +9,8 @@ Checkout the [wiki](https://github.com/rishabh9/riko/wiki) for more details.
 There's a demo project `riko-starter`, available for your reference [here](https://github.com/rishabh9/riko-starter), 
 demonstrating the usage of Riko. Feel free to use it as a starter for your own project.
 
+Build status: [![build_status](https://travis-ci.org/rishabh9/riko.svg?branch=3.0.0-SNAPSHOT)](https://travis-ci.org/rishabh9/riko)
+
 ### For Maven based project
 
 ```xml
