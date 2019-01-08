@@ -5,9 +5,10 @@ branches:
     - vanilla
 jdk:
   - openjdk9
-#before_install:
-#  - echo $GPG_SECRET_KEYS | base64 --decode | $GPG_EXECUTABLE --import
-#  - echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust
+before_install:
+  - mkdir -p ~/.gradle/
+  - echo "sonatypeUsername=yourusername" >> ~/.gradle/gradle.properties
+  - echo "sonatypePassword=secretpassword" >> ~/.gradle/gradle.properties
 install:
   - "./gradlew assemble"
 script:
